@@ -35,3 +35,7 @@ Request elements
 - Bootstrap Timeout
 - Extra 
 
+Pseudo - config defined 
+One provisionr instance can usually work with a single cloud provider
+
+
