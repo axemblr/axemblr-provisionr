@@ -22,8 +22,6 @@
     <inceptionYear>2012</inceptionYear>
 
     <modules>
-        <module>api</module>
-        <module>client</module>
         <module>core</module>
     </modules>
 
@@ -51,22 +49,39 @@
     </issueManagement>
 
     <properties>
-        <dropwizard.version>0.5.1</dropwizard.version>
+        <activiti-engine.version>5.10</activiti-engine.version>
+        <h2.version>1.2.132</h2.version>
+        <testng.version>6.7</testng.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.yammer.dropwizard</groupId>
-            <artifactId>dropwizard-core</artifactId>
-            <version>${dropwizard.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.yammer.dropwizard</groupId>
-            <artifactId>dropwizard-testing</artifactId>
-            <version>${dropwizard.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-engine</artifactId>
+                <version>${activiti-engine.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>activiti</id>
+            <url>http://maven.alfresco.com/nexus/content/repositories/activiti</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

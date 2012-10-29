@@ -13,40 +13,18 @@
     <name>Axemblr Provisionr :: Service Core</name>
     <artifactId>provisionr-core</artifactId>
 
-    <properties>
-        <activiti-engine.version>5.10</activiti-engine.version>
-        <h2.version>1.2.132</h2.version>
-    </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-engine</artifactId>
-            <version>${activiti-engine.version}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-client</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>activiti</id>
-            <url>http://maven.alfresco.com/nexus/content/repositories/activiti</url>
-        </repository>
-    </repositories>
 </project>
