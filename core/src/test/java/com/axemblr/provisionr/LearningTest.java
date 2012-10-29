@@ -4,8 +4,8 @@ import org.junit.Test;
 
 public class LearningTest {
 
-  @Test
-  public void testBuildAndRunASimpleProcess() {
-  }
+	@Test
+	public void testBuildAndRunASimpleProcess() {
+	}
 
 }

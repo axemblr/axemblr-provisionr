@@ -35,6 +35,11 @@
             <email>ieugen@axemblr.com</email>
         </developer>
     </developers>
+    
+    <organization>
+    	<name>Axemblr Software Solutions</name>
+    	<url>http://axemblr.com/</url>
+    </organization>
 
     <scm>
         <connection>scm:git:git@github.com:andreisavu/axemblr-provisionr.git</connection>
