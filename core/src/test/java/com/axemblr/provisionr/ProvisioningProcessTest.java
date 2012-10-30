@@ -1,5 +1,7 @@
 package com.axemblr.provisionr;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -28,9 +30,10 @@ public class ProvisioningProcessTest {
         String jobId = "j-" + UUID.randomUUID();
 
         Map<String, Object> variables = Maps.newHashMap();
-        variables.put("provisioning.duration", "P10M" /* 10 minutes */);
+        variables.put("provisioningTimeout", "PT10M" /* 10 minutes */);
 
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_NAME, jobId, variables);
+        assertEquals(instance.getBusinessKey(), jobId);
         waitForProcessToFinish(instance);
     }
 
