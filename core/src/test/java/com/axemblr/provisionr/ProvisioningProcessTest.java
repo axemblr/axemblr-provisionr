@@ -2,6 +2,7 @@ package com.axemblr.provisionr;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -17,18 +18,26 @@ import com.google.common.collect.Maps;
 @ContextConfiguration("classpath:activiti-memory-context.cfg.xml")
 public class ProvisioningProcessTest {
 
-	@Autowired
-	private RuntimeService runtimeService;
+    private static final String PROCESS_NAME = "stub";
 
-	@Test
-	public void testBuildAndRunASimpleProcess() {
-		String jobId = "j-" + UUID.randomUUID();
+    @Autowired
+    private RuntimeService runtimeService;
 
-		Map<String, Object> variables = Maps.newHashMap();
-		variables.put("test", 1);
+    @Test
+    public void testBuildAndRunASimpleProcess() throws Exception {
+        String jobId = "j-" + UUID.randomUUID();
 
-		ProcessInstance instance = runtimeService.startProcessInstanceByKey(
-				"provisioning", jobId, variables);
-	}
+        Map<String, Object> variables = Maps.newHashMap();
+        variables.put("provisioning.duration", "P10M" /* 10 minutes */);
+
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_NAME, jobId, variables);
+        waitForProcessToFinish(instance);
+    }
+
+    public void waitForProcessToFinish(ProcessInstance instance) throws InterruptedException {
+        while (!instance.isEnded()) {
+            TimeUnit.SECONDS.sleep(1);
+        }
+    }
 
 }
