@@ -1,4 +1,4 @@
-package com.axemblr.provisionr;
+package com.axemblr.provisionr.sample;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +20,7 @@ import com.google.common.collect.Maps;
 @ContextConfiguration("classpath:activiti-memory-context.cfg.xml")
 public class ProvisioningProcessTest {
 
-    private static final String PROCESS_NAME = "stub";
+    private static final String PROCESS_NAME = "sample";
 
     @Autowired
     private RuntimeService runtimeService;
