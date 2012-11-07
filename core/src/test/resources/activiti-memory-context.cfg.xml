@@ -27,7 +27,7 @@
 		<property name="history" value="full" />
 	</bean>
 
-	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean" scope="singleton">
 		<property name="processEngineConfiguration" ref="processEngineConfiguration" />
 	</bean>
 	<bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService" />

@@ -11,6 +11,7 @@
 
 	<name>Axemblr Provisionr :: Core</name>
 	<artifactId>provisionr-core</artifactId>
+	<packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>
