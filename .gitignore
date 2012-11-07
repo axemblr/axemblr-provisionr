@@ -16,4 +16,5 @@ target
 .classpath
 .bpmn
 core/.xml
+felix-cache
 

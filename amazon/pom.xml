@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.axemblr.provisionr</groupId>
-		<artifactId>provisionr-parent</artifactId>
+		<artifactId>parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
 	<name>Axemblr Provisionr :: Amazon</name>
-	<artifactId>provisionr-amazon</artifactId>
+	<artifactId>amazon</artifactId>
 	<packaging>jar</packaging>
 
 	<dependencies>
