@@ -24,7 +24,6 @@
 						<Export-Package>com.axemblr.provisionr.api</Export-Package>
 					</instructions>
 				</configuration>
-
 			</plugin>
 		</plugins>
 	</build>
