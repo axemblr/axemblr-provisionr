@@ -1,5 +1,7 @@
 package com.axemblr.provisionr.api;
 
-public class Pool {
+public interface Pool {
+
+  public void provision();
 
 }
