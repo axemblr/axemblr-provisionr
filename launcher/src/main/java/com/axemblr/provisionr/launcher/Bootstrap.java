@@ -9,6 +9,7 @@ import java.util.Map;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 import org.slf4j.Logger;
@@ -16,71 +17,73 @@ import org.slf4j.LoggerFactory;
 
 public class Bootstrap {
 
-	private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
-	private final Framework framework;
+  private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
+  private final Framework framework;
 
-	Bootstrap() throws BundleException {
-		FrameworkFactory frameworkFactory = java.util.ServiceLoader
-				.load(FrameworkFactory.class).iterator().next();
-		final Map<String, String> config = new HashMap<String, String>();
-		framework = frameworkFactory.newFramework(config);
-		framework.start();
-		log.info("OSGi framework started");
-	}
+  Bootstrap() throws BundleException {
+    FrameworkFactory frameworkFactory = java.util.ServiceLoader.load(FrameworkFactory.class).iterator().next();
+    final Map<String, String> config = new HashMap<String, String>();
+    config.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
 
-	void installBundles(File fromFolder) throws BundleException {
-		final String[] files = fromFolder.list();
-		if (files == null) {
-			log.warn("No bundles found in {}", fromFolder.getAbsolutePath());
-			return;
-		}
+    framework = frameworkFactory.newFramework(config);
+    framework.start();
 
-		log.info("Installing bundles from {}", fromFolder.getAbsolutePath());
-		final List<Bundle> installed = new LinkedList<Bundle>();
-		final BundleContext ctx = framework.getBundleContext();
-		for (String filename : files) {
-			if (filename.endsWith(".jar")) {
-				final File f = new File(fromFolder, filename);
-				final String ref = "file:" + f.getAbsolutePath();
-				log.info("Installing bundle {}", ref);
-				installed.add(ctx.installBundle(ref));
-			}
-		}
+    log.info("OSGi framework started");
+  }
 
-		for (Bundle bundle : installed) {
-			log.info("Starting bundle {}", bundle.getSymbolicName());
-			bundle.start();
-		}
+  void installBundles(File fromFolder) throws BundleException {
+    final String[] files = fromFolder.list();
+    if (files == null) {
+      log.warn("No bundles found in {}", fromFolder.getAbsolutePath());
+      return;
+    }
 
-		log.info("{} bundles installed from {}", installed.size(),
-				fromFolder.getAbsolutePath());
-	}
+    log.info("Installing bundles from {}", fromFolder.getAbsolutePath());
+    final List<Bundle> installed = new LinkedList<Bundle>();
+    final BundleContext ctx = framework.getBundleContext();
+    for (String filename : files) {
+      if (filename.endsWith(".jar")) {
+        final File f = new File(fromFolder, filename);
+        final String ref = "file:" + f.getAbsolutePath();
+        log.info("Installing bundle {}", ref);
+        installed.add(ctx.installBundle(ref));
+      }
+    }
 
-	void waitForFrameworkAndQuit() throws Exception {
-		try {
-			framework.waitForStop(0);
-		} finally {
-			log.info("OSGi framework stopped, exiting");
-			System.exit(0);
-		}
-	}
+    for (Bundle bundle : installed) {
+      log.info("Starting bundle {}", bundle.getSymbolicName());
+      bundle.start();
+    }
 
-	Framework getFramework() {
-		return framework;
-	}
+    log.info("{} bundles installed from {}", installed.size(),
+        fromFolder.getAbsolutePath());
+  }
 
-	public static void main(String[] args) throws Exception {
-		final Bootstrap osgi = new Bootstrap();
-		final Framework framework = osgi.getFramework();
+  void waitForFrameworkAndQuit() throws Exception {
+    try {
+      framework.waitForStop(0);
+    } finally {
+      log.info("OSGi framework stopped, exiting");
+      System.exit(0);
+    }
+  }
 
-		log.info("Framework bundle: {} ({})", framework.getSymbolicName(),
-				framework.getState());
-		osgi.installBundles(new File("target/bundles"));
-		for (Bundle b : framework.getBundleContext().getBundles()) {
-			log.info("Installed bundle: {} ({})", b.getSymbolicName(),
-					b.getState());
-		}
+  Framework getFramework() {
+    return framework;
+  }
 
-		osgi.waitForFrameworkAndQuit();
-	}
+  public static void main(String[] args) throws Exception {
+    final Bootstrap osgi = new Bootstrap();
+    final Framework framework = osgi.getFramework();
+
+    log.info("Framework bundle: {} ({})", framework.getSymbolicName(), framework.getState());
+    osgi.installBundles(new File("target/bundles"));
+
+    for (Bundle b : framework.getBundleContext().getBundles()) {
+      log.info("Installed bundle: {} ({})", b.getSymbolicName(),
+          b.getState());
+    }
+
+    osgi.waitForFrameworkAndQuit();
+  }
 }

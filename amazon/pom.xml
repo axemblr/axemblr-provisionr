@@ -3,28 +3,30 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.axemblr.provisionr</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>provisionr-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <name>Axemblr Provisionr :: Amazon</name>
-    <artifactId>amazon</artifactId>
+    <artifactId>provisionr-amazon</artifactId>
     <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-engine</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>provisionr-core</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>provisionr-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -38,5 +40,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

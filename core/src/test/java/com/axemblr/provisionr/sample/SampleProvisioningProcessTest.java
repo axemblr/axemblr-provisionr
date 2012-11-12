@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.google.common.collect.Maps;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:activiti-memory-context.cfg.xml")
+@Ignore
 public class SampleProvisioningProcessTest {
 
     private static final String PROCESS_NAME = "sample";
