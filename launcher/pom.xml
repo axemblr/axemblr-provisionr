@@ -3,76 +3,34 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.axemblr.provisionr</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>provisionr-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <name>Axemblr Provisionr :: Launcher</name>
-    <artifactId>launcher</artifactId>
+    <artifactId>provisionr-launcher</artifactId>
     <packaging>jar</packaging>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.axemblr.provisionr</groupId>
-                <artifactId>api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <properties>
+        <osgi.version>4.3.1</osgi.version>
+        <felix.version>4.0.3</felix.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.compendium</artifactId>
-            <version>4.3.1</version>
+            <version>${osgi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.framework</artifactId>
-            <version>4.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-            <version>1.7.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <version>${felix.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>activiti-engine</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>amazon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-client</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -81,6 +39,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -92,7 +51,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.2</version>
+                <version>2.5</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -107,6 +66,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.5.1</version>
                 <executions>
                     <execution>
                         <id>embed-osgi-framework</id>
@@ -155,11 +115,6 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.felix</groupId>
-                                    <artifactId>org.apache.felix.scr</artifactId>
-                                    <version>1.6.0</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.felix</groupId>
                                     <artifactId>org.apache.felix.webconsole</artifactId>
                                     <version>3.1.8</version>
                                 </artifactItem>
@@ -181,17 +136,17 @@
                                 <artifactItem>
                                     <groupId>org.activiti</groupId>
                                     <artifactId>activiti-engine</artifactId>
-                                    <version>5.10</version>
+                                    <version>${activiti.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.activiti</groupId>
                                     <artifactId>activiti-osgi</artifactId>
-                                    <version>5.10</version>
+                                    <version>${activiti.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.h2database</groupId>
                                     <artifactId>h2</artifactId>
-                                    <version>1.2.143</version>
+                                    <version>${h2.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>javax.mail</groupId>
@@ -235,24 +190,27 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.axemblr.provisionr</groupId>
-                                    <artifactId>api</artifactId>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.axemblr.provisionr</groupId>
-                                    <artifactId>activiti-engine</artifactId>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.axemblr.provisionr</groupId>
-                                    <artifactId>core</artifactId>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.axemblr.provisionr</groupId>
-                                    <artifactId>amazon</artifactId>
+                                    <artifactId>provisionr-api</artifactId>
                                     <version>${project.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>com.axemblr.provisionr</groupId>
-                                    <artifactId>provisionr-client</artifactId>
+                                    <artifactId>provisionr-engine</artifactId>
+                                    <version>${project.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.axemblr.provisionr</groupId>
+                                    <artifactId>provisionr-core</artifactId>
+                                    <version>${project.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.axemblr.provisionr</groupId>
+                                    <artifactId>provisionr-amazon</artifactId>
+                                    <version>${project.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.axemblr.provisionr</groupId>
+                                    <artifactId>provisionr-rest</artifactId>
                                     <version>${project.version}</version>
                                 </artifactItem>
                             </artifactItems>
@@ -269,44 +227,5 @@
                 </configuration>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings
-                            only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.apache.maven.plugins
-                                        </groupId>
-                                        <artifactId>
-                                            maven-dependency-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [2.1,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>copy</goal>
-                                            <goal>
-                                                unpack-dependencies
-                                            </goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 </project>
