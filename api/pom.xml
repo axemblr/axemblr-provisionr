@@ -1,30 +1,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.axemblr.provisionr</groupId>
-		<artifactId>parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.axemblr.provisionr</groupId>
+        <artifactId>provisionr-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<name>Axemblr Provisionr :: API</name>
-	<artifactId>api</artifactId>
-	<packaging>bundle</packaging>
+    <name>Axemblr Provisionr :: API</name>
+    <artifactId>provisionr-api</artifactId>
+    <packaging>bundle</packaging>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<configuration>
-					<outputDirectory>${basedir}/target/classes</outputDirectory>
-					<instructions>
-						<Private-Package>com.axemblr.provisionr.api.*</Private-Package>
-						<Export-Package>com.axemblr.provisionr.api</Export-Package>
-					</instructions>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${basedir}/target/classes</outputDirectory>
+                    <instructions>
+                        <Private-Package>com.axemblr.provisionr.api.*</Private-Package>
+                        <Export-Package>com.axemblr.provisionr.api</Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
