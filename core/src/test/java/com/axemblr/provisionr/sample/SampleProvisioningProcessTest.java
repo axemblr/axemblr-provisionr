@@ -1,31 +1,37 @@
 package com.axemblr.provisionr.sample;
 
-import static org.junit.Assert.assertEquals;
-
+import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
+import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.junit.Ignore;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.google.common.collect.Maps;
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:activiti-memory-context.cfg.xml")
-@Ignore
 public class SampleProvisioningProcessTest {
 
     private static final String PROCESS_NAME = "sample";
 
-    @Autowired
+    private ProcessEngine engine;
     private RuntimeService runtimeService;
+
+    @Before
+    public void setUp() {
+        engine = new StandaloneInMemProcessEngineConfiguration().buildProcessEngine();
+        engine.getRepositoryService().createDeployment()
+            .addClasspathResource("diagrams/sample.bpmn20.xml").deploy();
+        runtimeService = engine.getRuntimeService();
+    }
+
+    @After
+    public void tearDown() {
+        engine.close();
+    }
 
     @Test
     public void testBuildAndRunASimpleProcess() throws Exception {
