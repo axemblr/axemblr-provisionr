@@ -164,18 +164,8 @@
                                     <version>3.3.1.v201105211655</version>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.apache.aries.transaction</groupId>
-                                    <artifactId>org.apache.aries.transaction.manager</artifactId>
-                                    <version>${aries.version}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.aries.blueprint</groupId>
-                                    <artifactId>org.apache.aries.blueprint</artifactId>
-                                    <version>${aries.version}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.aries.blueprint</groupId>
-                                    <artifactId>org.apache.aries.blueprint.core</artifactId>
+                                    <groupId>org.apache.aries</groupId>
+                                    <artifactId>org.apache.aries.util</artifactId>
                                     <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
@@ -184,13 +174,28 @@
                                     <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.apache.aries.proxy</groupId>
-                                    <artifactId>org.apache.aries.proxy</artifactId>
+                                    <groupId>org.apache.aries.blueprint</groupId>
+                                    <artifactId>org.apache.aries.blueprint.cm</artifactId>
                                     <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.apache.aries</groupId>
-                                    <artifactId>org.apache.aries.util</artifactId>
+                                    <groupId>org.apache.aries.blueprint</groupId>
+                                    <artifactId>org.apache.aries.blueprint.core</artifactId>
+                                    <version>${aries.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.aries.proxy</groupId>
+                                    <artifactId>org.apache.aries.proxy.api</artifactId>
+                                    <version>${aries.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.aries.proxy</groupId>
+                                    <artifactId>org.apache.aries.proxy.impl</artifactId>
+                                    <version>${aries.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.aries.transaction</groupId>
+                                    <artifactId>org.apache.aries.transaction.manager</artifactId>
                                     <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
