@@ -3,8 +3,8 @@
 
     <ext:property-placeholder/>
 
-    <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource">
-        <property name="URL" value="jdbc:h2:mem:activiti"/>
+    <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource" scope="singleton">
+        <property name="URL" value="jdbc:h2:tcp://localhost/activiti"/>
         <property name="user" value="sa"/>
         <property name="password" value=""/>
     </bean>
@@ -12,6 +12,7 @@
     <bean id="configurationFactory" class="org.activiti.osgi.blueprint.ConfigurationFactory">
         <property name="dataSource" ref="dataSource"/>
         <property name="databaseSchemaUpdate" value="true"/>
+        <property name="jobExecutorActivate" value="true"/>
     </bean>
 
     <bean id="configuration" factory-ref="configurationFactory" factory-method="getConfiguration"/>
@@ -29,15 +30,12 @@
     <bean id="processEngine" factory-ref="processEngineFactory"
           factory-method="getObject"/>
 
-    <bean id="runtimeService" factory-ref="processEngine"
-          factory-method="getRuntimeService"/>
-    <bean id="repositoryService" factory-ref="processEngine"
-          factory-method="getRepositoryService"/>
+    <bean id="runtimeService" factory-ref="processEngine" factory-method="getRuntimeService"/>
+    <bean id="repositoryService" factory-ref="processEngine" factory-method="getRepositoryService"/>
 
     <reference-list id="activityProviders" availability="optional"
                     interface="org.activiti.engine.delegate.JavaDelegate"
                     activation="eager">
-
         <reference-listener ref="blueprintELResolver" bind-method="bindService" unbind-method="unbindService"/>
     </reference-list>
 

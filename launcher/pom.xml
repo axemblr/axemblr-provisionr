@@ -119,6 +119,11 @@
                                     <version>3.1.8</version>
                                 </artifactItem>
                                 <artifactItem>
+                                    <groupId>org.apache.felix</groupId>
+                                    <artifactId>org.apache.felix.fileinstall</artifactId>
+                                    <version>3.2.4</version>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>slf4j-api</artifactId>
                                     <version>${slf4j.version}</version>
@@ -154,34 +159,39 @@
                                     <version>1.4.4</version>
                                 </artifactItem>
                                 <artifactItem>
+                                    <groupId>org.eclipse.jetty.orbit</groupId>
+                                    <artifactId>org.objectweb.asm</artifactId>
+                                    <version>3.3.1.v201105211655</version>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>org.apache.aries.transaction</groupId>
                                     <artifactId>org.apache.aries.transaction.manager</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.aries.blueprint</groupId>
                                     <artifactId>org.apache.aries.blueprint</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.aries.blueprint</groupId>
                                     <artifactId>org.apache.aries.blueprint.core</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.aries.blueprint</groupId>
                                     <artifactId>org.apache.aries.blueprint.api</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.aries.proxy</groupId>
                                     <artifactId>org.apache.aries.proxy</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.aries</groupId>
                                     <artifactId>org.apache.aries.util</artifactId>
-                                    <version>1.0.0</version>
+                                    <version>${aries.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.mybatis</groupId>
