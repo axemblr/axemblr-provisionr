@@ -139,6 +139,19 @@
             <url>https://maven.alfresco.com/nexus/content/repositories/activiti/</url>
         </repository>
     </repositories>
+    
+    <distributionManagement>
+        <snapshotRepository>
+            <id>axemblr-snapshots</id>
+            <name>Axemblr Internal Snapshots</name>
+            <url>http://decebal.axemblr.com/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>    
+        <repository>
+            <id>axemblr-releases</id>
+            <name>Axemblr Internal Releases</name>
+            <url>http://decebal.axemblr.com/nexus/content/repositories/releases</url>
+        </repository>
+    </distributionManagement>
 
     <build>
         <plugins>
