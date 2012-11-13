@@ -35,7 +35,7 @@
 
     <reference-list id="activityProviders" availability="optional"
                     interface="org.activiti.engine.delegate.JavaDelegate"
-                    activation="eager">
+                    activation="eager">             
         <reference-listener ref="blueprintELResolver" bind-method="bindService" unbind-method="unbindService"/>
     </reference-list>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- ~ Copyright S.C. Axemblr Software Solutions S.R.L. (c) 2012. ~ ~ This 
-	file is subject to the terms and conditions defined in file ~ 'LICENSE.txt', 
-	which is part of this source code package. -->
+<!-- ~ Copyright S.C. Axemblr Software Solutions S.R.L. (c) 2012. ~ 
+     ~ This file is subject to the terms and conditions defined in file 
+     ~ 'LICENSE.txt',  which is part of this source code package. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -19,11 +19,12 @@
 
     <modules>
         <module>core</module>
-        <module>amazon</module>
         <module>api</module>
         <module>rest</module>
         <module>engine</module>
         <module>launcher</module>
+        <module>providers/amazon</module>
+        <module>providers/cloudstack</module>
     </modules>
 
     <prerequisites>
@@ -86,21 +87,6 @@
                 <version>${activiti.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.activiti</groupId>
-                <artifactId>activiti-spring</artifactId>
-                <version>${activiti.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-jdbc</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -119,12 +105,6 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${h2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RuntimeService;
-import org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -22,7 +22,8 @@ public class SampleProvisioningProcessTest {
 
     @Before
     public void setUp() {
-        engine = new StandaloneInMemProcessEngineConfiguration().buildProcessEngine();
+        engine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration()
+            .buildProcessEngine();
         engine.getRepositoryService().createDeployment()
             .addClasspathResource("diagrams/sample.bpmn20.xml").deploy();
         runtimeService = engine.getRuntimeService();
