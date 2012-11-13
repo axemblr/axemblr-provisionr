@@ -1,21 +1,25 @@
 package com.axemblr.provisionr.client;
 
-import com.axemblr.provisionr.api.Pool;
+import com.axemblr.provisionr.api.Provisionr;
+import java.util.List;
+import java.util.UUID;
 
 public class ProvisionrClient {
 
-  private Pool poolService = null;
+    private final List<Provisionr> services;
 
-  public void startup() {
-    System.out.println("Inside startup");
-    poolService.provision();
-  }
+    public ProvisionrClient(List<Provisionr> services) {
+        this.services = services;
+    }
 
-  public Pool getPoolService() {
-    return poolService;
-  }
+    public void init() {
+        System.out.println("**** Starting client. Got " + services.size() + " services.");
+        for (Provisionr service : services) {
+            service.createPool(UUID.randomUUID().toString(), null);
+        }
+    }
 
-  public void setPoolService(Pool poolService) {
-    this.poolService = poolService;
-  }
+    public List<Provisionr> getServices() {
+        return services;
+    }
 }

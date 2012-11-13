@@ -1,0 +1,4 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+    <bean id="provisionrService" class="com.axemblr.provisionr.cloudstack.CloudStackProvisionr"/>
+    <service ref="provisionrService" interface="com.axemblr.provisionr.api.Provisionr"/>
+</blueprint>

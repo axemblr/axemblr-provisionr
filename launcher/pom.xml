@@ -32,6 +32,16 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-amazon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-cloudstack</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -204,6 +214,11 @@
                                     <version>3.1.1</version>
                                 </artifactItem>
                                 <artifactItem>
+                                    <groupId>com.google.guava</groupId>
+                                    <artifactId>guava</artifactId>
+                                    <version>${guava.version}</version>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>com.axemblr.provisionr</groupId>
                                     <artifactId>provisionr-api</artifactId>
                                     <version>${project.version}</version>
@@ -221,6 +236,11 @@
                                 <artifactItem>
                                     <groupId>com.axemblr.provisionr</groupId>
                                     <artifactId>provisionr-amazon</artifactId>
+                                    <version>${project.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.axemblr.provisionr</groupId>
+                                    <artifactId>provisionr-cloudstack</artifactId>
                                     <version>${project.version}</version>
                                 </artifactItem>
                                 <artifactItem>

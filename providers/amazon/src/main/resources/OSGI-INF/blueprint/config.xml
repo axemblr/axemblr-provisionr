@@ -1,0 +1,8 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <bean id="provisionrService" class="com.axemblr.provisionr.amazon.AmazonProvisionr"
+          init-method="init">
+    </bean>
+    <service ref="provisionrService" interface="com.axemblr.provisionr.api.Provisionr"/>
+
+</blueprint>

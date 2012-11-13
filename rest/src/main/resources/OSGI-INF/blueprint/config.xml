@@ -1,10 +1,9 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <reference id="poolService" interface="com.axemblr.provisionr.api.Pool"/>
+    <reference-list id="provisionrServices" interface="com.axemblr.provisionr.api.Provisionr"/>
 
     <bean id="poolClient" class="com.axemblr.provisionr.client.ProvisionrClient"
-          init-method="startup">
-        <property name="poolService" ref="poolService"/>
+          init-method="init">
+        <argument ref="provisionrServices"/>
     </bean>
-
 </blueprint>
