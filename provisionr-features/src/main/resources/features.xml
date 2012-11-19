@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<features name="provisionr-features-${project.version}">
+
+    <feature name="spring" version="${spring.version}">
+        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/1.0_3</bundle>
+        <bundle>mvn:org.springframework/spring-asm/${spring.version}</bundle>
+        <bundle>mvn:org.springframework/spring-aop/${spring.version}</bundle>
+        <bundle>mvn:org.springframework/spring-aspects/${spring.version}</bundle>
+        <bundle>mvn:org.springframework/spring-core/${spring.version}</bundle>
+        <bundle>mvn:org.springframework/spring-beans/${spring.version}</bundle>
+        <bundle>mvn:org.springframework/spring-context/${spring.version}</bundle>
+        <bundle>mvn:org.springframework/spring-context-support/${spring.version}</bundle>
+        <bundle>mvn:org.springframework/spring-expression/${spring.version}</bundle>
+    </feature>
+
+    <feature name="activiti" version="${activiti.version}">
+        <feature version="${spring.version}">spring</feature>
+        <bundle dependency="true">mvn:org.apache.aries.transaction/org.apache.aries.transaction.manager/0.3</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.wsdl4j/1.6.2_3
+        </bundle>
+        <bundle dependency="true">mvn:org.mybatis/mybatis/3.1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.drools/5.1.1_2
+        </bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jdt-core/3.2.3_5
+        </bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.quartz/1.8.4_2
+        </bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.antlr/2.7.7_4</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.asm/2.2.3_5</bundle>
+        <bundle>mvn:com.h2database/h2/1.2.143</bundle>
+        <bundle>mvn:com.fasterxml.uuid/java-uuid-generator/3.1.2</bundle>
+        <bundle>mvn:javax.mail/mail/1.4.3</bundle>
+        <!--<bundle>mvn:org.codehaus.groovy/groovy/1.8.6</bundle>-->
+        <bundle>mvn:org.activiti/activiti-engine/${activiti.version}</bundle>
+        <bundle>mvn:org.activiti/activiti-osgi/${activiti.version}</bundle>
+    </feature>
+
+    <feature name="axemblr-provisionr" version="${project.version}">
+        <feature version="${activiti.version}">activiti</feature>
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
+        <bundle>mvn:com.axemblr.provisionr/provisionr-api/${project.version}</bundle>
+        <bundle>mvn:com.axemblr.provisionr/provisionr-core/${project.version}</bundle>
+        <bundle>mvn:com.axemblr.provisionr/provisionr-engine/${project.version}</bundle>
+        <bundle>mvn:com.axemblr.provisionr/provisionr-amazon/${project.version}</bundle>
+        <bundle>mvn:com.axemblr.provisionr/provisionr-cloudstack/${project.version}</bundle>
+    </feature>
+
+</features>

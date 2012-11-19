@@ -25,6 +25,7 @@
         <module>launcher</module>
         <module>providers/amazon</module>
         <module>providers/cloudstack</module>
+        <module>provisionr-features</module>
     </modules>
 
     <prerequisites>
@@ -69,6 +70,8 @@
         <aries.version>1.0.0</aries.version>
         <mockito.version>1.9.5</mockito.version>
         <fest-assert.version>2.0M8</fest-assert.version>
+        <exam.version>2.6.0</exam.version>
+        <url.version>1.4.0</url.version>
     </properties>
 
     <dependencyManagement>
@@ -139,13 +142,13 @@
             <url>https://maven.alfresco.com/nexus/content/repositories/activiti/</url>
         </repository>
     </repositories>
-    
+
     <distributionManagement>
         <snapshotRepository>
             <id>axemblr-snapshots</id>
             <name>Axemblr Internal Snapshots</name>
             <url>http://decebal.axemblr.com/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>    
+        </snapshotRepository>
         <repository>
             <id>axemblr-releases</id>
             <name>Axemblr Internal Releases</name>
