@@ -20,12 +20,12 @@
     <modules>
         <module>core</module>
         <module>api</module>
-        <module>rest</module>
         <module>engine</module>
-        <module>launcher</module>
+        <module>console</module>
         <module>providers/amazon</module>
         <module>providers/cloudstack</module>
-        <module>provisionr-features</module>
+        <module>karaf/features</module>
+        <module>karaf/tests</module>
     </modules>
 
     <prerequisites>
@@ -70,12 +70,38 @@
         <aries.version>1.0.0</aries.version>
         <mockito.version>1.9.5</mockito.version>
         <fest-assert.version>2.0M8</fest-assert.version>
-        <exam.version>2.6.0</exam.version>
-        <url.version>1.4.0</url.version>
+        <pax.exam.version>2.6.0</pax.exam.version>
+        <pax.url.version>1.4.0</pax.url.version>
+        <karaf.version>2.3.0</karaf.version>
+        <felix.version>4.0.3</felix.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.axemblr.provisionr</groupId>
+                <artifactId>provisionr-api</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.axemblr.provisionr</groupId>
+                <artifactId>provisionr-engine</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.axemblr.provisionr</groupId>
+                <artifactId>provisionr-core</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.axemblr.provisionr</groupId>
+                <artifactId>provisionr-api</artifactId>
+                <version>${project.version}</version>
+                <scope>provided</scope>
+            </dependency>
             <dependency>
                 <groupId>org.apache.aries.blueprint</groupId>
                 <artifactId>org.apache.aries.blueprint</artifactId>
