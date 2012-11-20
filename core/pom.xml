@@ -15,6 +15,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <scope>test</scope>
@@ -54,5 +59,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
