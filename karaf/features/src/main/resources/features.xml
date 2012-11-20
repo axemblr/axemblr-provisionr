@@ -16,7 +16,6 @@
         <bundle>mvn:org.activiti/activiti-osgi/${activiti.version}</bundle>
     </feature>
 
-
     <feature name="axemblr-provisionr" version="${project.version}">
         <feature version="${activiti.version}">activiti</feature>
         <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
@@ -26,5 +25,4 @@
         <bundle>mvn:com.axemblr.provisionr/provisionr-amazon/${project.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-cloudstack/${project.version}</bundle>
     </feature>
-
 </features>

@@ -20,8 +20,8 @@
     <modules>
         <module>core</module>
         <module>api</module>
-        <module>engine</module>
         <module>console</module>
+        <module>activiti/engine</module>
         <module>providers/amazon</module>
         <module>providers/cloudstack</module>
         <module>karaf/features</module>
@@ -92,12 +92,6 @@
             <dependency>
                 <groupId>com.axemblr.provisionr</groupId>
                 <artifactId>provisionr-core</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.axemblr.provisionr</groupId>
-                <artifactId>provisionr-api</artifactId>
                 <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -202,7 +196,7 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <mavenExecutorId>forked-path</mavenExecutorId>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <preparationGoals>clean test</preparationGoals>
+                    <preparationGoals>clean install</preparationGoals>
                 </configuration>
             </plugin>
             <plugin>
@@ -230,4 +224,50 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>with-assembly</id>
+            <modules>
+                <module>karaf/assembly</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>with-live-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.12.2</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*LiveTest.java</include>
+                            </includes>
+                            <!-- TODO: add more system properties for testing -->
+                            <systemPropertyVariables>
+                                <test.provider.id>${test.provider.id}</test.provider.id>
+                                <test.provider.identity>${test.provider.identity}</test.provider.identity>
+                                <test.provider.credential>${test.provider.credential}</test.provider.credential>
+                            </systemPropertyVariables>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
