@@ -72,8 +72,8 @@
         <fest-assert.version>2.0M8</fest-assert.version>
         <pax.exam.version>2.6.0</pax.exam.version>
         <pax.url.version>1.4.0</pax.url.version>
-        <karaf.version>2.3.0</karaf.version>
-        <felix.version>4.0.3</felix.version>
+        <karaf.version>2.2.9</karaf.version>
+        <felix.version>3.2.2</felix.version>
     </properties>
 
     <dependencyManagement>
