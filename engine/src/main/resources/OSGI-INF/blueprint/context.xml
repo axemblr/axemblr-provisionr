@@ -4,7 +4,7 @@
     <ext:property-placeholder/>
 
     <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource" scope="singleton">
-        <property name="URL" value="jdbc:h2:tcp://localhost/activiti"/>
+        <property name="URL" value="jdbc:h2:mem:axemblr;DB_CLOSE_DELAY=-1"/>
         <property name="user" value="sa"/>
         <property name="password" value=""/>
     </bean>
@@ -35,7 +35,7 @@
 
     <reference-list id="activityProviders" availability="optional"
                     interface="org.activiti.engine.delegate.JavaDelegate"
-                    activation="eager">             
+                    activation="eager">
         <reference-listener ref="blueprintELResolver" bind-method="bindService" unbind-method="unbindService"/>
     </reference-list>
 
