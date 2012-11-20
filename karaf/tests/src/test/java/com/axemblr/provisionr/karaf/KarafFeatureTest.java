@@ -8,6 +8,7 @@ import org.apache.karaf.features.FeaturesService;
 import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.karafDistributionConfiguration;
 import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.logLevel;
 import org.apache.karaf.tooling.exam.options.LogLevelOption;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +85,10 @@ public class KarafFeatureTest {
         assertInstalled("activiti");
         assertInstalled("axemblr-provisionr");
 
-        // TODO: check all bundles start as expected using the BundleContext
+        for (Bundle bundle : bundleContext.getBundles()) {
+            assertEquals("Bundle " + bundle.getSymbolicName() + " is not active",
+                Bundle.ACTIVE, bundle.getState());
+        }
     }
 
     private void assertInstalled(String featureName) throws Exception {
