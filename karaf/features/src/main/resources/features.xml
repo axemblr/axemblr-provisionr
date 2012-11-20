@@ -2,24 +2,20 @@
 
 <features name="provisionr-features-${project.version}">
     <feature name="activiti" version="${activiti.version}">
+        <feature version="0.3.1">transaction</feature>
         <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.antlr/2.7.7_4</bundle>
         <bundle>mvn:org.eclipse.jetty.orbit/org.objectweb.asm/3.3.1.v201105211655</bundle>
         <bundle>mvn:javax.mail/mail/1.4.4</bundle>
+
         <bundle>mvn:com.h2database/h2/${h2.version}</bundle>
         <bundle>mvn:org.mybatis/mybatis/3.1.1</bundle>
-        <bundle>mvn:org.codehaus.groovy/groovy/1.8.6</bundle>
 
-        <bundle>mvn:org.apache.aries/org.apache.aries.util/${aries.version}</bundle>
-        <bundle>mvn:org.apache.aries.blueprint/org.apache.aries.blueprint.api/${aries.version}</bundle>
-        <bundle>mvn:org.apache.aries.blueprint/org.apache.aries.blueprint.cm/${aries.version}</bundle>
-        <bundle>mvn:org.apache.aries.blueprint/org.apache.aries.blueprint.core/${aries.version}</bundle>
-        <bundle>mvn:org.apache.aries.proxy/org.apache.aries.proxy.api/${aries.version}</bundle>
-        <bundle>mvn:org.apache.aries.proxy/org.apache.aries.proxy.impl/${aries.version}</bundle>
-        <bundle>mvn:org.apache.aries.transaction/org.apache.aries.transaction.manager/${aries.version}</bundle>
+        <bundle>mvn:org.codehaus.groovy/groovy/1.8.6</bundle>
 
         <bundle>mvn:org.activiti/activiti-engine/${activiti.version}</bundle>
         <bundle>mvn:org.activiti/activiti-osgi/${activiti.version}</bundle>
     </feature>
+
 
     <feature name="axemblr-provisionr" version="${project.version}">
         <feature version="${activiti.version}">activiti</feature>
