@@ -1,20 +1,29 @@
 package com.axemblr.provisionr.api.pool;
 
+import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
+import com.axemblr.provisionr.api.os.OperatingSystem;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.axemblr.provisionr.api.util.BuilderWithOptions;
+import java.util.Map;
 
-public class PoolBuilder {
+public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
 
     private Provider provider;
     private Network network;
 
-    private String osType;
-    private String hardwareType;
+    private OperatingSystem operatingSystem;
+    private Hardware hardware;
 
     private int minSize;
-    private int maxSize;
+    private int expectedSize;
 
     private int bootstrapTimeInSeconds;
+
+    @Override
+    protected PoolBuilder getThis() {
+        return this;
+    }
 
     public PoolBuilder provider(Provider provider) {
         this.provider = provider;
@@ -26,13 +35,13 @@ public class PoolBuilder {
         return this;
     }
 
-    public PoolBuilder osType(String osType) {
-        this.osType = osType;
+    public PoolBuilder operatingSystem(OperatingSystem operatingSystem) {
+        this.operatingSystem = operatingSystem;
         return this;
     }
 
-    public PoolBuilder hardwareType(String hardwareType) {
-        this.hardwareType = hardwareType;
+    public PoolBuilder hardware(Hardware hardware) {
+        this.hardware = hardware;
         return this;
     }
 
@@ -41,8 +50,8 @@ public class PoolBuilder {
         return this;
     }
 
-    public PoolBuilder maxSize(int maxSize) {
-        this.maxSize = maxSize;
+    public PoolBuilder expectedSize(int expectedSize) {
+        this.expectedSize = expectedSize;
         return this;
     }
 
@@ -52,7 +61,7 @@ public class PoolBuilder {
     }
 
     public Pool createPool() {
-        return new Pool(provider, network, osType, hardwareType,
-            minSize, maxSize, bootstrapTimeInSeconds);
+        return new Pool(provider, network, operatingSystem, hardware, minSize,
+            expectedSize, bootstrapTimeInSeconds, buildOptions());
     }
 }

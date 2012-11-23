@@ -1,7 +1,9 @@
 package com.axemblr.provisionr.api.provider;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
+import java.util.Map;
 
 public class Provider implements Serializable {
 
@@ -15,15 +17,15 @@ public class Provider implements Serializable {
     private final String accessKey;
     private final String secretKey;
 
-    private final String locationId;
+    private final Map<String, String> options;
 
     public Provider(String id, String endpoint, String accessKey,
-                    String secretKey, String locationId) {
+                    String secretKey, Map<String, String> options) {
         this.id = id;
         this.endpoint = endpoint;
         this.accessKey = accessKey;
         this.secretKey = secretKey;
-        this.locationId = locationId;
+        this.options = ImmutableMap.copyOf(options);
     }
 
     /**
@@ -55,20 +57,20 @@ public class Provider implements Serializable {
     }
 
     /**
-     * Target location ID
+     * Generic provider configuration options
      */
-    public String getLocationId() {
-        return locationId;
+    public Map<String, String> getOptions() {
+        return options;
     }
 
     public ProviderBuilder toBuilder() {
         return builder().id(id).endpoint(endpoint).accessKey(accessKey)
-            .secretKey(secretKey).locationId(locationId);
+            .secretKey(secretKey).options(options);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, endpoint, accessKey, secretKey, locationId);
+        return Objects.hashCode(id, endpoint, accessKey, secretKey, options);
     }
 
     @Override
@@ -82,7 +84,7 @@ public class Provider implements Serializable {
         final Provider other = (Provider) obj;
         return Objects.equal(this.id, other.id) && Objects.equal(this.endpoint, other.endpoint)
             && Objects.equal(this.accessKey, other.accessKey) && Objects.equal(this.secretKey, other.secretKey)
-            && Objects.equal(this.locationId, other.locationId);
+            && Objects.equal(this.options, other.options);
     }
 
     @Override
@@ -91,7 +93,7 @@ public class Provider implements Serializable {
             "id='" + id + '\'' +
             ", endpoint='" + endpoint + '\'' +
             ", accessKey='" + accessKey + '\'' +
-            ", locationId='" + locationId + '\'' +
+            ", options='" + options + '\'' +
             '}';
     }
 }

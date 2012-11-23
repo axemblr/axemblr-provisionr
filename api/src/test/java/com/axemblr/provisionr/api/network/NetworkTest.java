@@ -1,7 +1,5 @@
-package com.axemblr.provisionr.api;
+package com.axemblr.provisionr.api.network;
 
-import com.axemblr.provisionr.api.network.Network;
-import com.axemblr.provisionr.api.network.Rule;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;

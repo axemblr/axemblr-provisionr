@@ -1,8 +1,10 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <bean id="amazonService" class="com.axemblr.provisionr.amazon.AmazonProvisionr"
-          init-method="init">
+    <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
+    <bean id="amazonService" class="com.axemblr.provisionr.amazon.AmazonProvisionr">
+        <argument ref="processEngine"/>
     </bean>
+
     <service ref="amazonService" interface="com.axemblr.provisionr.api.Provisionr"/>
 
 </blueprint>

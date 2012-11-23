@@ -1,12 +1,18 @@
 package com.axemblr.provisionr.api.provider;
 
-public class ProviderBuilder {
+import com.axemblr.provisionr.api.util.BuilderWithOptions;
+
+public class ProviderBuilder extends BuilderWithOptions<ProviderBuilder> {
 
     private String id;
     private String endpoint;
     private String accessKey;
     private String secretKey;
-    private String locationId;
+
+    @Override
+    protected ProviderBuilder getThis() {
+        return this;
+    }
 
     public ProviderBuilder id(String id) {
         this.id = id;
@@ -28,12 +34,7 @@ public class ProviderBuilder {
         return this;
     }
 
-    public ProviderBuilder locationId(String locationId) {
-        this.locationId = locationId;
-        return this;
-    }
-
     public Provider createProvider() {
-        return new Provider(id, endpoint, accessKey, secretKey, locationId);
+        return new Provider(id, endpoint, accessKey, secretKey, buildOptions());
     }
 }
