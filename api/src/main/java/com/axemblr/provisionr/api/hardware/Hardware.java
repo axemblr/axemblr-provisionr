@@ -3,9 +3,10 @@ package com.axemblr.provisionr.api.hardware;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
+import java.io.Serializable;
 import java.util.Map;
 
-public class Hardware {
+public class Hardware implements Serializable {
 
     public static HardwareBuilder builder() {
         return new HardwareBuilder();

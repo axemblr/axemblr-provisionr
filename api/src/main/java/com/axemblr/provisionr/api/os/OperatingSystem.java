@@ -4,10 +4,11 @@ import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-public class OperatingSystem {
+public class OperatingSystem implements Serializable {
 
     public static OperatingSystemBuilder builder() {
         return new OperatingSystemBuilder();

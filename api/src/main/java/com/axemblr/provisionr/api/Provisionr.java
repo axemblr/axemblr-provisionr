@@ -11,7 +11,7 @@ public interface Provisionr {
      * @param pool pool description
      * @return internal process ID
      */
-    void createPool(String id, Pool pool);
+    void startCreatePoolProcess(String id, Pool pool);
 
     /**
      * Destroy all the machines from the pool with that id

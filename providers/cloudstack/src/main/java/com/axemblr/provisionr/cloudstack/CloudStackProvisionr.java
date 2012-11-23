@@ -10,7 +10,7 @@ public class CloudStackProvisionr implements Provisionr {
     }
 
     @Override
-    public void createPool(String id, Pool pool) {
+    public void startCreatePoolProcess(String id, Pool pool) {
         System.out.println("**** CloudStack (createPool) id: " + id + " pool: " + pool);
     }
 
