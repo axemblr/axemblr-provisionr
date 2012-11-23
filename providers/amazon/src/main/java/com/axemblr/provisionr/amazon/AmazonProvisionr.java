@@ -13,14 +13,14 @@ public class AmazonProvisionr implements Provisionr {
 
     public AmazonProvisionr(ProcessEngine processEngine) {
         this.processEngine = checkNotNull(processEngine, "processEngine is null");
-    }
+    }                                           
 
     @Override
     public void createPool(String id, Pool pool) {
         System.out.println("**** Amazon Provisionr (createPool) id: " + id + " pool: " + pool);
 
         Map<String, Object> arguments = Maps.newHashMap();
-        arguments.put("pool", pool);
+        // arguments.put("pool", pool);
 
         processEngine.getRuntimeService().startProcessInstanceByKey("amazon", id, arguments);
     }
