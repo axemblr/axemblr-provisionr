@@ -16,13 +16,26 @@
         <bundle>mvn:org.activiti/activiti-osgi/${activiti.version}</bundle>
     </feature>
 
-    <feature name="axemblr-provisionr" version="${project.version}">
+    <feature name="axemblr-provisionr-core" version="${project.version}">
         <feature version="${activiti.version}">activiti</feature>
         <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-api/${project.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-core/${project.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-engine/${project.version}</bundle>
+    </feature>
+
+    <feature name="axemblr-provisionr-amazon" version="${project.version}">
+        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aws-java-sdk/${aws.sdk.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-amazon/${project.version}</bundle>
+    </feature>
+
+    <feature name="axemblr-provisionr-cloudstack" version="${project.version}">
         <bundle>mvn:com.axemblr.provisionr/provisionr-cloudstack/${project.version}</bundle>
+    </feature>
+
+    <feature name="axemblr-provisionr" version="${project.version}">
+        <feature version="${project.version}">axemblr-provisionr-core</feature>
+        <feature version="${project.version}">axemblr-provisionr-amazon</feature>
+        <feature version="${project.version}">axemblr-provisionr-cloudstack</feature>
     </feature>
 </features>

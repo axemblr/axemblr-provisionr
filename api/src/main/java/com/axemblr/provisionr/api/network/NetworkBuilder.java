@@ -1,13 +1,19 @@
 package com.axemblr.provisionr.api.network;
 
+import com.axemblr.provisionr.api.util.BuilderWithOptions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.Set;
 
-public class NetworkBuilder {
+public class NetworkBuilder extends BuilderWithOptions<NetworkBuilder> {
 
     private String type = "default";
     private ImmutableSet.Builder<Rule> incoming = ImmutableSet.<Rule>builder();
+
+    @Override
+    protected NetworkBuilder getThis() {
+        return this;
+    }
 
     public NetworkBuilder type(String type) {
         this.type = type;
@@ -29,6 +35,6 @@ public class NetworkBuilder {
     }
 
     public Network createNetwork() {
-        return new Network(type, incoming.build());
+        return new Network(type, incoming.build(), buildOptions());
     }
 }

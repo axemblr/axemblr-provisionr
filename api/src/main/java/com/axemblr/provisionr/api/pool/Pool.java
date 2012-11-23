@@ -1,32 +1,43 @@
 package com.axemblr.provisionr.api.pool;
 
+import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
+import com.axemblr.provisionr.api.os.OperatingSystem;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Objects;
-import java.io.Serializable;
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 
-public class Pool implements Serializable {
+public class Pool {
+
+    public static PoolBuilder builder() {
+        return new PoolBuilder();
+    }
 
     private final Provider provider;
     private final Network network;
 
-    private final String osType;
-    private final String hardwareType;
+    private final OperatingSystem operatingSystem;
+    private final Hardware hardware;
 
     private final int minSize;
-    private final int maxSize;
+    private final int expectedSize;
 
     private final int bootstrapTimeInSeconds;
 
-    public Pool(Provider provider, Network network, String osType, String hardwareType,
-                int minSize, int maxSize, int bootstrapTimeInSeconds) {
+    private final Map<String, String> options;
+
+    public Pool(Provider provider, Network network, OperatingSystem operatingSystem,
+                Hardware hardware, int minSize, int expectedSize, int bootstrapTimeInSeconds,
+                Map<String, String> options) {
         this.provider = provider;
         this.network = network;
-        this.osType = osType;
-        this.hardwareType = hardwareType;
+        this.operatingSystem = operatingSystem;
+        this.hardware = hardware;
         this.minSize = minSize;
-        this.maxSize = maxSize;
+        this.expectedSize = expectedSize;
         this.bootstrapTimeInSeconds = bootstrapTimeInSeconds;
+        this.options = ImmutableMap.copyOf(options);
     }
 
     public Provider getProvider() {
@@ -37,30 +48,43 @@ public class Pool implements Serializable {
         return network;
     }
 
-    public String getOsType() {
-        return osType;
+    public OperatingSystem getOperatingSystem() {
+        return operatingSystem;
     }
 
-    public String getHardwareType() {
-        return hardwareType;
+    public Hardware getHardware() {
+        return hardware;
     }
 
     public int getMinSize() {
         return minSize;
     }
 
-    public int getMaxSize() {
-        return maxSize;
+    public int getExpectedSize() {
+        return expectedSize;
     }
 
+    /**
+     * The maximum amount of time to go from 0 to minSize
+     */
     public int getBootstrapTimeInSeconds() {
         return bootstrapTimeInSeconds;
     }
 
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    public PoolBuilder toBuilder() {
+        return builder().provider(provider).network(network).operatingSystem(operatingSystem)
+            .hardware(hardware).minSize(minSize).expectedSize(expectedSize)
+            .bootstrapTimeInSeconds(bootstrapTimeInSeconds);
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(provider, network, osType, hardwareType,
-            minSize, maxSize, bootstrapTimeInSeconds);
+        return Objects.hashCode(provider, network, operatingSystem, hardware,
+            minSize, expectedSize, bootstrapTimeInSeconds, options);
     }
 
     @Override
@@ -72,13 +96,12 @@ public class Pool implements Serializable {
             return false;
         }
         final Pool other = (Pool) obj;
-        return Objects.equal(this.provider, other.provider)
-            && Objects.equal(this.network, other.network)
-            && Objects.equal(this.osType, other.osType)
-            && Objects.equal(this.hardwareType, other.hardwareType)
-            && Objects.equal(this.minSize, other.minSize)
-            && Objects.equal(this.maxSize, other.maxSize)
-            && Objects.equal(this.bootstrapTimeInSeconds, other.bootstrapTimeInSeconds);
+        return Objects.equal(this.provider, other.provider) && Objects.equal(this.network, other.network)
+            && Objects.equal(this.operatingSystem, other.operatingSystem)
+            && Objects.equal(this.hardware, other.hardware) && Objects.equal(this.minSize, other.minSize)
+            && Objects.equal(this.expectedSize, other.expectedSize)
+            && Objects.equal(this.bootstrapTimeInSeconds, other.bootstrapTimeInSeconds)
+            && Objects.equal(this.options, other.options);
     }
 
     @Override
@@ -86,10 +109,10 @@ public class Pool implements Serializable {
         return "Pool{" +
             "provider=" + provider +
             ", network=" + network +
-            ", osType='" + osType + '\'' +
-            ", hardwareType='" + hardwareType + '\'' +
+            ", operatingSystem=" + operatingSystem +
+            ", hardware=" + hardware +
             ", minSize=" + minSize +
-            ", maxSize=" + maxSize +
+            ", expectedSize=" + expectedSize +
             ", bootstrapTimeInSeconds=" + bootstrapTimeInSeconds +
             '}';
     }
