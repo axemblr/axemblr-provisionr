@@ -15,7 +15,7 @@ public class ProvisionrClient {
     public void init() {
         System.out.println("**** Starting client. Got " + services.size() + " services.");
         for (Provisionr service : services) {
-            service.createPool(UUID.randomUUID().toString(), null);
+            service.startCreatePoolProcess(UUID.randomUUID().toString(), null);
         }
     }
 

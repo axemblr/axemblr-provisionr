@@ -1,5 +1,6 @@
 package com.axemblr.provisionr.api.pool;
 
+import static com.axemblr.provisionr.api.AssertSerializable.assertSerializable;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
@@ -11,7 +12,7 @@ import org.junit.Test;
 public class PoolTest {
 
     @Test
-    public void testCreatePoolForHadoop() {
+    public void testSerialization() {
         final Provider provider = Provider.builder()
             .id("aws-ec2").accessKey("access").secretKey("secret").createProvider();
 
@@ -34,5 +35,7 @@ public class PoolTest {
             .createPool();
 
         assertThat(pool.getOperatingSystem().getPackages()).contains("hadoop-0.20");
+
+        assertSerializable(pool, Pool.class);
     }
 }
