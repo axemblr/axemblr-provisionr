@@ -5,6 +5,11 @@ import com.axemblr.provisionr.api.pool.Pool;
 public interface Provisionr {
 
     /**
+     * Get unique ID for this provisionr
+     */
+    public String getId();
+
+    /**
      * Start a provisioning process based on the pool description
      *
      * @param id   external process ID (e.g. job ID)
