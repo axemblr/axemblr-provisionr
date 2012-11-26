@@ -25,6 +25,7 @@
         <module>providers/amazon</module>
         <module>providers/cloudstack</module>
         <module>karaf/features</module>
+        <module>karaf/activiti-karaf-commands</module>
         <module>karaf/tests</module>
     </modules>
 
@@ -74,6 +75,9 @@
         <karaf.version>2.2.9</karaf.version>
         <felix.version>3.2.2</felix.version>
         <aws.sdk.version>1.3.14_1</aws.sdk.version>
+        <gson.version>1.7.1</gson.version>
+        <mybatis.version>3.1.1</mybatis.version>
+        <groovy.version>1.8.6</groovy.version>
     </properties>
 
     <dependencyManagement>
@@ -106,6 +110,11 @@
                 <artifactId>activiti-osgi</artifactId>
                 <version>${activiti.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring</artifactId>
+                <version>${activiti.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -148,6 +157,55 @@
                 <artifactId>fest-assert-core</artifactId>
                 <version>${fest-assert.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <!-- osgi dependencies -->
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>4.2.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.compendium</artifactId>
+                <version>4.2.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- spring dependencies -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

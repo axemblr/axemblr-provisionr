@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="windows-1252"?>
+    <!--
+        Copyright 2012 Cisco Systems
+        
+        Licensed to the Apache Software Foundation (ASF) under one or more
+        contributor license agreements.  See the NOTICE file distributed with
+        this work for additional information regarding copyright ownership.
+        The ASF licenses this file to You under the Apache License, Version 2.0
+        (the "License"); you may not use this file except in compliance with
+        the License.  You may obtain a copy of the License at
+
+           http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+    --> 
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
+	xmlns:cfg="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+	<shell:command-bundle>
+		<shell:command name="act/list">
+			<shell:action class="org.activiti.karaf.commands.ListBPMCommand">
+				<shell:property name="processEngine" ref="processEngineRef" />
+			</shell:action>
+		</shell:command>
+		<shell:command name="act/start">
+			<shell:action class="org.activiti.karaf.commands.StartBPMCommand">
+				<shell:property name="processEngine" ref="processEngineRef" />
+			</shell:action>
+		</shell:command>
+		<shell:command name="act/kill">
+			<shell:action class="org.activiti.karaf.commands.KillBPMCommand">
+				<shell:property name="processEngine" ref="processEngineRef" />
+			</shell:action>
+		</shell:command>
+		<shell:command name="act/signal">
+			<shell:action class="org.activiti.karaf.commands.SignalBPMCommand">
+				<shell:property name="processEngine" ref="processEngineRef" />
+			</shell:action>
+		</shell:command>
+		<shell:command name="act/undeploy">
+			<shell:action class="org.activiti.karaf.commands.UndeployBPMCommand">
+				<shell:property name="processEngine" ref="processEngineRef" />
+			</shell:action>
+		</shell:command>
+		<shell:command name="act/clean-history">
+			<shell:action class="org.activiti.karaf.commands.CleanHistoryBPMCommand">
+				<shell:property name="processEngine" ref="processEngineRef" />
+			</shell:action>
+		</shell:command>
+		<shell:command name="act/info">
+			<shell:action class="org.activiti.karaf.commands.InfoBPMCommand">
+				<shell:property name="processEngine" ref="processEngineRef" />
+			</shell:action>
+		</shell:command>
+	</shell:command-bundle>
+	<reference id="processEngineRef" interface="org.activiti.engine.ProcessEngine" />
+
+</blueprint>
