@@ -1,20 +1,11 @@
 package com.axemblr.provisionr.karaf;
 
-import java.io.File;
-import java.net.URI;
-import javax.inject.Inject;
 import org.apache.karaf.features.Feature;
 import org.apache.karaf.features.FeaturesService;
-import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.karafDistributionConfiguration;
-import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.logLevel;
 import org.apache.karaf.tooling.exam.options.LogLevelOption;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.MavenUtils;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
@@ -26,6 +17,17 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import java.io.File;
+import java.net.URI;
+
+import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.logLevel;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 /**
  * Test Axemblr Provisionr Feature installation in Apache Karaf.
@@ -81,9 +83,11 @@ public class KarafFeatureTest {
 
         features.addRepository(new URI(url));
         features.installFeature("axemblr-provisionr");
+        features.installFeature("activiti-karaf-commands");
 
         assertInstalled("activiti");
         assertInstalled("axemblr-provisionr");
+        assertInstalled("activiti-karaf-commands");
 
         for (Bundle bundle : bundleContext.getBundles()) {
             assertEquals("Bundle " + bundle.getSymbolicName() + " is not active",
