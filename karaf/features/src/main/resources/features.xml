@@ -18,7 +18,7 @@
 
     <feature name="activiti-karaf-commands" version="${project.version}">
         <feature version="${activiti.version}">activiti</feature>
-        <bundle>mvn:com.axemblr.provisionr/activiti-karaf-commands/${project.version}</bundle>
+        <bundle>mvn:org.activiti.karaf/activiti-karaf-commands/${activiti.version}</bundle>
         <bundle>mvn:com.google.code.gson/gson/${gson.version}</bundle>
         <!--<bundle>mvn:org.apache.karaf.shell/org.apache.karaf.shell.console/${karaf.version}</bundle>-->
     </feature>
