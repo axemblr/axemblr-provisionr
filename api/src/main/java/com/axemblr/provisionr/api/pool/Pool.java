@@ -6,9 +6,10 @@ import com.axemblr.provisionr.api.os.OperatingSystem;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
+import java.io.Serializable;
 import java.util.Map;
 
-public class Pool {
+public class Pool implements Serializable {
 
     public static PoolBuilder builder() {
         return new PoolBuilder();

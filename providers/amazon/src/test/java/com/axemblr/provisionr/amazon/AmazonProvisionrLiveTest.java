@@ -42,7 +42,7 @@ public class AmazonProvisionrLiveTest {
     public void testCreatePoolWithOneMachine() {
         Pool pool = new PoolBuilder().createPool();
 
-        provisionr.createPool("j-12345", pool);
+        provisionr.startCreatePoolProcess("j-12345", pool);
 
     }
 }

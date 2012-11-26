@@ -16,7 +16,7 @@ public class AmazonProvisionr implements Provisionr {
     }                                           
 
     @Override
-    public void createPool(String id, Pool pool) {
+    public void startCreatePoolProcess(String id, Pool pool) {
         System.out.println("**** Amazon Provisionr (createPool) id: " + id + " pool: " + pool);
 
         Map<String, Object> arguments = Maps.newHashMap();
