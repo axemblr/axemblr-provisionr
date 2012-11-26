@@ -9,18 +9,24 @@ import org.activiti.engine.ProcessEngine;
 
 public class AmazonProvisionr implements Provisionr {
 
+    public static final String ID = "amazon";
     private final ProcessEngine processEngine;
 
     public AmazonProvisionr(ProcessEngine processEngine) {
         this.processEngine = checkNotNull(processEngine, "processEngine is null");
-    }                                           
+    }
+
+    @Override
+    public String getId() {
+        return ID;
+    }
 
     @Override
     public void startCreatePoolProcess(String id, Pool pool) {
         System.out.println("**** Amazon Provisionr (createPool) id: " + id + " pool: " + pool);
 
         Map<String, Object> arguments = Maps.newHashMap();
-        // arguments.put("pool", pool);
+        arguments.put("pool", pool);
 
         processEngine.getRuntimeService().startProcessInstanceByKey("amazon", id, arguments);
     }

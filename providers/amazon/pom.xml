@@ -41,6 +41,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-core</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -58,6 +65,21 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <test.amazon.provider.accessKey>${test.amazon.provider.accessKey}</test.amazon.provider.accessKey>
+                            <test.amazon.provider.secretKey>${test.amazon.provider.secretKey}</test.amazon.provider.secretKey>
+                            <test.amazon.provider.region>${test.amazon.provider.region}</test.amazon.provider.region>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>

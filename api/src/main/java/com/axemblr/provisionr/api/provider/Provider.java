@@ -1,6 +1,8 @@
 package com.axemblr.provisionr.api.provider;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.util.Map;
@@ -21,10 +23,10 @@ public class Provider implements Serializable {
 
     public Provider(String id, String endpoint, String accessKey,
                     String secretKey, Map<String, String> options) {
-        this.id = id;
-        this.endpoint = endpoint;
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
+        this.id = checkNotNull(id, "id is null");
+        this.endpoint = Optional.fromNullable(endpoint).or("");
+        this.accessKey = Optional.fromNullable(accessKey).or("");
+        this.secretKey = Optional.fromNullable(secretKey).or("");
         this.options = ImmutableMap.copyOf(options);
     }
 

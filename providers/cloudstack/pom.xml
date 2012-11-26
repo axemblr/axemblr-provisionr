@@ -30,6 +30,21 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <test.cloudstack.provider.endpoint>${test.cloudstack.provider.endpoint}</test.cloudstack.provider.endpoint>
+                            <test.cloudstack.provider.accessKey>${test.cloudstack.provider.accessKey}</test.cloudstack.provider.accessKey>
+                            <test.cloudstack.provider.secretKey>${test.cloudstack.provider.secretKey}</test.cloudstack.provider.secretKey>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
