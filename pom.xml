@@ -236,6 +236,7 @@
             <id>with-assembly</id>
             <modules>
                 <module>karaf/assembly</module>
+                <module>activiti/activiti-karaf</module>
             </modules>
         </profile>
         <profile>
