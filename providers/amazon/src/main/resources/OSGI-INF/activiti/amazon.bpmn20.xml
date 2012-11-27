@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<definitions id="definitions"
-             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             targetNamespace="Examples" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="
-             http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             targetNamespace="http://www.bpmnwithactiviti.org"
+             xmlns:activiti="http://activiti.org/bpmn">
 
     <process id="amazon" name="Amazon Process" isExecutable="true">
         <startEvent id="start"/>
-        <sequenceFlow sourceRef="start" targetRef="end"/>
+        <serviceTask id="checkCredentials" name="Check credentials"
+                     activiti:expression="#{amazon::checkCredentials.apply(pool.provider)}"
+                     activiti:resultVariableName="validProvider"
+                     activiti:async="true"/>
         <endEvent id="end"/>
+
+        <sequenceFlow sourceRef="start" targetRef="checkCredentials"/>
+        <sequenceFlow sourceRef="checkCredentials" targetRef="end"/>
+
     </process>
 </definitions>

@@ -1,11 +1,13 @@
 package com.axemblr.provisionr.amazon;
 
-import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.amazon.activities.CheckCredentials;
 import com.axemblr.provisionr.api.Provisionr;
+import com.axemblr.provisionr.api.pool.Pool;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.runtime.ProcessInstance;
 
 public class AmazonProvisionr implements Provisionr {
 
@@ -28,7 +30,10 @@ public class AmazonProvisionr implements Provisionr {
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put("pool", pool);
 
-        processEngine.getRuntimeService().startProcessInstanceByKey("amazon", id, arguments);
+        arguments.put("amazon::checkCredentials", new CheckCredentials());
+
+        ProcessInstance instance = processEngine.getRuntimeService()
+            .startProcessInstanceByKey("amazon", id, arguments);
     }
 
     @Override

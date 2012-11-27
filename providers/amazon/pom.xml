@@ -15,15 +15,15 @@
     <dependencies>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
