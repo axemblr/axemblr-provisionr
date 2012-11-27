@@ -158,8 +158,12 @@
             <url>http://repo1.maven.org/maven2/</url>
         </repository>
         <repository>
-            <id>activiti</id>
-            <url>https://maven.alfresco.com/nexus/content/repositories/activiti/</url>
+            <id>Activiti</id>
+            <url>https://maven.alfresco.com/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>buzzmedia</id>
+            <url>http://maven.thebuzzmedia.com</url> <!-- ImageScalr -->
         </repository>
     </repositories>
 

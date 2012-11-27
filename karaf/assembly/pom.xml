@@ -13,6 +13,10 @@
     <name>Axemblr Provisionr :: Assembly</name>
     <artifactId>provisionr-assembly</artifactId>
 
+    <properties>
+        <activiti-karaf.version>1.0.0-SNAPSHOT</activiti-karaf.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.karaf</groupId>
@@ -25,6 +29,26 @@
                     <artifactId>org.eclipse.osgi</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti.karaf</groupId>
+            <artifactId>activiti-karaf-feature</artifactId>
+            <version>${activiti-karaf.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti.karaf</groupId>
+            <artifactId>activiti-karaf-commands</artifactId>
+            <version>${activiti-karaf.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti.karaf</groupId>
+            <artifactId>activiti-karaf-web-explorer</artifactId>
+            <version>${activiti-karaf.version}</version>
+            <type>war</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -105,9 +129,14 @@
                                 <descriptor>
                                     mvn:com.axemblr.provisionr/provisionr-features/${project.version}/xml/features
                                 </descriptor>
+                                <descriptor>
+                                    mvn:org.activiti.karaf/activiti-karaf-feature/${activiti-karaf.version}/xml/features
+                                </descriptor>
                             </descriptors>
                             <features>
                                 <feature>axemblr-provisionr</feature>
+                                <feature>activiti-karaf-commands</feature>
+                                <feature>activiti-karaf-web-explorer</feature>
                             </features>
                             <includeMvnBasedDescriptors>true</includeMvnBasedDescriptors>
                             <repository>target/features-repo</repository>
