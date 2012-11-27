@@ -236,7 +236,11 @@
             <id>with-assembly</id>
             <modules>
                 <module>karaf/assembly</module>
-                <module>activiti/activiti-karaf</module>
+                <module>activiti/activiti-karaf/activiti-karaf-parent</module>
+                <module>activiti/activiti-karaf/activiti-karaf-support</module>
+                <module>activiti/activiti-karaf/activiti-karaf-commands</module>
+                <module>activiti/activiti-karaf/activiti-karaf-feature</module>
+                <module>activiti/activiti-karaf/activiti-karaf-webapps/activiti-karaf-web-explorer</module>
             </modules>
         </profile>
         <profile>
