@@ -158,8 +158,12 @@
             <url>http://repo1.maven.org/maven2/</url>
         </repository>
         <repository>
-            <id>activiti</id>
-            <url>https://maven.alfresco.com/nexus/content/repositories/activiti/</url>
+            <id>Activiti</id>
+            <url>https://maven.alfresco.com/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>buzzmedia</id>
+            <url>http://maven.thebuzzmedia.com</url> <!-- ImageScalr -->
         </repository>
     </repositories>
 
@@ -236,6 +240,11 @@
             <id>with-assembly</id>
             <modules>
                 <module>karaf/assembly</module>
+                <module>activiti/activiti-karaf/activiti-karaf-parent</module>
+                <module>activiti/activiti-karaf/activiti-karaf-support</module>
+                <module>activiti/activiti-karaf/activiti-karaf-commands</module>
+                <module>activiti/activiti-karaf/activiti-karaf-feature</module>
+                <module>activiti/activiti-karaf/activiti-karaf-webapps/activiti-karaf-web-explorer</module>
             </modules>
         </profile>
         <profile>
