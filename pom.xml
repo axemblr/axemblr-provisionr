@@ -40,6 +40,9 @@
             <id>with-assembly</id>
             <modules>
                 <module>karaf/assembly</module>
+                <module>activiti/activiti-karaf/activiti-karaf-parent</module>
+                <module>activiti/activiti-karaf/activiti-karaf-feature</module>
+                <module>activiti/activiti-karaf/activiti-karaf-commands</module>
             </modules>
         </profile>
     </profiles>

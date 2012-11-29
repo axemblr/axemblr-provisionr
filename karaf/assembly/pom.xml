@@ -13,6 +13,11 @@
     <name>Axemblr Provisionr :: Assembly</name>
     <artifactId>provisionr-assembly</artifactId>
 
+    <properties>
+        <activiti-karaf.version>1.0.0-SNAPSHOT</activiti-karaf.version>
+        <gson.version>1.7.1</gson.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.karaf</groupId>
@@ -20,13 +25,26 @@
             <version>${karaf.version}</version>
             <type>tar.gz</type>
         </dependency>
+        <dependency>
+            <groupId>org.activiti.karaf</groupId>
+            <artifactId>activiti-karaf-feature</artifactId>
+            <version>${activiti-karaf.version}</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti.karaf</groupId>
+            <artifactId>activiti-karaf-commands</artifactId>
+            <version>${activiti-karaf.version}</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>false</filtering>
+                <filtering>true</filtering>
             </resource>
             <resource>
                 <directory>src/main/filtered-resources</directory>
@@ -99,9 +117,13 @@
                                 <descriptor>
                                     mvn:com.axemblr.provisionr/provisionr-features/${project.version}/xml/features
                                 </descriptor>
+                                <descriptor>
+                                    mvn:org.activiti.karaf/activiti-karaf-feature/${activiti-karaf.version}/xml/features
+                                </descriptor>
                             </descriptors>
                             <features>
                                 <feature>axemblr-provisionr</feature>
+                                <feature>activiti-karaf-commands</feature>
                             </features>
                             <includeMvnBasedDescriptors>true</includeMvnBasedDescriptors>
                             <repository>target/features-repo</repository>
