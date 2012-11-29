@@ -22,11 +22,20 @@
         <module>providers/amazon</module>
         <module>providers/cloudstack</module>
         <module>karaf/features</module>
-        <module>karaf/tests</module>
         <module>test-support</module>
     </modules>
 
     <profiles>
+        <profile>
+            <id>with-integration-tests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>karaf/tests</module>
+                <module>providers/amazon-tests</module>
+            </modules>
+        </profile>
         <profile>
             <id>with-assembly</id>
             <modules>

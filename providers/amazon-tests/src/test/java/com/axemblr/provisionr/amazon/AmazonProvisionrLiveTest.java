@@ -53,6 +53,7 @@ public class AmazonProvisionrLiveTest {
 
     @Before
     public void setUp() throws Exception {
+        // TODO we need to find a way to move this to configuration()
         String projectVersion = System.getProperty("project.version");
 
         String url = maven("com.axemblr.provisionr", "provisionr-features")
