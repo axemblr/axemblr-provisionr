@@ -3,8 +3,9 @@ package com.axemblr.provisionr.amazon;
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
-import com.axemblr.provisionr.test.KarafTests;
-import static com.axemblr.provisionr.test.KarafTests.systemPropertyPassThrough;
+import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
+import static com.axemblr.provisionr.test.KarafTests.projectVersionAsSystemProperty;
+import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProject;
 import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -40,14 +41,11 @@ public class AmazonProvisionrLiveTest {
     @Configuration
     public Option[] configuration() throws Exception {
         return new Option[]{
-            KarafTests.useDefaultKarafAsInProject(),
+            useDefaultKarafAsInProject(),
             junitBundles(),
-            KarafTests.projectVersionAsSystemProperty(),
-            logLevel(LogLevelOption.LogLevel.INFO),
-
-            systemPropertyPassThrough("test.amazon.provider.accessKey"),
-            systemPropertyPassThrough("test.amazon.provider.secretKey"),
-            systemPropertyPassThrough("test.amazon.provider.region")
+            projectVersionAsSystemProperty(),
+            passThroughAllSystemPropertiesWithPrefix("test.amazon."),
+            logLevel(LogLevelOption.LogLevel.INFO)
         };
     }
 

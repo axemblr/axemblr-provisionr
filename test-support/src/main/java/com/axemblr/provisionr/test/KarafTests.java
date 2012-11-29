@@ -6,6 +6,7 @@ import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.kara
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.MavenUtils;
+import org.ops4j.pax.exam.options.DefaultCompositeOption;
 import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.options.SystemPropertyOption;
 
@@ -39,10 +40,16 @@ public class KarafTests {
     }
 
     /**
-     * Push a system property through to Pax Exam container
+     * Make sure all system properties with a given prefix are also available inside the container
      */
-    public static SystemPropertyOption systemPropertyPassThrough(String name) {
-        return systemProperty(name).value(System.getProperty(name));
+    public static DefaultCompositeOption passThroughAllSystemPropertiesWithPrefix(String prefix) {
+        DefaultCompositeOption options = new DefaultCompositeOption();
+        for (String name : System.getProperties().stringPropertyNames()) {
+            if (name.startsWith(prefix)) {
+                options.add(systemProperty(name).value(System.getProperty(name)));
+            }
+        }
+        return options;
     }
 
     /**
