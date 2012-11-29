@@ -7,6 +7,6 @@ public class CreateSecurityGroup implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-
+        System.err.println("Create security group");
     }
 }

@@ -5,14 +5,13 @@
 
     <process id="amazon" name="Amazon Process" isExecutable="true">
         <startEvent id="start"/>
-        <serviceTask id="checkCredentials" name="Check credentials"
-                     activiti:expression="#{amazon::checkCredentials.apply(pool.provider)}"
-                     activiti:resultVariableName="validProvider"
-                     activiti:async="true"/>
         <endEvent id="end"/>
 
-        <sequenceFlow sourceRef="start" targetRef="checkCredentials"/>
-        <sequenceFlow sourceRef="checkCredentials" targetRef="end"/>
+        <serviceTask id="createSecurityGroup" name="Create Security Group"
+                     activiti:delegateExpression="${amazon_createSecurityGroup}"
+                     activiti:async="true"/>
 
+        <sequenceFlow sourceRef="start" targetRef="createSecurityGroup"/>
+        <sequenceFlow sourceRef="createSecurityGroup" targetRef="end"/>
     </process>
 </definitions>

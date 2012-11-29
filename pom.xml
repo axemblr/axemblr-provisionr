@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- ~ Copyright S.C. Axemblr Software Solutions S.R.L. (c) 2012. ~ 
-     ~ This file is subject to the terms and conditions defined in file 
-     ~ 'LICENSE.txt',  which is part of this source code package. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.axemblr.provisionr</groupId>
+        <artifactId>provisionr-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>./parent</relativePath>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.axemblr.provisionr</groupId>
-    <artifactId>provisionr-parent</artifactId>
+    <name>Axemblr Provisionr :: Aggregator</name>
+    <artifactId>provisionr-aggregator</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1-SNAPSHOT</version>
-
-    <name>Axemblr Provisionr :: Parent</name>
-    <description>Pool management service for 10s or 100s of virtual machines</description>
-
-    <url>https://github.com/andreisavu/axemblr-provisionr</url>
-    <inceptionYear>2012</inceptionYear>
 
     <modules>
+        <module>parent</module>
         <module>core</module>
         <module>api</module>
         <module>console</module>
@@ -28,247 +25,12 @@
         <module>karaf/tests</module>
     </modules>
 
-    <prerequisites>
-        <maven>3.0.3</maven>
-    </prerequisites>
-
-    <developers>
-        <developer>
-            <name>Andrei Savu</name>
-            <email>asavu@axemblr.com</email>
-        </developer>
-        <developer>
-            <name>Ioan Eugen Stan</name>
-            <email>ieugen@axemblr.com</email>
-        </developer>
-    </developers>
-
-    <organization>
-        <name>Axemblr Software Solutions</name>
-        <url>http://axemblr.com/</url>
-    </organization>
-
-    <scm>
-        <connection>scm:git:git@github.com:andreisavu/axemblr-provisionr.git</connection>
-        <developerConnection>scm:git:git@github.com:andreisavu/axemblr-provisionr.git</developerConnection>
-        <url>https://github.com/andreisavu/axemblr-provisionr</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/andreisavu/axemblr-provisionr/issues</url>
-    </issueManagement>
-
-    <properties>
-        <activiti.version>5.10</activiti.version>
-        <h2.version>1.3.168</h2.version>
-        <junit.version>4.10</junit.version>
-        <spring.version>3.1.3.RELEASE</spring.version>
-        <guava.version>13.0.1</guava.version>
-        <slf4j.version>1.6.6</slf4j.version>
-        <mockito.version>1.9.5</mockito.version>
-        <fest-assert.version>2.0M8</fest-assert.version>
-        <pax.exam.version>2.6.0</pax.exam.version>
-        <pax.url.version>1.4.0</pax.url.version>
-        <karaf.version>2.2.9</karaf.version>
-        <felix.version>3.2.2</felix.version>
-        <aws.sdk.version>1.3.14_1</aws.sdk.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.axemblr.provisionr</groupId>
-                <artifactId>provisionr-api</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.axemblr.provisionr</groupId>
-                <artifactId>provisionr-engine</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.axemblr.provisionr</groupId>
-                <artifactId>provisionr-core</artifactId>
-                <version>${project.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.activiti</groupId>
-                <artifactId>activiti-engine</artifactId>
-                <version>${activiti.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.activiti</groupId>
-                <artifactId>activiti-osgi</artifactId>
-                <version>${activiti.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>${h2.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.easytesting</groupId>
-                <artifactId>fest-assert-core</artifactId>
-                <version>${fest-assert.version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>http://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>activiti</id>
-            <url>https://maven.alfresco.com/nexus/content/repositories/activiti/</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>axemblr-snapshots</id>
-            <name>Axemblr Internal Snapshots</name>
-            <url>http://decebal.axemblr.com/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>axemblr-releases</id>
-            <name>Axemblr Internal Releases</name>
-            <url>http://decebal.axemblr.com/nexus/content/repositories/releases</url>
-        </repository>
-    </distributionManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <!-- use mvn versions:display-dependency-updates versions:display-plugin-updates -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>1.3.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <preparationGoals>clean install</preparationGoals>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
-                <configuration>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/*LiveTest.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <extensions>true</extensions>
-                    <version>2.3.7</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
     <profiles>
         <profile>
             <id>with-assembly</id>
             <modules>
                 <module>karaf/assembly</module>
             </modules>
-        </profile>
-        <profile>
-            <id>with-live-tests</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.12.4</version>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <includes>
-                                <include>**/*LiveTest.java</include>
-                            </includes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>verify</id>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 </project>

@@ -34,9 +34,6 @@ import org.slf4j.LoggerFactory;
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
 public class KarafFeatureTest {
 
-    private static Logger LOG = LoggerFactory.getLogger(KarafFeatureTest.class);
-    public static final String KARAF_VERSION = "2.2.9";
-
     @Inject
     private FeaturesService features;
 
@@ -47,17 +44,19 @@ public class KarafFeatureTest {
 
     @Configuration
     public static Option[] configuration() throws Exception {
+        String karafVersion = MavenUtils.asInProject().getVersion("org.apache.karaf", "apache-karaf");
         MavenArtifactUrlReference karafUrl = maven().groupId("org.apache.karaf")
             .artifactId("apache-karaf")
-            .version(KARAF_VERSION)
+            .version(karafVersion)
             .type("tar.gz");
 
-        String provisionrVersion = MavenUtils.getArtifactVersion("com.axemblr.provisionr", "provisionr-features");
+        String provisionrVersion = MavenUtils.asInProject()
+            .getVersion("com.axemblr.provisionr", "provisionr-features");
 
         return new Option[]{
             karafDistributionConfiguration()
                 .frameworkUrl(karafUrl)
-                .karafVersion(KARAF_VERSION)
+                .karafVersion(karafVersion)
                 .name("Apache Karaf")
                 .unpackDirectory(new File("target/exam")),
             logLevel(LogLevelOption.LogLevel.INFO),
