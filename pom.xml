@@ -23,6 +23,7 @@
         <module>providers/cloudstack</module>
         <module>karaf/features</module>
         <module>karaf/tests</module>
+        <module>test-support</module>
     </modules>
 
     <profiles>

@@ -1,31 +1,25 @@
 package com.axemblr.provisionr.karaf;
 
-import java.io.File;
+import com.axemblr.provisionr.test.KarafTests;
 import java.net.URI;
 import javax.inject.Inject;
 import org.apache.karaf.features.Feature;
 import org.apache.karaf.features.FeaturesService;
-import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.karafDistributionConfiguration;
 import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.logLevel;
 import org.apache.karaf.tooling.exam.options.LogLevelOption;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import org.ops4j.pax.exam.MavenUtils;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Test Axemblr Provisionr Feature installation in Apache Karaf.
@@ -40,40 +34,20 @@ public class KarafFeatureTest {
     @Inject
     private BundleContext bundleContext;
 
-    private String featuresVersion;
-
     @Configuration
-    public static Option[] configuration() throws Exception {
-        String karafVersion = MavenUtils.asInProject().getVersion("org.apache.karaf", "apache-karaf");
-        MavenArtifactUrlReference karafUrl = maven().groupId("org.apache.karaf")
-            .artifactId("apache-karaf")
-            .version(karafVersion)
-            .type("tar.gz");
-
-        String provisionrVersion = MavenUtils.asInProject()
-            .getVersion("com.axemblr.provisionr", "provisionr-features");
-
+    public Option[] configuration() throws Exception {
         return new Option[]{
-            karafDistributionConfiguration()
-                .frameworkUrl(karafUrl)
-                .karafVersion(karafVersion)
-                .name("Apache Karaf")
-                .unpackDirectory(new File("target/exam")),
+            KarafTests.useDefaultKarafAsInProject(),
+            junitBundles(),
             logLevel(LogLevelOption.LogLevel.INFO),
-            // use system property to provide project version for tests
-            systemProperty("provisionr-features").value(provisionrVersion)
+            KarafTests.projectVersionAsSystemProperty(),
         };
-    }
-
-    @Before
-    public void setUp() {
-        featuresVersion = System.getProperty("provisionr-features");
     }
 
     @Test
     public void shouldInstallAllFeatures() throws Exception {
         String url = maven("com.axemblr.provisionr", "provisionr-features")
-            .version(featuresVersion)
+            .version(System.getProperty("project.version"))
             .classifier("features")
             .type("xml")
             .getURL();
@@ -88,6 +62,8 @@ public class KarafFeatureTest {
             assertEquals("Bundle " + bundle.getSymbolicName() + " is not active",
                 Bundle.ACTIVE, bundle.getState());
         }
+
+        // TODO check services are published as expected
     }
 
     private void assertInstalled(String featureName) throws Exception {
