@@ -1,4 +1,4 @@
-package com.axemblr.provisionr.amazon;
+package com.axemblr.provisionr.cloudstack;
 
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.pool.Pool;
@@ -12,8 +12,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -22,14 +20,14 @@ import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 
 @RunWith(JUnit4TestRunner.class)
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
-public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
+public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
     @Configuration
     public Option[] configuration() throws Exception {
         return new Option[]{
             useDefaultKarafAsInProjectWithJunitBundles(),
-            passThroughAllSystemPropertiesWithPrefix("test.amazon."),
-            installProvisionrFeatures("axemblr-provisionr-amazon"),
+            passThroughAllSystemPropertiesWithPrefix("test.cloudstack."),
+            installProvisionrFeatures("axemblr-provisionr-cloudstack"),
             installProvisionrTestSupportBundle()
         };
     }
@@ -38,7 +36,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
     public void startProvisioningProcess() throws Exception {
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
-        Provider provider = getProviderFromSystemProperties("amazon");
+        Provider provider = getProviderFromSystemProperties("cloudstack");
         Pool pool = Pool.builder().provider(provider).createPool();
 
         provisionr.startCreatePoolProcess(UUID.randomUUID().toString(), pool);

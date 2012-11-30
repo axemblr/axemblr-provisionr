@@ -10,8 +10,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axemblr Provisionr :: Amazon Integration Tests</name>
-    <artifactId>provisionr-amazon-tests</artifactId>
+    <name>Axemblr Provisionr :: CloudStack Integration Tests</name>
+    <artifactId>provisionr-cloudstack-tests</artifactId>
 
     <dependencies>
         <dependency>
@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-amazon</artifactId>
+            <artifactId>provisionr-cloudstack</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -44,12 +44,15 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
-                            <test.amazon.provider.accessKey>${test.amazon.provider.accessKey}
-                            </test.amazon.provider.accessKey>
-                            <test.amazon.provider.secretKey>${test.amazon.provider.secretKey}
-                            </test.amazon.provider.secretKey>
-                            <test.amazon.provider.region>${test.amazon.provider.region}
-                            </test.amazon.provider.region>
+                            <test.cloudstack.provider.endpoint>
+                                ${test.cloudstack.provider.endpoint}
+                            </test.cloudstack.provider.endpoint>
+                            <test.cloudstack.provider.accessKey>
+                                ${test.cloudstack.provider.accessKey}
+                            </test.cloudstack.provider.accessKey>
+                            <test.cloudstack.provider.secretKey>
+                                ${test.cloudstack.provider.secretKey}
+                            </test.cloudstack.provider.secretKey>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

@@ -1,14 +1,18 @@
 package com.axemblr.provisionr.test;
 
 import java.io.File;
-import org.apache.karaf.tooling.exam.options.KarafDistributionBaseConfigurationOption;
 import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.logLevel;
+import org.apache.karaf.tooling.exam.options.LogLevelOption;
+import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.MavenUtils;
 import org.ops4j.pax.exam.options.DefaultCompositeOption;
 import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.options.SystemPropertyOption;
+import org.ops4j.pax.exam.options.extra.FeaturesScannerProvisionOption;
 
 /**
  * Helper methods for Karaf integration tests
@@ -24,7 +28,7 @@ public class KarafTests {
     /**
      * Use the same Karaf version from the project for integration testing with Pax Exam
      */
-    public static KarafDistributionBaseConfigurationOption useDefaultKarafAsInProject() {
+    public static DefaultCompositeOption useDefaultKarafAsInProjectWithJunitBundles() {
         String karafVersion = MavenUtils.asInProject().getVersion(KARAF_GROUP_ID, KARAF_ARTIFACT_ID);
 
         MavenArtifactUrlReference karafUrl = maven().groupId(KARAF_GROUP_ID)
@@ -32,11 +36,14 @@ public class KarafTests {
             .version(karafVersion)
             .type("tar.gz");
 
-        return karafDistributionConfiguration()
-            .frameworkUrl(karafUrl)
-            .karafVersion(karafVersion)
-            .name("Apache Karaf")
-            .unpackDirectory(new File("target/exam"));
+        return new DefaultCompositeOption()
+            .add(karafDistributionConfiguration()
+                .frameworkUrl(karafUrl)
+                .karafVersion(karafVersion)
+                .name("Apache Karaf")
+                .unpackDirectory(new File("target/exam")))
+            .add(junitBundles())
+            .add(logLevel(LogLevelOption.LogLevel.INFO));
     }
 
     /**
@@ -62,5 +69,27 @@ public class KarafTests {
         String version = MavenUtils.asInProject()
             .getVersion("com.axemblr.provisionr", "provisionr-test-support");
         return systemProperty("project.version").value(version);
+    }
+
+    /**
+     * Create an option to install the test support bundle inside the PAX Exam container
+     */
+    public static FeaturesScannerProvisionOption installProvisionrTestSupportBundle() {
+        return scanFeatures(
+            maven().groupId("com.axemblr.provisionr").artifactId("provisionr-test-support")
+                .type("xml").classifier("features").versionAsInProject(),
+            "provisionr-test-support"
+        );
+    }
+
+    /**
+     * Create an option to install all the requested Provisionr features inside the PAX Exam container
+     */
+    public static FeaturesScannerProvisionOption installProvisionrFeatures(String... features) {
+        return scanFeatures(
+            maven().groupId("com.axemblr.provisionr").artifactId("provisionr-features")
+                .type("xml").classifier("features").versionAsInProject(),
+            features
+        );
     }
 }

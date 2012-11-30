@@ -1,17 +1,15 @@
 package com.axemblr.provisionr.karaf;
 
-import com.axemblr.provisionr.test.KarafTests;
+import static com.axemblr.provisionr.test.KarafTests.projectVersionAsSystemProperty;
+import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import java.net.URI;
 import javax.inject.Inject;
 import org.apache.karaf.features.Feature;
 import org.apache.karaf.features.FeaturesService;
-import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.logLevel;
-import org.apache.karaf.tooling.exam.options.LogLevelOption;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
@@ -37,10 +35,8 @@ public class KarafFeatureTest {
     @Configuration
     public Option[] configuration() throws Exception {
         return new Option[]{
-            KarafTests.useDefaultKarafAsInProject(),
-            junitBundles(),
-            logLevel(LogLevelOption.LogLevel.INFO),
-            KarafTests.projectVersionAsSystemProperty(),
+            useDefaultKarafAsInProjectWithJunitBundles(),
+            projectVersionAsSystemProperty(),
         };
     }
 

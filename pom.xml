@@ -34,6 +34,7 @@
             <modules>
                 <module>karaf/tests</module>
                 <module>providers/amazon-tests</module>
+                <module>providers/cloudstack-tests</module>
             </modules>
         </profile>
         <profile>
