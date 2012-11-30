@@ -12,6 +12,12 @@ Features
 * Can be restarted while starting VMs
 * Has a modular architecture based on OSGi and Apache Karaf
 
+License
+-------
+
+Apache License Version 2.0
+http://apache.org/licenses/LICENSE-2.0.txt
+
 API Endpoints
 -------------
 
@@ -26,14 +32,30 @@ object structure for the POST request.
 How to build?
 -------------
 
+Maven as usual:
+
 $ mvn clean install 
+
+This will download dependencies, compile the sources and run
+unit tests and some of the integration tests. 
+
+How to create a distribution?
+-----------------------------
+
+You can build a binary release by running:
+
+$ mvn -DskipTests -Pwith-assembly -P\!with-integration-tests install
+
+And you will find the .tar.gz file in:
+
+karaf/assembly/target/com.axemblr.provisionr-*.tar.gz
 
 How to test?
 ------------
 
 All the unit tests are executed as part of the normal build
 
-You can run the live tests by executing:
+You can run tests against a set of cloud providers by running:
 
 $ mvn -Pwith-live-tests clean install 
 
@@ -51,28 +73,14 @@ Your credentials should be in ~/.m2/settings.xml or sent as system properties
     </profile>
 </profiles>
 
-How to build a distribution?
-----------------------------
+How to run?
+-----------
 
-You can build a custom Karaf distribution by running:
+$ tar xvfz com.axemblr.provisionr-*.tar.gz
+$ cd com.axemblr.provisionr*
+$ bin/karaf
 
-$ mvn -Pwith-assembly clean package 
+TODO: do more branding, add commands to create pool, show how to use the REST endpoint 
 
-And you will find the .tar.gz file in:
-
-karaf/assembly/target/com.axemblr.provisionr-*.tar.gz
-
-How to deploy?
---------------
-
-TBD
-
-
-
-
-
-
-
-
-
+Thanks! 
 
