@@ -16,6 +16,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-engine</artifactId>
         </dependency>
