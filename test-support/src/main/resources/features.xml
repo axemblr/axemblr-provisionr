@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<features name="provisionr-test-support-${project.version}"
+          xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+    <feature name="provisionr-test-support" version="${project.version}">
+        <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
+        <bundle>mvn:com.axemblr.provisionr/provisionr-test-support/${project.version}</bundle>
+    </feature>
+
+</features>
