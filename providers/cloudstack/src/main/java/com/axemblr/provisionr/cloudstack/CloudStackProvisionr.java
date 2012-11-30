@@ -2,11 +2,15 @@ package com.axemblr.provisionr.cloudstack;
 
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.pool.Pool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CloudStackProvisionr implements Provisionr {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CloudStackProvisionr.class);
+
     public void init() {
-        System.out.println("**** CloudStack (init)");
+        LOG.info("**** CloudStack (init)");
     }
 
     @Override
@@ -16,11 +20,11 @@ public class CloudStackProvisionr implements Provisionr {
 
     @Override
     public void startCreatePoolProcess(String id, Pool pool) {
-        System.out.println("**** CloudStack (createPool) id: " + id + " pool: " + pool);
+        LOG.info("**** CloudStack (createPool) id: " + id + " pool: " + pool);
     }
 
     @Override
     public void destroyPool(String id) {
-        System.out.println("**** CloudStack (destroyPool) id: " + id);
+        LOG.info("**** CloudStack (destroyPool) id: " + id);
     }
 }
