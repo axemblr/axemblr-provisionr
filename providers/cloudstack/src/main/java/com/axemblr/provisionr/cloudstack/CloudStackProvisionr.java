@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 public class CloudStackProvisionr implements Provisionr {
 
     private static final Logger LOG = LoggerFactory.getLogger(CloudStackProvisionr.class);
+    public static final String ID = "cloudstack";
 
     public void init() {
         LOG.info("**** CloudStack (init)");
@@ -15,7 +16,7 @@ public class CloudStackProvisionr implements Provisionr {
 
     @Override
     public String getId() {
-        return "cloudstack";
+        return ID;
     }
 
     @Override
