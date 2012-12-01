@@ -7,9 +7,12 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AmazonProvisionr implements Provisionr {
 
+    public static final Logger LOG = LoggerFactory.getLogger(AmazonProvisionr.class);
     public static final String ID = "amazon";
     public static final String PROCESS_KEY = "amazon";
 
@@ -17,7 +20,7 @@ public class AmazonProvisionr implements Provisionr {
 
     public AmazonProvisionr(ProcessEngine processEngine) {
         this.processEngine = checkNotNull(processEngine, "processEngine is null");
-        System.err.println("*** Amazon Provisionr constructor");
+        LOG.info("*** Amazon Provisionr constructor");
     }
 
     @Override
@@ -27,7 +30,7 @@ public class AmazonProvisionr implements Provisionr {
 
     @Override
     public void startCreatePoolProcess(String id, Pool pool) {
-        System.out.println("**** Amazon Provisionr (createPool) id: " + id + " pool: " + pool);
+        LOG.info("**** Amazon Provisionr (createPool) id: " + id + " pool: " + pool);
 
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put("pool", pool);
@@ -40,6 +43,6 @@ public class AmazonProvisionr implements Provisionr {
 
     @Override
     public void destroyPool(String id) {
-        System.out.println("**** Amazon Provisionr (destroyPool) id: " + id);
+        LOG.info("**** Amazon Provisionr (destroyPool) id: " + id);
     }
 }
