@@ -4,14 +4,13 @@ import com.axemblr.provisionr.api.util.BuilderWithOptions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 
 public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
 
-    private String type = "default";
+    private String baseOperatingSystem = "default";
 
     private ImmutableMap.Builder<String, String> files = ImmutableMap.builder();
     private ImmutableList.Builder<String> packages = ImmutableList.builder();
@@ -21,8 +20,8 @@ public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
         return this;
     }
 
-    public SoftwareBuilder type(String type) {
-        this.type = checkNotNull(type, "type");
+    public SoftwareBuilder baseOperatingSystem(String baseOperatingSystem) {
+        this.baseOperatingSystem = checkNotNull(baseOperatingSystem, "baseOperatingSystem");
         return this;
     }
 
@@ -47,6 +46,6 @@ public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
     }
 
     public Software createSoftware() {
-        return new Software(type, files.build(), packages.build(), buildOptions());
+        return new Software(baseOperatingSystem, files.build(), packages.build(), buildOptions());
     }
 }

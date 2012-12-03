@@ -17,23 +17,23 @@ public class Software implements Serializable {
         return new SoftwareBuilder();
     }
 
-    private final String type;
+    private final String baseOperatingSystem;
 
     private final Map<String, String> files;
     private final List<String> packages;
 
     private final Map<String, String> options;
 
-    Software(String type, Map<String, String> files, List<String> packages,
+    Software(String baseOperatingSystem, Map<String, String> files, List<String> packages,
              Map<String, String> options) {
-        this.type = checkNotNull(type, "type is null");
+        this.baseOperatingSystem = checkNotNull(baseOperatingSystem, "baseOperatingSystem is null");
         this.files = ImmutableMap.copyOf(files);
         this.packages = ImmutableList.copyOf(packages);
         this.options = ImmutableMap.copyOf(options);
     }
 
-    public String getType() {
-        return type;
+    public String getBaseOperatingSystem() {
+        return baseOperatingSystem;
     }
 
     /**
@@ -57,12 +57,12 @@ public class Software implements Serializable {
     }
 
     public SoftwareBuilder toBuilder() {
-        return builder().type(type).files(files).packages(packages).options(options);
+        return builder().baseOperatingSystem(baseOperatingSystem).files(files).packages(packages).options(options);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type, files, packages, options);
+        return Objects.hashCode(baseOperatingSystem, files, packages, options);
     }
 
     @Override
@@ -75,14 +75,14 @@ public class Software implements Serializable {
         }
 
         final Software other = (Software) obj;
-        return Objects.equal(this.type, other.type) && Objects.equal(this.files, other.files)
+        return Objects.equal(this.baseOperatingSystem, other.baseOperatingSystem) && Objects.equal(this.files, other.files)
             && Objects.equal(this.packages, other.packages) && Objects.equal(this.options, other.options);
     }
 
     @Override
     public String toString() {
         return "Software{" +
-            "type='" + type + '\'' +
+            "baseOperatingSystem='" + baseOperatingSystem + '\'' +
             ", files=" + files +
             ", packages=" + packages +
             ", options=" + options +
