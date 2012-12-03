@@ -32,6 +32,7 @@ public class PoolTest {
             .minSize(20)
             .expectedSize(25)
             .bootstrapTimeInSeconds(60 * 15)
+            .cacheBaseImage(true)
             .createPool();
 
         assertThat(pool.getOperatingSystem().getPackages()).contains("hadoop-0.20");

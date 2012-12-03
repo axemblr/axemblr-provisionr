@@ -24,19 +24,21 @@ public class Pool implements Serializable {
     private final int minSize;
     private final int expectedSize;
 
+    private final boolean cacheBaseImage;
     private final int bootstrapTimeInSeconds;
 
     private final Map<String, String> options;
 
     public Pool(Provider provider, Network network, OperatingSystem operatingSystem,
-                Hardware hardware, int minSize, int expectedSize, int bootstrapTimeInSeconds,
-                Map<String, String> options) {
+                Hardware hardware, int minSize, int expectedSize, boolean cacheBaseImage,
+                int bootstrapTimeInSeconds, Map<String, String> options) {
         this.provider = provider;
         this.network = network;
         this.operatingSystem = operatingSystem;
         this.hardware = hardware;
         this.minSize = minSize;
         this.expectedSize = expectedSize;
+        this.cacheBaseImage = cacheBaseImage;
         this.bootstrapTimeInSeconds = bootstrapTimeInSeconds;
         this.options = ImmutableMap.copyOf(options);
     }
@@ -65,6 +67,10 @@ public class Pool implements Serializable {
         return expectedSize;
     }
 
+    public boolean isCacheBaseImage() {
+        return cacheBaseImage;
+    }
+
     /**
      * The maximum amount of time to go from 0 to minSize
      */
@@ -78,14 +84,14 @@ public class Pool implements Serializable {
 
     public PoolBuilder toBuilder() {
         return builder().provider(provider).network(network).operatingSystem(operatingSystem)
-            .hardware(hardware).minSize(minSize).expectedSize(expectedSize)
+            .hardware(hardware).minSize(minSize).cacheBaseImage(cacheBaseImage).expectedSize(expectedSize)
             .bootstrapTimeInSeconds(bootstrapTimeInSeconds);
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(provider, network, operatingSystem, hardware,
-            minSize, expectedSize, bootstrapTimeInSeconds, options);
+            minSize, expectedSize, cacheBaseImage, bootstrapTimeInSeconds, options);
     }
 
     @Override
@@ -101,6 +107,7 @@ public class Pool implements Serializable {
             && Objects.equal(this.operatingSystem, other.operatingSystem)
             && Objects.equal(this.hardware, other.hardware) && Objects.equal(this.minSize, other.minSize)
             && Objects.equal(this.expectedSize, other.expectedSize)
+            && this.cacheBaseImage == other.cacheBaseImage
             && Objects.equal(this.bootstrapTimeInSeconds, other.bootstrapTimeInSeconds)
             && Objects.equal(this.options, other.options);
     }
@@ -113,6 +120,7 @@ public class Pool implements Serializable {
             ", operatingSystem=" + operatingSystem +
             ", hardware=" + hardware +
             ", minSize=" + minSize +
+            ", cacheBaseImage=" + cacheBaseImage +
             ", expectedSize=" + expectedSize +
             ", bootstrapTimeInSeconds=" + bootstrapTimeInSeconds +
             '}';
