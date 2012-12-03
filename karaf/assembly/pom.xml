@@ -120,6 +120,9 @@
                                 <descriptor>
                                     mvn:org.activiti.karaf/activiti-karaf-feature/${activiti-karaf.version}/xml/features
                                 </descriptor>
+                                <descriptor>
+                                    mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.version}/xml/features
+                                </descriptor>
                             </descriptors>
                             <features>
                                 <feature>axemblr-provisionr</feature>
