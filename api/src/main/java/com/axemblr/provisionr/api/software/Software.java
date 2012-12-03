@@ -1,34 +1,34 @@
-package com.axemblr.provisionr.api.os;
+package com.axemblr.provisionr.api.software;
 
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class OperatingSystem implements Serializable {
+/**
+ * Define the software environment for all the machines in the pool
+ */
+public class Software implements Serializable {
 
-    public static OperatingSystemBuilder builder() {
-        return new OperatingSystemBuilder();
+    public static SoftwareBuilder builder() {
+        return new SoftwareBuilder();
     }
 
     private final String type;
 
     private final Map<String, String> files;
-
-    private final Set<String> aptKeys;
-    private final Set<String> packages;
+    private final List<String> packages;
 
     private final Map<String, String> options;
 
-    public OperatingSystem(String type, Map<String, String> files, Set<String> aptKeys, Set<String> packages,
-                           Map<String, String> options) {
+    Software(String type, Map<String, String> files, List<String> packages,
+             Map<String, String> options) {
         this.type = checkNotNull(type, "type is null");
         this.files = ImmutableMap.copyOf(files);
-        this.aptKeys = ImmutableSet.copyOf(aptKeys);
-        this.packages = ImmutableSet.copyOf(packages);
+        this.packages = ImmutableList.copyOf(packages);
         this.options = ImmutableMap.copyOf(options);
     }
 
@@ -36,15 +36,19 @@ public class OperatingSystem implements Serializable {
         return type;
     }
 
+    /**
+     * Map of remote files that need to be available on the local filesystem
+     */
     public Map<String, String> getFiles() {
         return files;
     }
 
-    public Set<String> getAptKeys() {
-        return aptKeys;
-    }
-
-    public Set<String> getPackages() {
+    /**
+     * List of packages that should be installed
+     * <p/>
+     * This list can also include paths to local files
+     */
+    public List<String> getPackages() {
         return packages;
     }
 
@@ -52,13 +56,13 @@ public class OperatingSystem implements Serializable {
         return options;
     }
 
-    public OperatingSystemBuilder toBuilder() {
-        return builder().type(type).files(files).aptKeys(aptKeys).packages(packages).options(options);
+    public SoftwareBuilder toBuilder() {
+        return builder().type(type).files(files).packages(packages).options(options);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type, files, aptKeys, packages, options);
+        return Objects.hashCode(type, files, packages, options);
     }
 
     @Override
@@ -70,18 +74,16 @@ public class OperatingSystem implements Serializable {
             return false;
         }
 
-        final OperatingSystem other = (OperatingSystem) obj;
+        final Software other = (Software) obj;
         return Objects.equal(this.type, other.type) && Objects.equal(this.files, other.files)
-            && Objects.equal(this.aptKeys, other.aptKeys) && Objects.equal(this.packages, other.packages)
-            && Objects.equal(this.options, other.options);
+            && Objects.equal(this.packages, other.packages) && Objects.equal(this.options, other.options);
     }
 
     @Override
     public String toString() {
-        return "OperatingSystem{" +
+        return "Software{" +
             "type='" + type + '\'' +
             ", files=" + files +
-            ", aptKeys=" + aptKeys +
             ", packages=" + packages +
             ", options=" + options +
             '}';

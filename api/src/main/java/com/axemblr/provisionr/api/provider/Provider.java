@@ -21,8 +21,8 @@ public class Provider implements Serializable {
 
     private final Map<String, String> options;
 
-    public Provider(String id, String endpoint, String accessKey,
-                    String secretKey, Map<String, String> options) {
+    Provider(String id, String endpoint, String accessKey,
+             String secretKey, Map<String, String> options) {
         this.id = checkNotNull(id, "id is null");
         this.endpoint = Optional.fromNullable(endpoint).or("");
         this.accessKey = Optional.fromNullable(accessKey).or("");

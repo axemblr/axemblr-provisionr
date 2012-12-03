@@ -18,7 +18,7 @@ public class Network implements Serializable {
     private final Set<Rule> incoming;
     private final Map<String, String> options;
 
-    public Network(String type, Set<Rule> incoming, Map<String, String> options) {
+    Network(String type, Set<Rule> incoming, Map<String, String> options) {
         this.type = Optional.fromNullable(type).or("default");
         this.incoming = ImmutableSet.copyOf(incoming);
         this.options = ImmutableMap.copyOf(options);

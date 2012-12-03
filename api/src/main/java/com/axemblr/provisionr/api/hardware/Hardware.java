@@ -16,7 +16,7 @@ public class Hardware implements Serializable {
 
     private final Map<String, String> options;
 
-    public Hardware(String type, Map<String, String> options) {
+    Hardware(String type, Map<String, String> options) {
         this.type = checkNotNull(type, "type is null");
         this.options = ImmutableMap.copyOf(options);
     }

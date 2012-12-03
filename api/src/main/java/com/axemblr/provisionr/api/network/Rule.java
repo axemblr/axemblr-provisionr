@@ -16,7 +16,7 @@ public class Rule implements Serializable {
     private final Range<Integer> ports;
     private final Protocol protocol;
 
-    public Rule(String cidr, Range<Integer> ports, Protocol protocol) {
+    Rule(String cidr, Range<Integer> ports, Protocol protocol) {
         this.cidr = cidr;
         this.ports = ports;
         this.protocol = protocol;

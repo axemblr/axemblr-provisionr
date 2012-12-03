@@ -2,23 +2,23 @@ package com.axemblr.provisionr.api.pool;
 
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
-import com.axemblr.provisionr.api.os.OperatingSystem;
+import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.util.BuilderWithOptions;
-import java.util.Map;
 
 public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
 
     private Provider provider;
     private Network network;
 
-    private OperatingSystem operatingSystem;
+    private Software software;
     private Hardware hardware;
 
-    private int minSize;
-    private int expectedSize;
+    private int minSize = -1;
+    private int expectedSize = -1;
 
-    private int bootstrapTimeInSeconds;
+    private boolean cacheBaseImage = false;
+    private int bootstrapTimeInSeconds = 15 * 60;
 
     @Override
     protected PoolBuilder getThis() {
@@ -35,8 +35,8 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
         return this;
     }
 
-    public PoolBuilder operatingSystem(OperatingSystem operatingSystem) {
-        this.operatingSystem = operatingSystem;
+    public PoolBuilder software(Software software) {
+        this.software = software;
         return this;
     }
 
@@ -55,13 +55,18 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
         return this;
     }
 
+    public PoolBuilder cacheBaseImage(boolean cacheBaseImage) {
+        this.cacheBaseImage = cacheBaseImage;
+        return this;
+    }
+
     public PoolBuilder bootstrapTimeInSeconds(int bootstrapTimeInSeconds) {
         this.bootstrapTimeInSeconds = bootstrapTimeInSeconds;
         return this;
     }
 
     public Pool createPool() {
-        return new Pool(provider, network, operatingSystem, hardware, minSize,
-            expectedSize, bootstrapTimeInSeconds, buildOptions());
+        return new Pool(provider, network, software, hardware, minSize,
+            expectedSize, cacheBaseImage, bootstrapTimeInSeconds, buildOptions());
     }
 }
