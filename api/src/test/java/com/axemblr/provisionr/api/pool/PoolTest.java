@@ -4,7 +4,7 @@ import static com.axemblr.provisionr.api.AssertSerializable.assertSerializable;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
-import com.axemblr.provisionr.api.os.OperatingSystem;
+import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.provider.Provider;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
@@ -21,13 +21,13 @@ public class PoolTest {
             Rule.builder().anySource().port(8088).createRule()
         ).createNetwork();
 
-        final OperatingSystem operatingSystem = OperatingSystem.builder()
-            .packages("hadoop-0.20", "hadoop-0.20-native").createOperatingSystem();
+        final Software software = Software.builder()
+            .packages("hadoop-0.20", "hadoop-0.20-native").createSoftware();
 
         Pool pool = Pool.builder()
             .provider(provider)
             .network(network)
-            .operatingSystem(operatingSystem)
+            .software(software)
             .hardware(Hardware.builder().type("large").createHardware())
             .minSize(20)
             .expectedSize(25)
@@ -35,7 +35,7 @@ public class PoolTest {
             .cacheBaseImage(true)
             .createPool();
 
-        assertThat(pool.getOperatingSystem().getPackages()).contains("hadoop-0.20");
+        assertThat(pool.getSoftware().getPackages()).contains("hadoop-0.20");
 
         assertSerializable(pool, Pool.class);
     }

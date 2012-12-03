@@ -2,7 +2,7 @@ package com.axemblr.provisionr.api.pool;
 
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
-import com.axemblr.provisionr.api.os.OperatingSystem;
+import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
@@ -18,7 +18,7 @@ public class Pool implements Serializable {
     private final Provider provider;
     private final Network network;
 
-    private final OperatingSystem operatingSystem;
+    private final Software software;
     private final Hardware hardware;
 
     private final int minSize;
@@ -29,12 +29,12 @@ public class Pool implements Serializable {
 
     private final Map<String, String> options;
 
-    public Pool(Provider provider, Network network, OperatingSystem operatingSystem,
-                Hardware hardware, int minSize, int expectedSize, boolean cacheBaseImage,
-                int bootstrapTimeInSeconds, Map<String, String> options) {
+    Pool(Provider provider, Network network, Software software, Hardware hardware,
+         int minSize, int expectedSize, boolean cacheBaseImage,
+         int bootstrapTimeInSeconds, Map<String, String> options) {
         this.provider = provider;
         this.network = network;
-        this.operatingSystem = operatingSystem;
+        this.software = software;
         this.hardware = hardware;
         this.minSize = minSize;
         this.expectedSize = expectedSize;
@@ -51,8 +51,8 @@ public class Pool implements Serializable {
         return network;
     }
 
-    public OperatingSystem getOperatingSystem() {
-        return operatingSystem;
+    public Software getSoftware() {
+        return software;
     }
 
     public Hardware getHardware() {
@@ -83,14 +83,14 @@ public class Pool implements Serializable {
     }
 
     public PoolBuilder toBuilder() {
-        return builder().provider(provider).network(network).operatingSystem(operatingSystem)
+        return builder().provider(provider).network(network).software(software)
             .hardware(hardware).minSize(minSize).cacheBaseImage(cacheBaseImage).expectedSize(expectedSize)
             .bootstrapTimeInSeconds(bootstrapTimeInSeconds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(provider, network, operatingSystem, hardware,
+        return Objects.hashCode(provider, network, software, hardware,
             minSize, expectedSize, cacheBaseImage, bootstrapTimeInSeconds, options);
     }
 
@@ -104,7 +104,7 @@ public class Pool implements Serializable {
         }
         final Pool other = (Pool) obj;
         return Objects.equal(this.provider, other.provider) && Objects.equal(this.network, other.network)
-            && Objects.equal(this.operatingSystem, other.operatingSystem)
+            && Objects.equal(this.software, other.software)
             && Objects.equal(this.hardware, other.hardware) && Objects.equal(this.minSize, other.minSize)
             && Objects.equal(this.expectedSize, other.expectedSize)
             && this.cacheBaseImage == other.cacheBaseImage
@@ -117,7 +117,7 @@ public class Pool implements Serializable {
         return "Pool{" +
             "provider=" + provider +
             ", network=" + network +
-            ", operatingSystem=" + operatingSystem +
+            ", software=" + software +
             ", hardware=" + hardware +
             ", minSize=" + minSize +
             ", cacheBaseImage=" + cacheBaseImage +
