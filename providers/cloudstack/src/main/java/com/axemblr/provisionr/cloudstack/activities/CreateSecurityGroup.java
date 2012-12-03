@@ -12,7 +12,7 @@ public class CreateSecurityGroup implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-//        Pool pool = (Pool) execution.getVariable("pool");
-        LOG.info("Retrieved pool");
+        Pool pool = (Pool) execution.getVariable("pool");
+        LOG.info("Retrieved pool {}", pool);
     }
 }

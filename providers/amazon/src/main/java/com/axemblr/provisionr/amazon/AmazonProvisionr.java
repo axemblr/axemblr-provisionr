@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 public class AmazonProvisionr implements Provisionr {
 
     public static final Logger LOG = LoggerFactory.getLogger(AmazonProvisionr.class);
+
     public static final String ID = "amazon";
     public static final String PROCESS_KEY = "amazon";
 

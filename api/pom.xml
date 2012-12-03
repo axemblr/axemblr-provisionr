@@ -37,7 +37,8 @@
                 <configuration>
                     <outputDirectory>${basedir}/target/classes</outputDirectory>
                     <instructions>
-                        <Export-Package>com.axemblr.provisionr.api.*</Export-Package>
+                        <Fragment-Host>org.activiti.engine</Fragment-Host>
+                        <Export-Package>com.axemblr.provisionr.api*</Export-Package>
                         <Private-Package>!*</Private-Package>
                     </instructions>
                 </configuration>

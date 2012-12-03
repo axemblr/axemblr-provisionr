@@ -9,7 +9,8 @@
 
         <serviceTask id="createSecurityGroup" name="Create Security Group"
                      activiti:delegateExpression="${amazon_createSecurityGroup}"
-                     activiti:async="true"/>
+                     activiti:async="true">
+        </serviceTask>
 
         <sequenceFlow sourceRef="start" targetRef="createSecurityGroup"/>
         <sequenceFlow sourceRef="createSecurityGroup" targetRef="end"/>

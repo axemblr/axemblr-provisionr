@@ -40,6 +40,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-test-support</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -54,11 +59,15 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
-                            <test.amazon.provider.accessKey>${test.amazon.provider.accessKey}
+                            <test.amazon.provider.accessKey>
+                                ${test.amazon.provider.accessKey}
                             </test.amazon.provider.accessKey>
-                            <test.amazon.provider.secretKey>${test.amazon.provider.secretKey}
+                            <test.amazon.provider.secretKey>
+                                ${test.amazon.provider.secretKey}
                             </test.amazon.provider.secretKey>
-                            <test.amazon.provider.region>${test.amazon.provider.region}</test.amazon.provider.region>
+                            <test.amazon.provider.region>
+                                ${test.amazon.provider.region}
+                            </test.amazon.provider.region>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
