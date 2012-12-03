@@ -52,6 +52,7 @@ public class KarafFeatureTest {
         features.installFeature("axemblr-provisionr");
 
         assertInstalled("activiti");
+        assertInstalled("jclouds-api-cloudstack");
         assertInstalled("axemblr-provisionr");
 
         for (Bundle bundle : bundleContext.getBundles()) {
