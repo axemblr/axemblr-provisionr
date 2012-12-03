@@ -8,10 +8,13 @@ import static com.axemblr.provisionr.test.KarafTests.installProvisionrTestSuppor
 import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
 import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
+import com.google.inject.Inject;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -31,6 +34,8 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         return new Option[]{
             useDefaultKarafAsInProjectWithJunitBundles(),
             passThroughAllSystemPropertiesWithPrefix("test.cloudstack."),
+            scanFeatures(maven().groupId("org.jclouds.karaf").artifactId("jclouds-karaf")
+                .type("xml").classifier("features").versionAsInProject(), "jclouds-api-cloudstack"),
             installProvisionrFeatures("axemblr-provisionr-cloudstack"),
             installProvisionrTestSupportBundle()
         };
@@ -38,6 +43,8 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
     @Test
     public void startProvisioningProcess() throws Exception {
+        // TODO: We need to wait for the process to be registered before we call it. Replace with something smarter
+        TimeUnit.SECONDS.sleep(5);
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
         Provider provider = collectProviderCredentialsFromSystemProperties()
