@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<definitions id="definitions"
-             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             targetNamespace="Examples" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="
-             http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             targetNamespace="http://www.bpmnwithactiviti.org"
+             xmlns:activiti="http://activiti.org/bpmn">
 
     <process id="cloudstack" name="CloudStack Process" isExecutable="true">
         <startEvent id="start"/>
-        <sequenceFlow sourceRef="start" targetRef="end"/>
         <endEvent id="end"/>
+
+        <serviceTask id="createSecurityGroup" name="Create Security Group"
+                     activiti:delegateExpression="${cloudstack_createSecurityGroup}"
+                     activiti:async="true"/>
+
+        <sequenceFlow sourceRef="start" targetRef="createSecurityGroup"/>
+        <sequenceFlow sourceRef="createSecurityGroup" targetRef="end"/>
     </process>
 </definitions>

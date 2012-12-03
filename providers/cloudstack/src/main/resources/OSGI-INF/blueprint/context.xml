@@ -1,5 +1,14 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
-    <bean id="cloudstackService" class="com.axemblr.provisionr.cloudstack.CloudStackProvisionr"
-          init-method="init" />
+
+    <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
+
+    <bean id="cloudstackService" class="com.axemblr.provisionr.cloudstack.CloudStackProvisionr">
+        <argument ref="processEngine" />
+    </bean>
+
     <service ref="cloudstackService" interface="com.axemblr.provisionr.api.Provisionr"/>
+
+    <bean id="cloudstack_createSecurityGroup" class="com.axemblr.provisionr.cloudstack.activities.CreateSecurityGroup"/>
+    <service ref="cloudstack_createSecurityGroup" auto-export="interfaces"/>
+
 </blueprint>

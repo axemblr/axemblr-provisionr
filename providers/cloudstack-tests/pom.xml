@@ -34,6 +34,14 @@
             <artifactId>provisionr-test-support</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jclouds.karaf</groupId>
+            <artifactId>jclouds-karaf</artifactId>
+            <version>${jclouds.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
