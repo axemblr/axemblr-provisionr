@@ -5,7 +5,6 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.os.OperatingSystem;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.util.BuilderWithOptions;
-import java.util.Map;
 
 public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
 
@@ -18,7 +17,8 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
     private int minSize;
     private int expectedSize;
 
-    private int bootstrapTimeInSeconds;
+    private boolean cacheBaseImage = false;
+    private int bootstrapTimeInSeconds = 15 * 60;
 
     @Override
     protected PoolBuilder getThis() {
@@ -55,6 +55,11 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
         return this;
     }
 
+    public PoolBuilder cacheBaseImage(boolean cacheBaseImage) {
+        this.cacheBaseImage = cacheBaseImage;
+        return this;
+    }
+
     public PoolBuilder bootstrapTimeInSeconds(int bootstrapTimeInSeconds) {
         this.bootstrapTimeInSeconds = bootstrapTimeInSeconds;
         return this;
@@ -62,6 +67,6 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
 
     public Pool createPool() {
         return new Pool(provider, network, operatingSystem, hardware, minSize,
-            expectedSize, bootstrapTimeInSeconds, buildOptions());
+            expectedSize, cacheBaseImage, bootstrapTimeInSeconds, buildOptions());
     }
 }
