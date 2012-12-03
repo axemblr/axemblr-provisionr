@@ -12,8 +12,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -23,6 +21,10 @@ import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 @RunWith(JUnit4TestRunner.class)
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
 public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
+
+    public AmazonProvisionrLiveTest() {
+        super(AmazonProvisionr.ID);
+    }
 
     @Configuration
     public Option[] configuration() throws Exception {
@@ -38,21 +40,13 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
     public void startProvisioningProcess() throws Exception {
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
-        Provider provider = getProviderFromSystemProperties("amazon");
+        Provider provider = collectProviderCredentialsFromSystemProperties()
+            .option("region", getProviderProperty("region", "us-east-1"))
+            .createProvider();
+
         Pool pool = Pool.builder().provider(provider).createPool();
 
         provisionr.startCreatePoolProcess(UUID.randomUUID().toString(), pool);
         TimeUnit.SECONDS.sleep(5);  // TODO replace with wait on process to finish
-    }
-
-    /**
-     * Get the provider connection details from system properties
-     */
-    protected Provider getProviderFromSystemProperties(String id) {
-        final String accessKey = System.getProperty("test." + id + ".provider.accessKey");
-        final String secretKey = System.getProperty("test." + id + ".provider.secretKey");
-//        final String region = System.getProperty("test." + id + ".provider.region");
-
-        return Provider.builder().id(id).accessKey(accessKey).secretKey(secretKey).createProvider();
     }
 }

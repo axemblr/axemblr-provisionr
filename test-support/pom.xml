@@ -23,7 +23,9 @@
             org.apache.karaf.tooling.exam.options,
             org.ops4j.pax.exam,
             org.ops4j.pax.exam.options,
-            org.ops4j.pax.exam.options.extra
+            org.ops4j.pax.exam.options.extra,
+            com.axemblr.provisionr.api.provider;version="[0.0.1, 1.0.0)",
+            com.google.common.base;version="[13.0, 14.0)"
         </osgi.import>
     </properties>
 
@@ -32,6 +34,12 @@
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>4.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>

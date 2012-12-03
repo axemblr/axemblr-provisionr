@@ -22,6 +22,10 @@ import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
 public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
+    public CloudStackProvisionrLiveTest() {
+        super(CloudStackProvisionr.ID);
+    }
+
     @Configuration
     public Option[] configuration() throws Exception {
         return new Option[]{
@@ -36,21 +40,13 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
     public void startProvisioningProcess() throws Exception {
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
-        Provider provider = getProviderFromSystemProperties("cloudstack");
+        Provider provider = collectProviderCredentialsFromSystemProperties()
+            // TODO: get more options as needed for CloudStack
+            .createProvider();
+
         Pool pool = Pool.builder().provider(provider).createPool();
 
         provisionr.startCreatePoolProcess(UUID.randomUUID().toString(), pool);
         TimeUnit.SECONDS.sleep(5);  // TODO replace with wait on process to finish
-    }
-
-    /**
-     * Get the provider connection details from system properties
-     */
-    protected Provider getProviderFromSystemProperties(String id) {
-        final String accessKey = System.getProperty("test." + id + ".provider.accessKey");
-        final String secretKey = System.getProperty("test." + id + ".provider.secretKey");
-//        final String region = System.getProperty("test." + id + ".provider.region");
-
-        return Provider.builder().id(id).accessKey(accessKey).secretKey(secretKey).createProvider();
     }
 }
