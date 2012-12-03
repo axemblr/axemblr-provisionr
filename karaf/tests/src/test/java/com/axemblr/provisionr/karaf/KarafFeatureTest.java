@@ -11,6 +11,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import org.ops4j.pax.exam.MavenUtils;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -18,6 +20,8 @@ import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+import org.osgi.framework.wiring.BundleRevision;
 
 /**
  * Test Axemblr Provisionr Feature installation in Apache Karaf.
@@ -37,6 +41,7 @@ public class KarafFeatureTest {
         return new Option[]{
             useDefaultKarafAsInProjectWithJunitBundles(),
             projectVersionAsSystemProperty(),
+            systemProperty("jclouds.version").value(MavenUtils.getArtifactVersion("org.jclouds.karaf", "jclouds-karaf"))
         };
     }
 
@@ -48,15 +53,26 @@ public class KarafFeatureTest {
             .type("xml")
             .getURL();
 
+        String jcloudsFeatureUrl = maven("org.jclouds.karaf", "jclouds-karaf")
+            .version(System.getProperty("jclouds.version"))
+            .classifier("features")
+            .type("xml")
+            .getURL();
+
         features.addRepository(new URI(url));
+        features.addRepository(new URI(jcloudsFeatureUrl));
         features.installFeature("axemblr-provisionr");
 
         assertInstalled("activiti");
+        assertInstalled("jclouds-api-cloudstack");
         assertInstalled("axemblr-provisionr");
 
         for (Bundle bundle : bundleContext.getBundles()) {
-            assertEquals("Bundle " + bundle.getSymbolicName() + " is not active",
-                Bundle.ACTIVE, bundle.getState());
+            // skip fragments, they can't be started
+            if (bundle.getHeaders().get(Constants.FRAGMENT_HOST) == null) {
+                assertEquals("Bundle " + bundle.getSymbolicName() + " is not active",
+                    Bundle.ACTIVE, bundle.getState());
+            }
         }
 
         // TODO check services are published as expected
