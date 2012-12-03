@@ -2,6 +2,7 @@ package com.axemblr.provisionr.test;
 
 import java.io.File;
 import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.keepRuntimeFolder;
 import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.logLevel;
 import org.apache.karaf.tooling.exam.options.LogLevelOption;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
@@ -42,6 +43,7 @@ public class KarafTests {
                 .karafVersion(karafVersion)
                 .name("Apache Karaf")
                 .unpackDirectory(new File("target/exam")))
+            .add(keepRuntimeFolder())
             .add(junitBundles())
             .add(logLevel(LogLevelOption.LogLevel.INFO));
     }
