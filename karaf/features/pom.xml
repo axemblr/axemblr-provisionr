@@ -123,6 +123,8 @@
                         <configuration>
                             <descriptors>
                                 <descriptor>file:${project.build.directory}/features.xml</descriptor>
+                                <descriptor>mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.version}/xml/features
+                                </descriptor>
                             </descriptors>
                             <features>
                                 <feature>axemblr-provisionr</feature>
