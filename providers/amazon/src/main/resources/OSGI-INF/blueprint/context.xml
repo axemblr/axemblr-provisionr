@@ -6,7 +6,8 @@
     </bean>
     <service ref="amazonService" interface="com.axemblr.provisionr.api.Provisionr"/>
 
-    <bean id="amazon_createSecurityGroup" class="com.axemblr.provisionr.amazon.activities.CreateSecurityGroup"/>
-    <service ref="amazon_createSecurityGroup" auto-export="interfaces"/>
+    <bean id="amazon_ensureSecurityGroupExists"
+          class="com.axemblr.provisionr.amazon.activities.EnsureSecurityGroupExists"/>
+    <service ref="amazon_ensureSecurityGroupExists" auto-export="interfaces"/>
 
 </blueprint>                     
