@@ -17,8 +17,8 @@ public class PoolTest {
             .id("aws-ec2").accessKey("access").secretKey("secret").createProvider();
 
         final Network network = Network.builder().addRules(
-            Rule.builder().anySource().port(22).createRule(),
-            Rule.builder().anySource().port(8088).createRule()
+            Rule.builder().anySource().port(22).tcp().createRule(),
+            Rule.builder().anySource().port(8088).tcp().createRule()
         ).createNetwork();
 
         final Software software = Software.builder()

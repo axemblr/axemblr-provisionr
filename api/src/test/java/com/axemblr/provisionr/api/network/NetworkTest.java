@@ -8,12 +8,12 @@ public class NetworkTest {
 
     @Test
     public void testSerialization() {
-        final Rule sshRule = Rule.builder().anySource().port(22).createRule();
+        final Rule sshRule = Rule.builder().anySource().port(22).tcp().createRule();
 
         Network network = Network.builder().type("default")
             .addRules(
                 sshRule,
-                Rule.builder().anySource().port(80).createRule(),
+                Rule.builder().anySource().port(80).tcp().createRule(),
                 Rule.builder().anySource().protocol(Protocol.ICMP).createRule())
             .createNetwork();
 
