@@ -39,7 +39,7 @@ public class ProvisionrLiveTestSupport {
      */
     protected ProviderBuilder collectProviderCredentialsFromSystemProperties() {
         return Provider.builder().id(provisionrId).accessKey(getProviderProperty("accessKey"))
-            .secretKey(getProviderProperty("accessKey")).endpoint(getProviderProperty("endpoint"));
+            .secretKey(getProviderProperty("secretKey")).endpoint(getProviderProperty("endpoint"));
     }
 
     /**

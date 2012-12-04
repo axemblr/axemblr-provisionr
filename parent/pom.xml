@@ -72,6 +72,8 @@
         <junit.version>4.10</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <jclouds.version>1.5.3_1</jclouds.version>
+        <commons-codec.version>1.3_5</commons-codec.version>
+        <http-client.version>4.1.2</http-client.version>
     </properties>
 
     <dependencyManagement>

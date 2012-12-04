@@ -7,12 +7,12 @@
         <startEvent id="start"/>
         <endEvent id="end"/>
 
-        <serviceTask id="createSecurityGroup" name="Create Security Group"
-                     activiti:delegateExpression="${amazon_createSecurityGroup}"
+        <serviceTask id="ensureSecurityGroupExists" name="Ensure Security Group Exists"
+                     activiti:delegateExpression="${amazon_ensureSecurityGroupExists}"
                      activiti:async="true">
         </serviceTask>
 
-        <sequenceFlow sourceRef="start" targetRef="createSecurityGroup"/>
-        <sequenceFlow sourceRef="createSecurityGroup" targetRef="end"/>
+        <sequenceFlow sourceRef="start" targetRef="ensureSecurityGroupExists"/>
+        <sequenceFlow sourceRef="ensureSecurityGroupExists" targetRef="end"/>
     </process>
 </definitions>

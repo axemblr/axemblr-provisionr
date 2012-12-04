@@ -50,6 +50,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
             .createProvider();
 
         final Network network = Network.builder().addRules(
+            Rule.builder().anySource().icmp().createRule(),
             Rule.builder().anySource().port(22).protocol(Protocol.TCP).createRule(),
             Rule.builder().anySource().port(80).protocol(Protocol.TCP).createRule()
         ).createNetwork();
