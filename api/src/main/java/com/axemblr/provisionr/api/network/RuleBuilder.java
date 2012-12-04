@@ -5,7 +5,7 @@ import com.google.common.collect.Ranges;
 
 public class RuleBuilder {
 
-    private String cidr;
+    private String cidr = Rule.CIDR_ALL;
     private Range<Integer> ports;
     private Protocol protocol;
 
@@ -32,6 +32,18 @@ public class RuleBuilder {
     public RuleBuilder protocol(Protocol protocol) {
         this.protocol = protocol;
         return this;
+    }
+
+    public RuleBuilder tcp() {
+        return protocol(Protocol.TCP);
+    }
+
+    public RuleBuilder udp() {
+        return protocol(Protocol.UDP);
+    }
+
+    public RuleBuilder icmp() {
+        return protocol(Protocol.ICMP);
     }
 
     public Rule createRule() {

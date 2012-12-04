@@ -1,6 +1,7 @@
 package com.axemblr.provisionr.api.network;
 
 import com.google.common.base.Objects;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Range;
 import java.io.Serializable;
 
@@ -17,9 +18,9 @@ public class Rule implements Serializable {
     private final Protocol protocol;
 
     Rule(String cidr, Range<Integer> ports, Protocol protocol) {
-        this.cidr = cidr;
         this.ports = ports;
-        this.protocol = protocol;
+        this.cidr = checkNotNull(cidr, "cidr is null");
+        this.protocol = checkNotNull(protocol, "protocol is null");
     }
 
     public String getCidr() {

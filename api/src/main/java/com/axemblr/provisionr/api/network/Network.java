@@ -15,12 +15,12 @@ public class Network implements Serializable {
     }
 
     private final String type;
-    private final Set<Rule> incoming;
+    private final Set<Rule> ingress;
     private final Map<String, String> options;
 
-    Network(String type, Set<Rule> incoming, Map<String, String> options) {
+    Network(String type, Set<Rule> ingress, Map<String, String> options) {
         this.type = Optional.fromNullable(type).or("default");
-        this.incoming = ImmutableSet.copyOf(incoming);
+        this.ingress = ImmutableSet.copyOf(ingress);
         this.options = ImmutableMap.copyOf(options);
     }
 
@@ -34,8 +34,8 @@ public class Network implements Serializable {
     /**
      * Set of rules for incoming packages
      */
-    public Set<Rule> getIncoming() {
-        return incoming;
+    public Set<Rule> getIngress() {
+        return ingress;
     }
 
     public Map<String, String> getOptions() {
@@ -43,12 +43,12 @@ public class Network implements Serializable {
     }
 
     public NetworkBuilder toBuilder() {
-        return builder().type(type).incoming(incoming).options(options);
+        return builder().type(type).ingress(ingress).options(options);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type, incoming, options);
+        return Objects.hashCode(type, ingress, options);
     }
 
     @Override
@@ -61,14 +61,14 @@ public class Network implements Serializable {
         }
         final Network other = (Network) obj;
         return Objects.equal(this.type, other.type)
-            && Objects.equal(this.incoming, other.incoming)
+            && Objects.equal(this.ingress, other.ingress)
             && Objects.equal(this.options, other.options);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this).omitNullValues()
-            .add("type", type).add("incoming", incoming)
+            .add("type", type).add("ingress", ingress)
             .add("options", options).toString();
     }
 }

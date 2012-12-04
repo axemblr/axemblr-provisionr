@@ -8,7 +8,7 @@ import java.util.Set;
 public class NetworkBuilder extends BuilderWithOptions<NetworkBuilder> {
 
     private String type = "default";
-    private ImmutableSet.Builder<Rule> incoming = ImmutableSet.<Rule>builder();
+    private ImmutableSet.Builder<Rule> ingress = ImmutableSet.<Rule>builder();
 
     @Override
     protected NetworkBuilder getThis() {
@@ -20,8 +20,8 @@ public class NetworkBuilder extends BuilderWithOptions<NetworkBuilder> {
         return this;
     }
 
-    public NetworkBuilder incoming(Set<Rule> incoming) {
-        this.incoming = ImmutableSet.<Rule>builder().addAll(incoming);
+    public NetworkBuilder ingress(Set<Rule> incoming) {
+        this.ingress = ImmutableSet.<Rule>builder().addAll(incoming);
         return this;
     }
 
@@ -30,11 +30,11 @@ public class NetworkBuilder extends BuilderWithOptions<NetworkBuilder> {
     }
 
     public NetworkBuilder addRules(Iterable<Rule> rules) {
-        this.incoming.addAll(rules);
+        this.ingress.addAll(rules);
         return this;
     }
 
     public Network createNetwork() {
-        return new Network(type, incoming.build(), buildOptions());
+        return new Network(type, ingress.build(), buildOptions());
     }
 }
