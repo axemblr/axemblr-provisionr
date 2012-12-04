@@ -44,11 +44,14 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
-                            <test.amazon.provider.accessKey>${test.amazon.provider.accessKey}
+                            <test.amazon.provider.accessKey>
+                                ${test.amazon.provider.accessKey}
                             </test.amazon.provider.accessKey>
-                            <test.amazon.provider.secretKey>${test.amazon.provider.secretKey}
+                            <test.amazon.provider.secretKey>
+                                ${test.amazon.provider.secretKey}
                             </test.amazon.provider.secretKey>
-                            <test.amazon.provider.region>${test.amazon.provider.region}
+                            <test.amazon.provider.region>
+                                ${test.amazon.provider.region}
                             </test.amazon.provider.region>
                         </systemPropertyVariables>
                     </configuration>

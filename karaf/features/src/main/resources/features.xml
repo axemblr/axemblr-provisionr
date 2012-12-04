@@ -29,6 +29,12 @@
     <feature name="axemblr-provisionr-amazon" version="${project.version}">
         <feature version="${project.version}">axemblr-provisionr-core</feature>
         <bundle dependency="true">
+            mvn:org.jbundle.util.osgi.wrapped/org.jbundle.util.osgi.wrapped.org.apache.http.client/${http-client.version}
+        </bundle>
+        <bundle dependency="true">
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/${commons-codec.version}
+        </bundle>
+        <bundle dependency="true">
             mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aws-java-sdk/${aws.sdk.version}
         </bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-amazon/${project.version}</bundle>
