@@ -23,6 +23,7 @@ API Endpoints
 
 GET /pools - list all pools
 GET /pools/<id> - retrieve a specific pool
+POST /pools/<id> - resize an existing pool
 POST /pools - create new pool
 DELETE /pools/<id> - delete pool
 
@@ -37,27 +38,48 @@ Maven as usual:
 $ mvn clean install 
 
 This will download dependencies, compile the sources and run
-unit tests and some of the integration tests. 
+unit tests and some of the integration tests (karaf feature install)
 
 How to create a distribution?
 -----------------------------
 
 You can build a binary release by running:
 
-$ mvn -DskipTests -Pwith-assembly -P\!with-integration-tests install
+$ ./scripts/create_distribution.sh 
 
 And you will find the .tar.gz file in:
 
 karaf/assembly/target/com.axemblr.provisionr-*.tar.gz
+
+How to run?
+-----------
+
+$ cd karaf/assembly/target/
+$ tar xvfz com.axemblr.provisionr-*.tar.gz
+$ cd com.axemblr.provisionr*
+$ bin/karaf
+
+TODO: do more branding, add commands to create pool, show how to use the REST endpoint 
+
+Supported cloud providers
+-------------------------
+
+We are working on making all this run as expected on Amazon EC2 & CloudStack. 
 
 How to test?
 ------------
 
 All the unit tests are executed as part of the normal build
 
-You can run tests against a set of cloud providers by running:
+You can run tests against a specific cloud provider for 
+individual activities by running:
 
-$ mvn -Pwith-live-tests clean install 
+$ ./scripts/activities_test.sh ID # (amazon or cloudstack)
+
+Or you can the test the pool management process as a whole 
+by running:
+
+$ ./scripts/process_test.sh ID # (amazon or cloudstack) 
 
 Your credentials should be in ~/.m2/settings.xml or sent as system properties
 
@@ -66,21 +88,16 @@ Your credentials should be in ~/.m2/settings.xml or sent as system properties
         <id>provisionr-credentials</id>
         <activation><activeByDefault>true</activeByDefault></activation>
         <properties>
+            <test.cloudstack.provider.accessKey>cs-key</test.cloudstack.provider.accessKey>
+            <test.cloudstack.provider.secretKey>cs-secret</test.cloudstack.provider.secretKey>
+            <test.cloudstack.provider.endpoint>http://api.example.com/v1/</test.cloudstack.provider.endpoint>
+
             <test.amazon.provider.accessKey>xxxxx</test.amazon.provider.accessKey>
             <test.amazon.provider.secretKey>xxxxx</test.amazon.provider.secretKey>
             <test.amazon.provider.region>us-east-1</test.amazon.provider.region>
         </properties>
     </profile>
 </profiles>
-
-How to run?
------------
-
-$ tar xvfz com.axemblr.provisionr-*.tar.gz
-$ cd com.axemblr.provisionr*
-$ bin/karaf
-
-TODO: do more branding, add commands to create pool, show how to use the REST endpoint 
 
 Thanks! 
 
