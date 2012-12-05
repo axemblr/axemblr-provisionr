@@ -10,4 +10,8 @@
           class="com.axemblr.provisionr.amazon.activities.EnsureSecurityGroupExists"/>
     <service ref="amazon_ensureSecurityGroupExists" auto-export="interfaces"/>
 
+    <bean id="amazon_deleteSecurityGroup"
+          class="com.axemblr.provisionr.amazon.activities.DeleteSecurityGroup"/>
+    <service ref="amazon_deleteSecurityGroup" auto-export="interfaces"/>
+
 </blueprint>                     

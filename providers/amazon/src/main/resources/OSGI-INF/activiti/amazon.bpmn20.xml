@@ -9,10 +9,14 @@
 
         <serviceTask id="ensureSecurityGroupExists" name="Ensure Security Group Exists"
                      activiti:delegateExpression="${amazon_ensureSecurityGroupExists}"
-                     activiti:async="true">
-        </serviceTask>
+                     activiti:async="true"/>
+
+        <serviceTask id="deleteSecurityGroup" name="Delete Security Group"
+                     activiti:delegateExpression="${amazon_deleteSecurityGroup}"
+                     activiti:async="true"/>
 
         <sequenceFlow sourceRef="start" targetRef="ensureSecurityGroupExists"/>
-        <sequenceFlow sourceRef="ensureSecurityGroupExists" targetRef="end"/>
+        <sequenceFlow sourceRef="ensureSecurityGroupExists" targetRef="deleteSecurityGroup"/>
+        <sequenceFlow sourceRef="deleteSecurityGroup" targetRef="end"/>
     </process>
 </definitions>
