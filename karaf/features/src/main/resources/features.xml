@@ -46,7 +46,7 @@
     </feature>
 
     <feature name="axemblr-provisionr-cloudstack" version="${project.version}">
-        <feature version="${jclouds.version}">jclouds-api-cloudstack</feature>
+        <feature version="${jclouds.karaf.version}">jclouds-api-cloudstack</feature>
         <feature version="${project.version}">axemblr-provisionr-core</feature>
         <bundle>mvn:com.axemblr.provisionr/provisionr-cloudstack/${project.version}</bundle>
     </feature>
