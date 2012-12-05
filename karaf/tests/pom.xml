@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>jclouds-karaf</artifactId>
-            <version>${jclouds.version}</version>
+            <version>${jclouds.karaf.version}</version>
             <type>xml</type>
             <classifier>features</classifier>
             <scope>test</scope>
