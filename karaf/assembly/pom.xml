@@ -13,11 +13,6 @@
     <name>Axemblr Provisionr :: Assembly</name>
     <artifactId>provisionr-assembly</artifactId>
 
-    <properties>
-        <activiti-karaf.version>1.0.0-SNAPSHOT</activiti-karaf.version>
-        <gson.version>1.7.1</gson.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.karaf</groupId>
@@ -27,15 +22,8 @@
         </dependency>
         <dependency>
             <groupId>org.activiti.karaf</groupId>
-            <artifactId>activiti-karaf-feature</artifactId>
-            <version>${activiti-karaf.version}</version>
-            <type>pom</type>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti.karaf</groupId>
             <artifactId>activiti-karaf-commands</artifactId>
-            <version>${activiti-karaf.version}</version>
+            <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
@@ -116,9 +104,6 @@
                                 </descriptor>
                                 <descriptor>
                                     mvn:com.axemblr.provisionr/provisionr-features/${project.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.activiti.karaf/activiti-karaf-feature/${activiti-karaf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
                                     mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.version}/xml/features

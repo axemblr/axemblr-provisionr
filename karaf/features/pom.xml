@@ -23,15 +23,16 @@
     <dependencies>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-amazon</artifactId>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-cloudstack</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti.karaf</groupId>
+            <artifactId>activiti-karaf-commands</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

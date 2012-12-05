@@ -21,10 +21,6 @@
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-core</artifactId>
         </dependency>
         <dependency>
@@ -49,9 +45,12 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <systemPropertyVariables>
-                            <test.cloudstack.provider.endpoint>${test.cloudstack.provider.endpoint}</test.cloudstack.provider.endpoint>
-                            <test.cloudstack.provider.accessKey>${test.cloudstack.provider.accessKey}</test.cloudstack.provider.accessKey>
-                            <test.cloudstack.provider.secretKey>${test.cloudstack.provider.secretKey}</test.cloudstack.provider.secretKey>
+                            <test.cloudstack.provider.endpoint>${test.cloudstack.provider.endpoint}
+                            </test.cloudstack.provider.endpoint>
+                            <test.cloudstack.provider.accessKey>${test.cloudstack.provider.accessKey}
+                            </test.cloudstack.provider.accessKey>
+                            <test.cloudstack.provider.secretKey>${test.cloudstack.provider.secretKey}
+                            </test.cloudstack.provider.secretKey>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

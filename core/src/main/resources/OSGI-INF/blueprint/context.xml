@@ -4,25 +4,25 @@
 
     <ext:property-placeholder/>
 
-    <cm:property-placeholder persistent-id="com.axemblr.provisionr.activiti"
+    <cm:property-placeholder persistent-id="com.axemblr.provisionr"
                              placeholder-prefix="$(" placeholder-suffix=")" update-strategy="reload">
         <cm:default-properties>
-            <cm:property name="db.url" value="jdbc:h2:mem:axemblr;DB_CLOSE_DELAY=-1"/>
-            <cm:property name="db.user" value="sa"/>
-            <cm:property name="db.password" value=""/>
-            <cm:property name="db.schemaUpdate" value="true"/>
+            <cm:property name="activiti.db.url" value="jdbc:h2:mem:axemblr;DB_CLOSE_DELAY=-1"/>
+            <cm:property name="activiti.db.user" value="sa"/>
+            <cm:property name="activiti.db.password" value=""/>
+            <cm:property name="activiti.db.schemaUpdate" value="true"/>
         </cm:default-properties>
     </cm:property-placeholder>
 
     <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource" scope="singleton">
-        <property name="URL" value="$(db.url)"/>
-        <property name="user" value="$(db.user)"/>
-        <property name="password" value="$(db.password)"/>
+        <property name="URL" value="$(activiti.db.url)"/>
+        <property name="user" value="$(activiti.db.user)"/>
+        <property name="password" value="$(activiti.db.password)"/>
     </bean>
 
     <bean id="configurationFactory" class="org.activiti.osgi.blueprint.ConfigurationFactory">
         <property name="dataSource" ref="dataSource"/>
-        <property name="databaseSchemaUpdate" value="$(db.schemaUpdate)"/>
+        <property name="databaseSchemaUpdate" value="$(activiti.db.schemaUpdate)"/>
         <property name="jobExecutorActivate" value="true"/>
     </bean>
 

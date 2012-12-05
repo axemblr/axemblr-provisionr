@@ -50,10 +50,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <osgi.framework.version>4.3.1</osgi.framework.version>
         <activiti.version>5.10</activiti.version>
         <h2.version>1.3.168</h2.version>
         <spring.version>3.1.3.RELEASE</spring.version>
-        <guava.version>13.0.1</guava.version>
+        <guava.version>13.0</guava.version>
+        <gson.version>1.7.1</gson.version>
         <slf4j.version>1.6.6</slf4j.version>
         <fest-assert.version>2.0M8</fest-assert.version>
         <pax.exam.version>2.6.0</pax.exam.version>
@@ -79,14 +81,20 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.axemblr.provisionr</groupId>
-                <artifactId>provisionr-api</artifactId>
-                <version>${project.version}</version>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>${osgi.framework.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.compendium</artifactId>
+                <version>${osgi.framework.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.axemblr.provisionr</groupId>
-                <artifactId>provisionr-engine</artifactId>
+                <artifactId>provisionr-api</artifactId>
                 <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
