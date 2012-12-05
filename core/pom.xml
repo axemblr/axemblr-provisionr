@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>Axemblr Provisionr :: Core</name>
+    <description>Includes Activiti Engine configuration and common building blocks</description>
     <artifactId>provisionr-core</artifactId>
     <packaging>bundle</packaging>
 
@@ -20,13 +21,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -53,7 +53,7 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Export-Packages>com.axemblr.provisionr.core</Export-Packages>
+                        <Export-Packages>com.axemblr.provisionr.core, *</Export-Packages>
                     </instructions>
                 </configuration>
             </plugin>

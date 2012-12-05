@@ -1,3 +1,0 @@
-[submodule "activiti/activiti-karaf"]
-	path = activiti/activiti-karaf
-	url = git@github.com:axemblr/activiti-karaf.git
