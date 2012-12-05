@@ -57,7 +57,8 @@ public class KarafFeatureTest {
         return new Option[]{
             useDefaultKarafAsInProjectWithJunitBundles(),
             projectVersionAsSystemProperty(),
-            systemProperty("jclouds.version").value(MavenUtils.getArtifactVersion("org.jclouds.karaf", "jclouds-karaf"))
+            systemProperty("jclouds.version").value(MavenUtils
+                .getArtifactVersion("org.jclouds.karaf", "jclouds-karaf"))
         };
     }
 

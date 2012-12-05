@@ -137,7 +137,7 @@
                                     mvn:com.axemblr.provisionr/provisionr-features/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.version}/xml/features
+                                    mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.karaf.version}/xml/features
                                 </descriptor>
                             </descriptors>
                             <features>

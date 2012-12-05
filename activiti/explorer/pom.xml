@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!--
+        Copyright 2012 Cisco Systems
+        
+        Licensed to the Apache Software Foundation (ASF) under one or more
+        contributor license agreements.  See the NOTICE file distributed with
+        this work for additional information regarding copyright ownership.
+        The ASF licenses this file to You under the Apache License, Version 2.0
+        (the "License"); you may not use this file except in compliance with
+        the License.  You may obtain a copy of the License at
+
+           http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+    -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.axemblr.provisionr</groupId>
+        <artifactId>provisionr-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../parent</relativePath>
+    </parent>
+
+    <groupId>org.activiti.karaf</groupId>
+    <artifactId>activiti-karaf-web-explorer</artifactId>
+    <packaging>war</packaging>
+
+    <name>Activiti Karaf :: Web Explorer</name>
+    <description>Activiti Explorer Web Application As OGSi War</description>
+    <url>http://activiti.org</url>
+
+    <properties>
+        <activiti.osgi.version.clean>${activiti.version}</activiti.osgi.version.clean>
+        <activiti.osgi.dynamic>*</activiti.osgi.dynamic>
+        <activiti.karaf.no.import.pkg>
+            !org.activiti.explorer.*,
+            !org.activiti.karaf.web.explorer.*,
+            !VAADIN.theams.activiti.*
+        </activiti.karaf.no.import.pkg>
+        <activiti.osgi.import.before.defaults>
+            org.springframework.beans.*;version="0.0.0",
+            org.springframework.context.*;version="0.0.0",
+            org.springframework.stereotype.*;version="0.0.0",
+            org.springframework.jdbc.*;version="0.0.0",
+            VAADIN.*;version="0.0.0",
+        </activiti.osgi.import.before.defaults>
+        <activiti.osgi.export.pkg>
+            org.activiti.explorer,
+            org.activiti.explorer.demo,
+            org.activiti.explorer.ui.login,
+            org.activiti.explorer.form,
+            org.activiti.explorer.navigation,
+            org.activiti.explorer.ui.content,
+            org.activiti.explorer.ui.form,
+            org.activiti.explorer.ui.variable,
+            org.activiti.explorer.cache,
+            org.activiti.explorer.ui,
+            org.activiti.explorer.servlet,
+            org.activiti.karaf.web.explorer
+        </activiti.osgi.export.pkg>
+        <activiti.artifact>
+            org.activiti.karaf.web.explorer
+        </activiti.artifact>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.osgi</groupId>
+            <artifactId>spring-osgi-web</artifactId>
+            <version>${spring.osgi.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+            <version>${activiti.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-webapp-explorer2</artifactId>
+            <version>${activiti.version}</version>
+            <type>war</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin</artifactId>
+            <version>${vaadin.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.thebuzzmedia</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>3.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-vadin</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.vaadin</groupId>
+                                    <artifactId>vaadin</artifactId>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${project.build.directory}/${project.artifactId}-${project.version}
+                                    </outputDirectory>
+                                    <includes>VAADIN/widgetsets/**/*.*</includes>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}
+                            </outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-explorer2</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.activiti</groupId>
+                                    <artifactId>activiti-webapp-explorer2</artifactId>
+                                    <version>${activiti.version}</version>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/unpacked-classes</outputDirectory>
+                                    <includes>WEB-INF/classes/**/*.*</includes>
+                                    <excludes>
+                                        WEB-INF/classes/db.properties,WEB-INF/classes/logging.properties,WEB-INF/classes/activiti.cfg.xml
+                                    </excludes>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/unpacked-classes</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-unpacked-classes-explorer2</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/unpacked-classes/WEB-INF/classes</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>**/*.*</include>
+                                        <include>**/*</include>
+                                        <include>**/.*</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dumpClasspath>${project.build.directory}/bundle-classpath.txt</dumpClasspath>
+                    <dumpInstructions>${project.build.directory}/bundle-instructions.txt</dumpInstructions>
+                    <manifestLocation>${project.build.directory}</manifestLocation>
+                    <supportedProjectTypes>
+                        <supportedProjectType>jar</supportedProjectType>
+                        <supportedProjectType>bundle</supportedProjectType>
+                        <supportedProjectType>war</supportedProjectType>
+                    </supportedProjectTypes>
+                    <instructions>
+                        <Embed-Directory>WEB-INF/lib</Embed-Directory>
+                        <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>
+                        <Webapp-Context>activiti-explorer</Webapp-Context>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
+                    </archive>
+                    <packagingExcludes>WEB-INF/lib/*</packagingExcludes>
+                    <overlays>
+                        <overlay>
+                            <groupId>org.activiti</groupId>
+                            <artifactId>activiti-webapp-explorer2</artifactId>
+                            <type>war</type>
+                            <excludes>
+                                <exclude>WEB-INF/lib/*</exclude>
+                                <exclude>WEB-INF/classes/db.properties</exclude>
+                                <exclude>WEB-INF/classes/logging.properties</exclude>
+                                <exclude>WEB-INF/web.xml</exclude>
+                                <exclude>WEB-INF/applicationContext.xml</exclude>
+                                <exclude>WEB-INF/activiti-ui-context.xml</exclude>
+                            </excludes>
+                        </overlay>
+                        <overlay>
+                            <excludes>
+                                <exclude>WEB-INF/lib/*</exclude>
+                            </excludes>
+                        </overlay>
+                    </overlays>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>buzzmedia</id>
+            <url>http://maven.thebuzzmedia.com</url>
+            <!-- ImageScalr -->
+        </repository>
+    </repositories>
+
+</project>
