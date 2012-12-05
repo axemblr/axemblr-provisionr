@@ -15,14 +15,14 @@
 
     <modules>
         <module>parent</module>
-        <module>core</module>
         <module>api</module>
+        <module>core</module>
         <module>console</module>
-        <module>activiti/engine</module>
+        <module>test-support</module>
         <module>providers/amazon</module>
         <module>providers/cloudstack</module>
         <module>karaf/features</module>
-        <module>test-support</module>
+        <module>activiti/commands</module>
     </modules>
 
     <profiles>
@@ -41,9 +41,6 @@
             <id>with-assembly</id>
             <modules>
                 <module>karaf/assembly</module>
-                <module>activiti/activiti-karaf/activiti-karaf-parent</module>
-                <module>activiti/activiti-karaf/activiti-karaf-feature</module>
-                <module>activiti/activiti-karaf/activiti-karaf-commands</module>
             </modules>
         </profile>
     </profiles>

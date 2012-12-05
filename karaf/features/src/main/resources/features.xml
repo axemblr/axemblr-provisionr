@@ -18,12 +18,17 @@
         <bundle>mvn:org.activiti/activiti-osgi/${activiti.version}</bundle>
     </feature>
 
+    <feature name="activiti-karaf-commands" version="${project.version}">
+        <feature version="${activiti.version}">activiti</feature>
+        <bundle dependency="true">mvn:com.google.code.gson/gson/${gson.version}</bundle>
+        <bundle>mvn:org.activiti.karaf/activiti-karaf-commands/${project.version}</bundle>
+    </feature>
+
     <feature name="axemblr-provisionr-core" version="${project.version}">
         <feature version="${activiti.version}">activiti</feature>
         <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-api/${project.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-core/${project.version}</bundle>
-        <bundle>mvn:com.axemblr.provisionr/provisionr-engine/${project.version}</bundle>
     </feature>
 
     <feature name="axemblr-provisionr-amazon" version="${project.version}">
@@ -47,6 +52,7 @@
     </feature>
 
     <feature name="axemblr-provisionr" version="${project.version}">
+        <feature version="${project.version}">activiti-karaf-commands</feature>
         <feature version="${project.version}">axemblr-provisionr-amazon</feature>
         <feature version="${project.version}">axemblr-provisionr-cloudstack</feature>
     </feature>
