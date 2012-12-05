@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn -DskipTests -P\!with-integration-tests -Pwith-assembly clean install
+mvn -DskipTests -DskipKarafTests -Pwith-assembly clean install
