@@ -3,21 +3,14 @@ package com.axemblr.provisionr.cloudstack.activities;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
-import com.axemblr.provisionr.api.provider.Provider;
-import com.axemblr.provisionr.cloudstack.CloudStackProvisionr;
 import com.axemblr.provisionr.cloudstack.functions.ConvertIngressRuleToRule;
-import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
-import org.jclouds.cloudstack.CloudStackAsyncClient;
-import org.jclouds.cloudstack.CloudStackClient;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 import static org.jclouds.cloudstack.options.ListSecurityGroupsOptions.Builder.named;
-import org.jclouds.rest.RestContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,33 +19,24 @@ import static org.mockito.Mockito.when;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateSecurityGroupLiveTest extends ProvisionrLiveTestSupport {
+public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<CreateSecurityGroup> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CreateSecurityGroupLiveTest.class);
 
-    private final CloudStackActivity ACTIVITY = new CreateSecurityGroup();
-
-    private final String BUSINESS_KEY = "j-" + UUID.randomUUID().toString();
     private final String SECURITY_GROUP_NAME = "network-" + BUSINESS_KEY;
 
-    private Provider provider;
-    private RestContext<CloudStackClient, CloudStackAsyncClient> context;
-
-    public CreateSecurityGroupLiveTest() {
-        super(CloudStackProvisionr.ID);
-    }
-
+    @Override
     @Before
     public void setUp() throws Exception {
-        provider = collectProviderCredentialsFromSystemProperties().createProvider();
-        LOG.info("Using provider {}", provider);
-        context = ACTIVITY.newCloudStackClient(provider);
+        super.setUp();
         deleteSecurityGroupIfExists();
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         deleteSecurityGroupIfExists();
+        super.tearDown();
     }
 
     private void deleteSecurityGroupIfExists() {
@@ -83,9 +67,9 @@ public class CreateSecurityGroupLiveTest extends ProvisionrLiveTestSupport {
 
         when(execution.getVariable("pool")).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        ACTIVITY.execute(execution);
-        assertSecurityGroupExistsWithRules(CreateSecurityGroup.getSecurityGroupByName(
-            context.getApi().getSecurityGroupClient(), SECURITY_GROUP_NAME), ingressRules);
+        activity.execute(execution);
+        assertSecurityGroupExistsWithRules(SecurityGroups.getByName(
+            context.getApi(), SECURITY_GROUP_NAME), ingressRules);
     }
 
     private void assertSecurityGroupExistsWithRules(SecurityGroup securityGroup, ImmutableSet<Rule> ingressRules) {

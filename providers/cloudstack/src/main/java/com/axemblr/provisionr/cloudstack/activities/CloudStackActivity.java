@@ -2,6 +2,7 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.io.Closeables;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
@@ -34,7 +35,7 @@ public abstract class CloudStackActivity implements JavaDelegate {
 
         RestContext<CloudStackClient, CloudStackAsyncClient> restContext = null;
         try {
-            Pool pool = (Pool) execution.getVariable("pool");
+            Pool pool = (Pool) checkNotNull(execution.getVariable("pool"), "Please add 'pool' variable to the process!");
             // delegate
             restContext = newCloudStackClient(pool.getProvider());
             execute(restContext.getApi(), pool, execution);

@@ -1,6 +1,8 @@
 package com.axemblr.provisionr.cloudstack;
 
 import com.axemblr.provisionr.api.Provisionr;
+import com.axemblr.provisionr.api.network.Network;
+import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import static com.axemblr.provisionr.test.KarafTests.installProvisionrFeatures;
@@ -8,7 +10,6 @@ import static com.axemblr.provisionr.test.KarafTests.installProvisionrTestSuppor
 import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
 import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
-import com.google.inject.Inject;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
@@ -47,13 +48,15 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         TimeUnit.SECONDS.sleep(5);
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
-        Provider provider = collectProviderCredentialsFromSystemProperties()
+        final Provider provider = collectProviderCredentialsFromSystemProperties()
             // TODO: get more options as needed for CloudStack
             .createProvider();
-
-        Pool pool = Pool.builder().provider(provider).createPool();
+        final Network network = Network.builder()
+            .addRules(Rule.builder().anySource().tcp().port(22).cidr("192.0.0.0/24").createRule())
+            .createNetwork();
+        Pool pool = Pool.builder().network(network).provider(provider).createPool();
 
         provisionr.startCreatePoolProcess(UUID.randomUUID().toString(), pool);
-        TimeUnit.SECONDS.sleep(5);  // TODO replace with wait on process to finish
+        TimeUnit.SECONDS.sleep(10);  // TODO replace with wait on process to finish
     }
 }

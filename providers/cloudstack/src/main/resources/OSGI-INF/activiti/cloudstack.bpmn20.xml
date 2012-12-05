@@ -10,8 +10,12 @@
         <serviceTask id="createSecurityGroup" name="Create Security Group"
                      activiti:delegateExpression="${cloudstack_createSecurityGroup}"
                      activiti:async="true"/>
+        <serviceTask id="deleteSecurityGroup" name="Delete Security group"
+                     activiti:delegateExpression="${cloudstack_deleteSecurityGroup}"
+                     activiti:async="true"/>
 
         <sequenceFlow sourceRef="start" targetRef="createSecurityGroup"/>
-        <sequenceFlow sourceRef="createSecurityGroup" targetRef="end"/>
+        <sequenceFlow sourceRef="createSecurityGroup" targetRef="deleteSecurityGroup"/>
+        <sequenceFlow sourceRef="deleteSecurityGroup" targetRef="end"/>
     </process>
 </definitions>
