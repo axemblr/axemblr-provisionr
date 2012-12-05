@@ -7,6 +7,11 @@ then
     echo "Make sure you add your credentials to ~/.m2/settings.xml"
     echo "See README for documentation"
 else
-    mvn -DskipTests -P\!with-integration-tests clean install && \
-      (cd providers/$1-tests && mvn -Pwith-live-tests clean install)
+    if [ -d "providers/$1" ]; then
+        mvn -DskipTests -DskipKaraf -DskipKarafTests clean install && \
+         (cd providers/$1 && mvn -Pwith-live-tests clean install)
+    else
+        echo "Folder not found: providers/$1"
+    fi
 fi 
+
