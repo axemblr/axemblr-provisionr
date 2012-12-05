@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axemblr Provisionr :: OSGi Test Support</name>
+    <name>Axemblr Provisionr :: Test Support</name>
     <artifactId>provisionr-test-support</artifactId>
     <packaging>bundle</packaging>
 

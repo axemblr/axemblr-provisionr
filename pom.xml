@@ -21,15 +21,28 @@
         <module>test-support</module>
         <module>providers/amazon</module>
         <module>providers/cloudstack</module>
-        <module>karaf/features</module>
-        <module>activiti/commands</module>
     </modules>
 
     <profiles>
         <profile>
-            <id>with-integration-tests</id>
+            <id>with-karaf</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!skipKaraf</name>
+                </property>
+            </activation>
+            <modules>
+                <module>activiti/commands</module>
+                <!--<module>activiti/explorer</module>-->
+                <module>karaf/features</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>with-karaf-tests</id>
+            <activation>
+                <property>
+                    <name>!skipKarafTests</name>
+                </property>
             </activation>
             <modules>
                 <module>karaf/tests</module>
