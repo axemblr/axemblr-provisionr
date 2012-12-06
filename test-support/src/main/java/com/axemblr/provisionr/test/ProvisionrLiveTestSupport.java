@@ -44,8 +44,10 @@ public class ProvisionrLiveTestSupport {
      * Collect the provider connection details from system properties
      */
     protected ProviderBuilder collectProviderCredentialsFromSystemProperties() {
-        return Provider.builder().id(provisionrId).accessKey(getProviderProperty("accessKey"))
-            .secretKey(getProviderProperty("secretKey")).endpoint(getProviderProperty("endpoint"));
+        return Provider.builder().id(provisionrId)
+            .accessKey(getProviderProperty("accessKey"))
+            .secretKey(getProviderProperty("secretKey"))
+            .endpoint(Optional.fromNullable(getProviderProperty("endpoint")));
     }
 
     /**

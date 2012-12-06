@@ -2,6 +2,7 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.io.Closeables;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -47,14 +48,11 @@ public abstract class CloudStackActivity implements JavaDelegate {
 
     /**
      * Creates a new {@link CloudStackClient} with {@link Provider} supplied credentials.
-     *
-     * @param provider
-     * @return
      */
     RestContext<CloudStackClient, CloudStackAsyncClient> newCloudStackClient(Provider provider) {
-        return ContextBuilder
-            .newBuilder(new CloudStackApiMetadata())
-            .endpoint(provider.getEndpoint())
+        checkArgument(provider.getEndpoint().isPresent(), "please specify an endpoint for this provider");
+        return ContextBuilder.newBuilder(new CloudStackApiMetadata())
+            .endpoint(provider.getEndpoint().get())
             .credentials(provider.getAccessKey(), provider.getSecretKey())
             .build(CloudStackApiMetadata.CONTEXT_TOKEN);
     }

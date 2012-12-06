@@ -22,7 +22,7 @@ public enum ConvertIngressRuleToRule implements Function<IngressRule, Rule> {
             rule = Rule.builder()
                 .anySource()
                 .protocol(Protocol.valueOf(input.getProtocol().toUpperCase()))
-                .ports(Ranges.closed(input.getStartPort(), input.getEndPort()))
+                .ports(input.getStartPort(), input.getEndPort())
                 .cidr(input.getCIDR())
                 .createRule();
         }

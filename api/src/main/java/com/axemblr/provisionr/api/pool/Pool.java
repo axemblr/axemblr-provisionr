@@ -6,6 +6,8 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Objects;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.util.Map;
@@ -35,11 +37,15 @@ public class Pool implements Serializable {
          int minSize, int expectedSize, boolean cacheBaseImage, int bootstrapTimeInSeconds,
          Map<String, String> options
     ) {
-        this.provider = provider;
-        this.network = network;
-        this.adminAccess = adminAccess;
-        this.software = software;
-        this.hardware = hardware;
+        checkArgument(minSize > 0, "minSize should be positive");
+        checkArgument(minSize <= expectedSize, "minSize should be smaller or equal to expectedSize");
+        checkArgument(bootstrapTimeInSeconds > 0, "bootstrapTimeInSeconds should be positive");
+
+        this.provider = checkNotNull(provider, "provider is null");
+        this.network = checkNotNull(network, "network is null");
+        this.adminAccess = checkNotNull(adminAccess, "adminAccess is null");
+        this.software = checkNotNull(software, "software is null");
+        this.hardware = checkNotNull(hardware, "hardware is null");
         this.minSize = minSize;
         this.expectedSize = expectedSize;
         this.cacheBaseImage = cacheBaseImage;

@@ -13,7 +13,7 @@ public enum ConvertRuleToIpPermission implements Function<Rule, IpPermission> {
             .withIpProtocol(rule.getProtocol().toString().toLowerCase())
             .withIpRanges(rule.getCidr());
 
-        if (rule.getPorts() != null) {
+        if (!rule.getPorts().isEmpty()) {
             permission.withFromPort(rule.getPorts().lowerEndpoint())
                 .withToPort(rule.getPorts().upperEndpoint());
         } else {
