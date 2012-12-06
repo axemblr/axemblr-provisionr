@@ -9,6 +9,7 @@ import com.amazonaws.services.ec2.model.DescribeSecurityGroupsRequest;
 import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.RevokeSecurityGroupIngressRequest;
+import com.axemblr.provisionr.amazon.SecurityGroups;
 import com.axemblr.provisionr.amazon.functions.ConvertRuleToIpPermission;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.pool.Pool;
@@ -29,7 +30,7 @@ public class EnsureSecurityGroupExists extends AmazonActivity {
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) {
         final String businessKey = execution.getProcessBusinessKey();
-        final String groupName = "network-" + businessKey;
+        final String groupName = SecurityGroups.formatNameFromBusinessKey(businessKey);
 
         try {
             LOG.info(">> Creating Security Group with name {}", groupName);
