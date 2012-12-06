@@ -3,12 +3,15 @@
     <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
 
     <bean id="cloudstackService" class="com.axemblr.provisionr.cloudstack.CloudStackProvisionr">
-        <argument ref="processEngine" />
+        <argument ref="processEngine"/>
     </bean>
 
     <service ref="cloudstackService" interface="com.axemblr.provisionr.api.Provisionr"/>
 
     <bean id="cloudstack_createSecurityGroup" class="com.axemblr.provisionr.cloudstack.activities.CreateSecurityGroup"/>
     <service ref="cloudstack_createSecurityGroup" auto-export="interfaces"/>
+
+    <bean id="cloudstack_deleteSecurityGroup" class="com.axemblr.provisionr.cloudstack.activities.DeleteSecurityGroup"/>
+    <service ref="cloudstack_deleteSecurityGroup" auto-export="interfaces"/>
 
 </blueprint>
