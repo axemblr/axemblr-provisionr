@@ -19,6 +19,7 @@ public class NetworkTest {
 
         assertThat(network.getType()).isEqualTo("default");
         assertThat(network.getIngress()).contains(sshRule);
+        assertThat(network.toBuilder().createNetwork()).isEqualTo(network);
 
         assertSerializable(network, Network.class);
     }

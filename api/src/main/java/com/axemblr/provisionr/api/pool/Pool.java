@@ -1,5 +1,6 @@
 package com.axemblr.provisionr.api.pool;
 
+import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.software.Software;
@@ -18,6 +19,7 @@ public class Pool implements Serializable {
     private final Provider provider;
     private final Network network;
 
+    private final AdminAccess adminAccess;
     private final Software software;
     private final Hardware hardware;
 
@@ -29,11 +31,13 @@ public class Pool implements Serializable {
 
     private final Map<String, String> options;
 
-    Pool(Provider provider, Network network, Software software, Hardware hardware,
-         int minSize, int expectedSize, boolean cacheBaseImage,
-         int bootstrapTimeInSeconds, Map<String, String> options) {
+    Pool(Provider provider, Network network, AdminAccess adminAccess, Software software, Hardware hardware,
+         int minSize, int expectedSize, boolean cacheBaseImage, int bootstrapTimeInSeconds,
+         Map<String, String> options
+    ) {
         this.provider = provider;
         this.network = network;
+        this.adminAccess = adminAccess;
         this.software = software;
         this.hardware = hardware;
         this.minSize = minSize;
@@ -49,6 +53,10 @@ public class Pool implements Serializable {
 
     public Network getNetwork() {
         return network;
+    }
+
+    public AdminAccess getAdminAccess() {
+        return adminAccess;
     }
 
     public Software getSoftware() {
@@ -83,14 +91,14 @@ public class Pool implements Serializable {
     }
 
     public PoolBuilder toBuilder() {
-        return builder().provider(provider).network(network).software(software)
+        return builder().provider(provider).network(network).adminAccess(adminAccess).software(software)
             .hardware(hardware).minSize(minSize).cacheBaseImage(cacheBaseImage).expectedSize(expectedSize)
             .bootstrapTimeInSeconds(bootstrapTimeInSeconds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(provider, network, software, hardware,
+        return Objects.hashCode(provider, network, adminAccess, software, hardware,
             minSize, expectedSize, cacheBaseImage, bootstrapTimeInSeconds, options);
     }
 
@@ -104,7 +112,7 @@ public class Pool implements Serializable {
         }
         final Pool other = (Pool) obj;
         return Objects.equal(this.provider, other.provider) && Objects.equal(this.network, other.network)
-            && Objects.equal(this.software, other.software)
+            && Objects.equal(this.adminAccess, other.adminAccess) && Objects.equal(this.software, other.software)
             && Objects.equal(this.hardware, other.hardware) && Objects.equal(this.minSize, other.minSize)
             && Objects.equal(this.expectedSize, other.expectedSize)
             && this.cacheBaseImage == other.cacheBaseImage
@@ -117,6 +125,7 @@ public class Pool implements Serializable {
         return "Pool{" +
             "provider=" + provider +
             ", network=" + network +
+            ", adminAccess=" + adminAccess +
             ", software=" + software +
             ", hardware=" + hardware +
             ", minSize=" + minSize +
