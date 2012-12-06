@@ -14,6 +14,7 @@ public class ProviderTest {
 
         assertThat(provider.getAccessKey()).isEqualTo("access");
         assertThat(provider.getOptions()).containsKey("location");
+        assertThat(provider.toBuilder().createProvider()).isEqualTo(provider);
 
         assertSerializable(provider, Provider.class);
     }
