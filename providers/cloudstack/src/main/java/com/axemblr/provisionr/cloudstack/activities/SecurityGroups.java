@@ -1,6 +1,5 @@
 package com.axemblr.provisionr.cloudstack.activities;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -19,17 +18,9 @@ public class SecurityGroups {
     }
 
     static SecurityGroup getByName(CloudStackClient cloudStackClient, String securityGroup) {
-        try {
-            return Iterables.getOnlyElement(cloudStackClient
-                .getSecurityGroupClient()
-                .listSecurityGroups(named(securityGroup)));
-        } catch (NoSuchElementException e1) {
-            throw Throwables.propagate(e1);
-        } catch (IllegalArgumentException e2) {
-            throw new NoSuchElementException(e2.getMessage());
-        } catch (Exception e) {
-            throw Throwables.propagate(e);
-        }
+        return Iterables.getOnlyElement(cloudStackClient
+            .getSecurityGroupClient()
+            .listSecurityGroups(named(securityGroup)));
     }
 
     static Set<SecurityGroup> getAll(CloudStackClient cloudStackClient) {
@@ -42,7 +33,7 @@ public class SecurityGroups {
             LOG.info("Deleting SecurityGroup {}", securityGroup.getName());
             cloudStackClient.getSecurityGroupClient().deleteSecurityGroup(securityGroup.getId());
         } catch (NoSuchElementException e) {
-            LOG.debug("Exception retrieving SecurityGroup (most likely it does not yet exist){}: {}", securityGroupName, e);
+            LOG.warn("Exception retrieving SecurityGroup (most likely it does not yet exist){}: {}", securityGroupName, e);
         }
     }
 }

@@ -4,9 +4,7 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.pool.Pool;
 import java.util.NoSuchElementException;
 import org.activiti.engine.delegate.DelegateExecution;
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,12 +15,6 @@ public class DeleteSecurityGroupLiveTest extends CloudStackActivityLiveTest<Dele
 
     private final Logger LOG = LoggerFactory.getLogger(DeleteSecurityGroupLiveTest.class);
     private final String SECURITY_GROUP_NAME = SecurityGroups.formatSecurityGroupNameFromProcessBusinessKey(BUSINESS_KEY);
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-    }
 
     @Test
     public void testDeleteSecurityGroup() throws Exception {
@@ -41,8 +33,8 @@ public class DeleteSecurityGroupLiveTest extends CloudStackActivityLiveTest<Dele
         try {
             SecurityGroups.getByName(context.getApi(), SECURITY_GROUP_NAME);
             fail("Does not throw Exception as it should have");
-        } catch (Exception e) {
-            assertThat(e instanceof NoSuchElementException).isEqualTo(true);
+        } catch (NoSuchElementException e) {
+            LOG.info("Exception thrown. Test passed.");
         }
     }
 }

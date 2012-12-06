@@ -33,7 +33,8 @@ public class ProvisionrLiveTestSupport {
         tracker.open(true);
 
         try {
-            return checkNotNull(tracker.waitForService(timeout), "OSGi Service not available");
+            return checkNotNull(tracker.waitForService(timeout), "OSGi Service not available "
+                + klass.getCanonicalName());
         } finally {
             tracker.close();
         }

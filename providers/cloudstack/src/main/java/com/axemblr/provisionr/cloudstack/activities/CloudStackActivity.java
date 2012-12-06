@@ -35,7 +35,7 @@ public abstract class CloudStackActivity implements JavaDelegate {
 
         RestContext<CloudStackClient, CloudStackAsyncClient> restContext = null;
         try {
-            Pool pool = (Pool) checkNotNull(execution.getVariable("pool"), "Please add 'pool' variable to the process!");
+            Pool pool = (Pool) checkNotNull(execution.getVariable("pool"), "Please add 'pool' variable to the process");
             // delegate
             restContext = newCloudStackClient(pool.getProvider());
             execute(restContext.getApi(), pool, execution);

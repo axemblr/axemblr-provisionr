@@ -18,6 +18,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Creates a CloudStack {@link SecurityGroup} with specified rules. If a SecurityGroup with the same name exists,
  * it will be deleted first.
+ * <p/>
+ * TODO: Cred ca trebuie schimbata abordarea. Daca nu proces exista trebuie doar modificate regurile.
+ * Un grup existent nu poate sa fie sters daca contine masini.
  */
 public class CreateSecurityGroup extends CloudStackActivity {
 
@@ -42,8 +45,7 @@ public class CreateSecurityGroup extends CloudStackActivity {
 
     static void createSecurityGroupWithRules(CloudStackClient cloudStackClient, Network network, String securityGroupName) {
         SecurityGroupClient securityGroupClient = cloudStackClient.getSecurityGroupClient();
-        securityGroupClient.createSecurityGroup(securityGroupName);
-        SecurityGroup securityGroup = SecurityGroups.getByName(cloudStackClient, securityGroupName);
+        SecurityGroup securityGroup = securityGroupClient.createSecurityGroup(securityGroupName);
 
         for (Rule rule : network.getIngress()) {
             if (rule.getProtocol() == Protocol.ICMP) {

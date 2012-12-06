@@ -52,7 +52,7 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
             // TODO: get more options as needed for CloudStack
             .createProvider();
         final Network network = Network.builder()
-            .addRules(Rule.builder().anySource().tcp().port(22).cidr("192.0.0.0/24").createRule())
+            .addRules(Rule.builder().anySource().tcp().port(22).createRule())
             .createNetwork();
         Pool pool = Pool.builder().network(network).provider(provider).createPool();
 
