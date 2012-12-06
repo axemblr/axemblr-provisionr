@@ -15,6 +15,11 @@ public class ProvisionrLiveTestSupport {
 
     protected final String provisionrId;
 
+    /**
+     * Supply the provisionrId to acquire proper credentials from System Properties.
+     *
+     * @param provisionrId
+     */
     public ProvisionrLiveTestSupport(String provisionrId) {
         this.provisionrId = checkNotNull(provisionrId, "provisionrId is null");
     }
@@ -28,7 +33,8 @@ public class ProvisionrLiveTestSupport {
         tracker.open(true);
 
         try {
-            return tracker.waitForService(timeout);
+            return checkNotNull(tracker.waitForService(timeout), "OSGi Service not available "
+                + klass.getCanonicalName());
         } finally {
             tracker.close();
         }
