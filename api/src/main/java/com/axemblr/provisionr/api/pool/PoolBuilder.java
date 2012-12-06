@@ -1,16 +1,19 @@
 package com.axemblr.provisionr.api.pool;
 
+import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.util.BuilderWithOptions;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
 
     private Provider provider;
     private Network network;
 
+    private AdminAccess adminAccess;
     private Software software;
     private Hardware hardware;
 
@@ -32,6 +35,11 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
 
     public PoolBuilder network(Network network) {
         this.network = network;
+        return this;
+    }
+
+    public PoolBuilder adminAccess(AdminAccess adminAccess) {
+        this.adminAccess = checkNotNull(adminAccess, "adminAccess is null");
         return this;
     }
 
@@ -66,7 +74,7 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
     }
 
     public Pool createPool() {
-        return new Pool(provider, network, software, hardware, minSize,
+        return new Pool(provider, network, adminAccess, software, hardware, minSize,
             expectedSize, cacheBaseImage, bootstrapTimeInSeconds, buildOptions());
     }
 }
