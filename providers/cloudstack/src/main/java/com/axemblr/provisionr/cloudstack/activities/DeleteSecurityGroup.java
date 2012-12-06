@@ -15,6 +15,4 @@ public class DeleteSecurityGroup extends CloudStackActivity {
         String securityGroupName = SecurityGroups.formatSecurityGroupNameFromProcessBusinessKey(execution.getProcessBusinessKey());
         SecurityGroups.deleteByName(cloudStackClient, securityGroupName);
     }
-
-
 }

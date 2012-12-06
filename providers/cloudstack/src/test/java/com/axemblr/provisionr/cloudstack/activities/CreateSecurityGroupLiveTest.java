@@ -25,6 +25,13 @@ public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<Crea
 
     private final String SECURITY_GROUP_NAME = "network-" + BUSINESS_KEY;
 
+    private final ImmutableSet<Rule> ingressRules = ImmutableSet.of(
+        Rule.builder().anySource().icmp().createRule(),
+        Rule.builder().anySource().tcp().port(22).createRule(),
+        Rule.builder().anySource().udp().port(53).createRule());
+
+    private final Network network = Network.builder().ingress(ingressRules).createNetwork();
+
     @Override
     @Before
     public void setUp() throws Exception {
@@ -56,14 +63,6 @@ public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<Crea
     @Test
     public void testCreateSecurityGroup() throws Exception {
         DelegateExecution execution = mock(DelegateExecution.class);
-
-        final ImmutableSet<Rule> ingressRules = ImmutableSet.of(
-            Rule.builder().anySource().icmp().createRule(),
-            Rule.builder().anySource().tcp().port(22).createRule(),
-            Rule.builder().anySource().udp().port(53).createRule());
-
-        final Network network = Network.builder().ingress(ingressRules).createNetwork();
-
         Pool pool = mock(Pool.class);
 
         when(pool.getProvider()).thenReturn(provider);
@@ -71,14 +70,38 @@ public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<Crea
 
         when(execution.getVariable("pool")).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
+
         activity.execute(execution);
         assertSecurityGroupExistsWithRules(SecurityGroups.getByName(
             context.getApi(), SECURITY_GROUP_NAME), ingressRules);
+    }
+
+    @Test
+    public void testCreateSecurityGroupWithExistingSecurityGroup() throws Exception {
+        DelegateExecution execution = mock(DelegateExecution.class);
+        Pool pool = mock(Pool.class);
+
+        when(pool.getProvider()).thenReturn(provider);
+
+        when(execution.getVariable("pool")).thenReturn(pool);
+        when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
+
+        // create the SecurityGroup with an extra Network Rule, then call the activity
+        when(pool.getNetwork()).thenReturn(network.toBuilder().addRules(
+            Rule.builder().anySource().tcp().port(80).createRule()).createNetwork());
+
+        activity.execute(execution);
+        // call the process again with the old network rules and check the rules
+        when(pool.getNetwork()).thenReturn(network);
+
+        activity.execute(execution);
+
+        assertSecurityGroupExistsWithRules(SecurityGroups.getByName(context.getApi(),
+            SECURITY_GROUP_NAME), ingressRules);
     }
 
     private void assertSecurityGroupExistsWithRules(SecurityGroup securityGroup, ImmutableSet<Rule> ingressRules) {
         assertThat(ingressRules).containsAll(Iterables.transform(securityGroup.getIngressRules(),
             ConvertIngressRuleToRule.FUNCTION));
     }
-
 }

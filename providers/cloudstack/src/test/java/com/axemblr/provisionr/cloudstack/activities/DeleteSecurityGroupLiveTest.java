@@ -29,8 +29,7 @@ public class DeleteSecurityGroupLiveTest extends CloudStackActivityLiveTest<Dele
         when(execution.getVariable("pool")).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
-        CreateSecurityGroup.createSecurityGroupWithRules(context.getApi(),
-            network, SECURITY_GROUP_NAME);
+        SecurityGroups.createSecurityGroup(context.getApi(), SECURITY_GROUP_NAME);
 
         activity.execute(execution);
 
