@@ -3,8 +3,10 @@ package com.axemblr.provisionr.amazon.activities;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
 import com.amazonaws.services.ec2.model.DescribeSecurityGroupsRequest;
+import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.software.Software;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
@@ -30,10 +32,9 @@ public class DeleteSecurityGroupLiveTest extends AmazonActivityLiveTest<DeleteSe
     @Test
     public void testDeleteSecurityGroup() throws Exception {
         DelegateExecution execution = mock(DelegateExecution.class);
+        Pool pool = mock(Pool.class);
 
-        final Network network = Network.builder().createNetwork();
-        final Pool pool = Pool.builder().provider(provider).network(network).createPool();
-
+        when(pool.getProvider()).thenReturn(provider);
         when(execution.getVariable("pool")).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 

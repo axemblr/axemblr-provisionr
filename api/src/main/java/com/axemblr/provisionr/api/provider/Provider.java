@@ -14,19 +14,19 @@ public class Provider implements Serializable {
     }
 
     private final String id;
-    private final String endpoint;
+    private final Optional<String> endpoint;
 
     private final String accessKey;
     private final String secretKey;
 
     private final Map<String, String> options;
 
-    Provider(String id, String endpoint, String accessKey,
+    Provider(String id, Optional<String> endpoint, String accessKey,
              String secretKey, Map<String, String> options) {
         this.id = checkNotNull(id, "id is null");
-        this.endpoint = Optional.fromNullable(endpoint).or("");
-        this.accessKey = Optional.fromNullable(accessKey).or("");
-        this.secretKey = Optional.fromNullable(secretKey).or("");
+        this.endpoint = checkNotNull(endpoint, "endpoint is null");
+        this.accessKey = checkNotNull(accessKey, "accessKey is null");
+        this.secretKey = checkNotNull(secretKey, "secretKey is null");
         this.options = ImmutableMap.copyOf(options);
     }
 
@@ -40,7 +40,7 @@ public class Provider implements Serializable {
     /**
      * API endpoint for this provider
      */
-    public String getEndpoint() {
+    public Optional<String> getEndpoint() {
         return endpoint;
     }
 
@@ -84,8 +84,10 @@ public class Provider implements Serializable {
             return false;
         }
         final Provider other = (Provider) obj;
-        return Objects.equal(this.id, other.id) && Objects.equal(this.endpoint, other.endpoint)
-            && Objects.equal(this.accessKey, other.accessKey) && Objects.equal(this.secretKey, other.secretKey)
+        return Objects.equal(this.id, other.id)
+            && Objects.equal(this.endpoint, other.endpoint)
+            && Objects.equal(this.accessKey, other.accessKey)
+            && Objects.equal(this.secretKey, other.secretKey)
             && Objects.equal(this.options, other.options);
     }
 
@@ -93,7 +95,7 @@ public class Provider implements Serializable {
     public String toString() {
         return "Provider{" +
             "id='" + id + '\'' +
-            ", endpoint='" + endpoint + '\'' +
+            ", endpoint='" + endpoint.or("") + '\'' +
             ", accessKey='" + accessKey + '\'' +
             ", options='" + options + '\'' +
             '}';

@@ -6,6 +6,7 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.util.BuilderWithOptions;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
@@ -29,12 +30,12 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
     }
 
     public PoolBuilder provider(Provider provider) {
-        this.provider = provider;
+        this.provider = checkNotNull(provider, "provider is null");
         return this;
     }
 
     public PoolBuilder network(Network network) {
-        this.network = network;
+        this.network = checkNotNull(network, "network is null");
         return this;
     }
 
@@ -44,21 +45,23 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
     }
 
     public PoolBuilder software(Software software) {
-        this.software = software;
+        this.software = checkNotNull(software, "software is null");
         return this;
     }
 
     public PoolBuilder hardware(Hardware hardware) {
-        this.hardware = hardware;
+        this.hardware = checkNotNull(hardware, "hardware is null");
         return this;
     }
 
     public PoolBuilder minSize(int minSize) {
+        checkArgument(minSize > 0, "minSize should be positive");
         this.minSize = minSize;
         return this;
     }
 
     public PoolBuilder expectedSize(int expectedSize) {
+        checkArgument(expectedSize > 0, "expectedSize should be positive");
         this.expectedSize = expectedSize;
         return this;
     }
@@ -69,6 +72,7 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
     }
 
     public PoolBuilder bootstrapTimeInSeconds(int bootstrapTimeInSeconds) {
+        checkArgument(bootstrapTimeInSeconds > 0, "bootstrapTimeInSeconds should be positive");
         this.bootstrapTimeInSeconds = bootstrapTimeInSeconds;
         return this;
     }

@@ -63,7 +63,11 @@ public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<Crea
             Rule.builder().anySource().udp().port(53).createRule());
 
         final Network network = Network.builder().ingress(ingressRules).createNetwork();
-        final Pool pool = Pool.builder().provider(provider).network(network).createPool();
+
+        Pool pool = mock(Pool.class);
+
+        when(pool.getProvider()).thenReturn(provider);
+        when(pool.getNetwork()).thenReturn(network);
 
         when(execution.getVariable("pool")).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);

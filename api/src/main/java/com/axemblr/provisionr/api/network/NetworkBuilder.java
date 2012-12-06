@@ -1,6 +1,7 @@
 package com.axemblr.provisionr.api.network;
 
 import com.axemblr.provisionr.api.util.BuilderWithOptions;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.Set;
@@ -16,7 +17,7 @@ public class NetworkBuilder extends BuilderWithOptions<NetworkBuilder> {
     }
 
     public NetworkBuilder type(String type) {
-        this.type = type;
+        this.type = checkNotNull(type, "type is null");
         return this;
     }
 

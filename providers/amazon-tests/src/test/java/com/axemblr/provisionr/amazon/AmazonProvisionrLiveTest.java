@@ -1,6 +1,7 @@
 package com.axemblr.provisionr.amazon;
 
 import com.axemblr.provisionr.api.Provisionr;
+import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Protocol;
@@ -60,8 +61,11 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final Software software = Software.builder().baseOperatingSystem("ubuntu-10.04")
             .packages("nginx").createSoftware();
 
-        final Pool pool = Pool.builder().provider(provider).network(network).software(software)
-            .hardware(hardware).minSize(1).expectedSize(1).createPool();
+        final AdminAccess adminAccess = AdminAccess.builder().username("admin").publicKey("ssh-rsa ")
+            .privateKey("-----BEGIN RSA PRIVATE KEY-----").createAdminAccess();
+
+        final Pool pool = Pool.builder().provider(provider).network(network).adminAccess(adminAccess)
+            .software(software).hardware(hardware).minSize(1).expectedSize(1).createPool();
 
         provisionr.startCreatePoolProcess("j-" + UUID.randomUUID().toString(), pool);
         TimeUnit.SECONDS.sleep(5);  // TODO replace with wait on process to finish
