@@ -6,6 +6,7 @@ import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.RevokeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.SecurityGroup;
+import com.axemblr.provisionr.amazon.SecurityGroups;
 import com.axemblr.provisionr.amazon.functions.ConvertIpPermissionToRule;
 import com.axemblr.provisionr.amazon.functions.ConvertRuleToIpPermission;
 import com.axemblr.provisionr.api.network.Network;
@@ -32,7 +33,7 @@ public class EnsureSecurityGroupExistsLiveTest extends AmazonActivityLiveTest<En
 
     private static final Logger LOG = LoggerFactory.getLogger(EnsureSecurityGroupExistsLiveTest.class);
 
-    protected final String SECURITY_GROUP_NAME = "network-" + BUSINESS_KEY;
+    protected final String SECURITY_GROUP_NAME = SecurityGroups.formatNameFromBusinessKey(BUSINESS_KEY);
 
     @After
     public void tearDown() {
