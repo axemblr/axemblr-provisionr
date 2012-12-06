@@ -2,21 +2,20 @@ package com.axemblr.provisionr.cloudstack.functions;
 
 import com.axemblr.provisionr.api.network.Protocol;
 import com.axemblr.provisionr.api.network.Rule;
-import com.axemblr.provisionr.cloudstack.activities.CreateSecurityGroup;
+import com.axemblr.provisionr.cloudstack.activities.SecurityGroups;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.jclouds.cloudstack.domain.IngressRule;
 import org.junit.Test;
 
 public class ConversionsTest {
 
-
     @Test
     public void testConvertIngressRuleToRuleICMP() throws Exception {
         final IngressRule ingressRule = IngressRule.builder()
             .id("rule1")
             .protocol("icmp")
-            .ICMPCode(CreateSecurityGroup.DEFAULT_ICMP_CODE)
-            .ICMPType(CreateSecurityGroup.DEFAULT_ICMP_TYPE)
+            .ICMPCode(SecurityGroups.DEFAULT_ICMP_CODE)
+            .ICMPType(SecurityGroups.DEFAULT_ICMP_TYPE)
             .CIDR("10.0.0.0/24")
             .build();
 
