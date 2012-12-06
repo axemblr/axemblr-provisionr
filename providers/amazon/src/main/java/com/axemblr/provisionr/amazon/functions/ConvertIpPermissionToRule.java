@@ -17,7 +17,7 @@ public enum ConvertIpPermissionToRule implements Function<IpPermission, Rule> {
             .protocol(Protocol.valueOf(ipPermission.getIpProtocol().toUpperCase()));
 
         if (!ipPermission.getIpProtocol().equals("icmp")) {
-            builder.ports(Ranges.<Integer>closed(ipPermission.getFromPort(), ipPermission.getToPort()));
+            builder.ports(ipPermission.getFromPort(), ipPermission.getToPort());
         }
 
         return builder.createRule();

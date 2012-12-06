@@ -15,7 +15,8 @@ public class PoolTest {
     @Test
     public void testSerialization() {
         final Provider provider = Provider.builder()
-            .id("amazon").accessKey("access").secretKey("secret").createProvider();
+            .id("amazon").accessKey("access").secretKey("secret")
+            .createProvider();
 
         final Network network = Network.builder().addRules(
             Rule.builder().anySource().port(22).tcp().createRule(),

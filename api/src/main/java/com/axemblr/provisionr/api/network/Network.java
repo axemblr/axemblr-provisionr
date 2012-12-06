@@ -2,6 +2,7 @@ package com.axemblr.provisionr.api.network;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
@@ -19,7 +20,7 @@ public class Network implements Serializable {
     private final Map<String, String> options;
 
     Network(String type, Set<Rule> ingress, Map<String, String> options) {
-        this.type = Optional.fromNullable(type).or("default");
+        this.type = checkNotNull(type, "type is null");
         this.ingress = ImmutableSet.copyOf(ingress);
         this.options = ImmutableMap.copyOf(options);
     }

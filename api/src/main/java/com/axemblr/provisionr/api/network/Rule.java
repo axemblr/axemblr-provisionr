@@ -3,11 +3,13 @@ package com.axemblr.provisionr.api.network;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Range;
+import com.google.common.collect.Ranges;
 import java.io.Serializable;
 
 public class Rule implements Serializable {
 
     public static final String CIDR_ALL = "0.0.0.0/0";
+    public static final Range<Integer> EMPTY_RANGE = Ranges.openClosed(-1, -1);
 
     public static RuleBuilder builder() {
         return new RuleBuilder();
@@ -18,7 +20,7 @@ public class Rule implements Serializable {
     private final Protocol protocol;
 
     Rule(String cidr, Range<Integer> ports, Protocol protocol) {
-        this.ports = ports;
+        this.ports = checkNotNull(ports, "ports is null");
         this.cidr = checkNotNull(cidr, "cidr is null");
         this.protocol = checkNotNull(protocol, "protocol is null");
     }
