@@ -14,4 +14,8 @@
           class="com.axemblr.provisionr.amazon.activities.DeleteSecurityGroup"/>
     <service ref="amazon_deleteSecurityGroup" auto-export="interfaces"/>
 
+    <bean id="amazon_ensureKeyPairExists"
+          class="com.axemblr.provisionr.amazon.activities.EnsureKeyPairExists"/>
+    <service ref="amazon_ensureKeyPairExists" auto-export="interfaces"/>
+
 </blueprint>                     
