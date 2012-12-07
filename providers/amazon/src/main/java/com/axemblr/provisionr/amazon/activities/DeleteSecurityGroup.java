@@ -3,6 +3,7 @@ package com.axemblr.provisionr.amazon.activities;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DeleteSecurityGroupRequest;
+import com.axemblr.provisionr.amazon.ErrorCodes;
 import com.axemblr.provisionr.amazon.SecurityGroups;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.google.common.base.Throwables;
@@ -19,7 +20,7 @@ public class DeleteSecurityGroup extends AmazonActivity {
             client.deleteSecurityGroup(new DeleteSecurityGroupRequest().withGroupName(groupName));
 
         } catch (AmazonServiceException e) {
-            if (e.getErrorCode().equals("InvalidGroup.NotFound")) {
+            if (e.getErrorCode().equals(ErrorCodes.SECURITY_GROUP_NOT_FOUND)) {
                 LOG.info("<< Security Group {} not found. Ignoring this error.", groupName);
             } else {
                 throw Throwables.propagate(e);

@@ -19,12 +19,10 @@ import org.slf4j.LoggerFactory;
 
 public class DeleteSecurityGroupLiveTest extends AmazonActivityLiveTest<DeleteSecurityGroup> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DeleteSecurityGroupLiveTest.class);
-
     private final String SECURITY_GROUP_NAME = "network-" + BUSINESS_KEY;
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         quietlyDeleteSecurityGroupIfExists(SECURITY_GROUP_NAME);
         super.tearDown();
     }

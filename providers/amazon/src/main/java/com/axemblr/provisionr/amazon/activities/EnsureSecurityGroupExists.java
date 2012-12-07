@@ -9,6 +9,7 @@ import com.amazonaws.services.ec2.model.DescribeSecurityGroupsRequest;
 import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.RevokeSecurityGroupIngressRequest;
+import com.axemblr.provisionr.amazon.ErrorCodes;
 import com.axemblr.provisionr.amazon.SecurityGroups;
 import com.axemblr.provisionr.amazon.functions.ConvertRuleToIpPermission;
 import com.axemblr.provisionr.api.network.Network;
@@ -41,7 +42,7 @@ public class EnsureSecurityGroupExists extends AmazonActivity {
             LOG.info("<< Created Security Group with ID {}", result.getGroupId());
 
         } catch (AmazonServiceException e) {
-            if (e.getErrorCode().equals("InvalidGroup.Duplicate")) {
+            if (e.getErrorCode().equals(ErrorCodes.DUPLICATE_SECURITY_GROUP)) {
                 LOG.warn(String.format("<< Security Group %s already exists. " +
                     "Synchronizing ingress rules.", groupName), e);
             } else {
