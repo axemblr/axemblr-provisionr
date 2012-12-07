@@ -36,7 +36,7 @@ public class EnsureSecurityGroupExistsLiveTest extends AmazonActivityLiveTest<En
     protected final String SECURITY_GROUP_NAME = SecurityGroups.formatNameFromBusinessKey(BUSINESS_KEY);
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         quietlyDeleteSecurityGroupIfExists(SECURITY_GROUP_NAME);
         super.tearDown();
     }

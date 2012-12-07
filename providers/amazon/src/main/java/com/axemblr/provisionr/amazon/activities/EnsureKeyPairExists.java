@@ -5,6 +5,7 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
 import com.amazonaws.services.ec2.model.ImportKeyPairRequest;
 import com.amazonaws.services.ec2.model.ImportKeyPairResult;
+import com.axemblr.provisionr.amazon.ErrorCodes;
 import com.axemblr.provisionr.amazon.KeyPairs;
 import com.axemblr.provisionr.api.pool.Pool;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -25,7 +26,7 @@ public class EnsureKeyPairExists extends AmazonActivity {
             importPoolPublicKeyPair(client, keyName, publicKey);
 
         } catch (AmazonServiceException e) {
-            if (e.getErrorCode().equals("InvalidKeyPair.Duplicate")) {
+            if (e.getErrorCode().equals(ErrorCodes.DUPLICATE_KEYPAIR)) {
                 LOG.info("<< Duplicate key pair found. Re-importing from pool description");
 
                 client.deleteKeyPair(new DeleteKeyPairRequest().withKeyName(keyName));
