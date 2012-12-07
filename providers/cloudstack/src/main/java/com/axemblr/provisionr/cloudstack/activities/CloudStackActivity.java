@@ -4,13 +4,16 @@ import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
+import com.google.inject.Module;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.jclouds.ContextBuilder;
 import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackAsyncClient;
 import org.jclouds.cloudstack.CloudStackClient;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.rest.RestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,7 @@ public abstract class CloudStackActivity implements JavaDelegate {
         checkArgument(provider.getEndpoint().isPresent(), "please specify an endpoint for this provider");
         return ContextBuilder.newBuilder(new CloudStackApiMetadata())
             .endpoint(provider.getEndpoint().get())
+            .modules(ImmutableSet.<Module>of(new SLF4JLoggingModule()))
             .credentials(provider.getAccessKey(), provider.getSecretKey())
             .build(CloudStackApiMetadata.CONTEXT_TOKEN);
     }
