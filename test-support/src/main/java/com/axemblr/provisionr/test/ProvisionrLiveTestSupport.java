@@ -2,8 +2,11 @@ package com.axemblr.provisionr.test;
 
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.provider.ProviderBuilder;
+import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.io.Resources;
+import java.io.IOException;
 import javax.inject.Inject;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
@@ -62,5 +65,9 @@ public class ProvisionrLiveTestSupport {
      */
     protected String getProviderProperty(String property, String defaultValue) {
         return Optional.fromNullable(getProviderProperty(property)).or(defaultValue);
+    }
+
+    public String getResourceAsString(String resource) throws IOException {
+        return Resources.toString(Resources.getResource(resource), Charsets.UTF_8);
     }
 }

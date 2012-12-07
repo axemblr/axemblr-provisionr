@@ -4,12 +4,16 @@ import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.cloudstack.CloudStackProvisionr;
 import com.axemblr.provisionr.test.Generics;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
+import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
+import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 import org.jclouds.cloudstack.CloudStackAsyncClient;
 import org.jclouds.cloudstack.CloudStackClient;
 import org.jclouds.cloudstack.domain.SecurityGroup;
+import org.jclouds.cloudstack.domain.SshKeyPair;
 import org.jclouds.rest.RestContext;
 import org.junit.After;
 import org.junit.Before;
@@ -63,19 +67,27 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
 
         activity = createCloudStackActivitiInstance();
         context = activity.newCloudStackClient(provider);
-        logSecurityGroupDetails();
     }
 
 
     @After
     public void tearDown() throws Exception {
-        logSecurityGroupDetails();
         context.close();
     }
 
     protected void logSecurityGroupDetails() {
         Set<SecurityGroup> securityGroups = SecurityGroups.getAll(context.getApi());
-        LOG.info("Security groups count is {}", securityGroups.size());
-        LOG.debug("{}", securityGroups);
+        LOG.info("Security Group count is {}", securityGroups.size());
+        for (SecurityGroup securityGroup : securityGroups) {
+            LOG.info("\tSecurity Group {}", securityGroup.getName());
+        }
+    }
+
+    protected void logKeyPairs() {
+        Set<SshKeyPair> keys = context.getApi().getSSHKeyPairClient().listSSHKeyPairs();
+        LOG.info("Access Key count is {}", keys.size());
+        for (SshKeyPair keyPair : keys) {
+            LOG.info("\tKey {}", keyPair.getName());
+        }
     }
 }

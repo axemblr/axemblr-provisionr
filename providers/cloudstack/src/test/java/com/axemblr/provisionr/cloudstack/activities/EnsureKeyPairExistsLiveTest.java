@@ -1,26 +1,35 @@
-package com.axemblr.provisionr.amazon.activities;
+package com.axemblr.provisionr.cloudstack.activities;
 
-import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
-import com.amazonaws.services.ec2.model.DescribeKeyPairsRequest;
-import com.amazonaws.services.ec2.model.DescribeKeyPairsResult;
-import com.axemblr.provisionr.amazon.KeyPairs;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.cloudstack.KeyPairs;
+import java.io.IOException;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
+import org.jclouds.cloudstack.domain.SshKeyPair;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EnsureKeyPairExistsLiveTest extends AmazonActivityLiveTest<EnsureKeyPairExists> {
+public class EnsureKeyPairExistsLiveTest extends CloudStackActivityLiveTest<EnsureKeyPairExists> {
 
-    public static final String TEST_KEY_FINGERPRINT = "2f:e9:a0:bc:17:71:3a:7e:d7:c0:16:99:0d:62:8e:be";
-
+    public static final String TEST_KEY_FINGERPRINT = "15:0b:a4:43:dd:58:19:9e:84:ca:db:31:a8:6b:b6:c3";
     private final String KEYPAIR_NAME = KeyPairs.formatNameFromBusinessKey(BUSINESS_KEY);
 
     @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        logKeyPairs();
+    }
+
+    @Override
+    @After
     public void tearDown() throws Exception {
-        client.deleteKeyPair(new DeleteKeyPairRequest().withKeyName(KEYPAIR_NAME));
+        context.getApi().getSSHKeyPairClient().deleteSSHKeyPair(KEYPAIR_NAME);
+        logKeyPairs();
         super.tearDown();
     }
 
@@ -49,11 +58,8 @@ public class EnsureKeyPairExistsLiveTest extends AmazonActivityLiveTest<EnsureKe
         assertKeyPairWasImportedAsExpected();
     }
 
-    private void assertKeyPairWasImportedAsExpected() {
-        final DescribeKeyPairsRequest request = new DescribeKeyPairsRequest().withKeyNames(KEYPAIR_NAME);
-        DescribeKeyPairsResult result = client.describeKeyPairs(request);
-
-        assertThat(result.getKeyPairs()).hasSize(1);
-        assertThat(result.getKeyPairs().get(0).getKeyFingerprint()).isEqualTo(TEST_KEY_FINGERPRINT);
+    private void assertKeyPairWasImportedAsExpected() throws IOException {
+        SshKeyPair pair = context.getApi().getSSHKeyPairClient().getSSHKeyPair(KEYPAIR_NAME);
+        assertThat(pair.getFingerprint()).isEqualTo(TEST_KEY_FINGERPRINT);
     }
 }

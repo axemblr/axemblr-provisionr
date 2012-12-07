@@ -1,36 +1,33 @@
-package com.axemblr.provisionr.amazon.activities;
+package com.axemblr.provisionr.cloudstack.activities;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
-import com.amazonaws.services.ec2.model.DescribeKeyPairsRequest;
-import com.amazonaws.services.ec2.model.DescribeKeyPairsResult;
-import com.amazonaws.services.ec2.model.ImportKeyPairRequest;
-import com.axemblr.provisionr.amazon.ErrorCodes;
-import com.axemblr.provisionr.amazon.KeyPairs;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.cloudstack.KeyPairs;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DeleteKeyPairLiveTest extends AmazonActivityLiveTest<DeleteKeyPair> {
+public class DeleteKeyPairLiveTest extends CloudStackActivityLiveTest<DeleteKeyPair> {
 
     private final String KEYPAIR_NAME = KeyPairs.formatNameFromBusinessKey(BUSINESS_KEY);
 
     @Override
+    @Before
     public void setUp() throws Exception {
         super.setUp();
-
-        client.importKeyPair(new ImportKeyPairRequest().withKeyName(KEYPAIR_NAME)
-            .withPublicKeyMaterial(getResourceAsString("keys/test.pub")));
+        logKeyPairs();
+        context.getApi().getSSHKeyPairClient().registerSSHKeyPair(KEYPAIR_NAME, getResourceAsString("keys/test.pub"));
     }
 
     @Override
+    @After
     public void tearDown() throws Exception {
-        client.deleteKeyPair(new DeleteKeyPairRequest().withKeyName(KEYPAIR_NAME));
+        context.getApi().getSSHKeyPairClient().deleteSSHKeyPair(KEYPAIR_NAME);
+        logKeyPairs();
         super.tearDown();
     }
 
@@ -53,19 +50,11 @@ public class DeleteKeyPairLiveTest extends AmazonActivityLiveTest<DeleteKeyPair>
 
         activity.execute(execution);
         assertKeyNotFound(KEYPAIR_NAME);
-
         /* the second call should just do nothing */
         activity.execute(execution);
     }
 
-    public void assertKeyNotFound(String keyName) {
-        final DescribeKeyPairsRequest request = new DescribeKeyPairsRequest().withKeyNames(keyName);
-        try {
-            DescribeKeyPairsResult result = client.describeKeyPairs(request);
-            fail("Found key " + result.getKeyPairs().get(0));
-
-        } catch (AmazonServiceException e) {
-            assertThat(e.getErrorCode()).isEqualTo(ErrorCodes.KEYPAIR_NOT_FOUND);
-        }
+    private void assertKeyNotFound(String keyName) {
+        assertThat(context.getApi().getSSHKeyPairClient().getSSHKeyPair(keyName)).isNull();
     }
 }
