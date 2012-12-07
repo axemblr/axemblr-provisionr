@@ -1,8 +1,11 @@
 package com.axemblr.provisionr.amazon.activities;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsRequest;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsResult;
+import com.amazonaws.services.ec2.model.ImportKeyPairRequest;
+import com.axemblr.provisionr.amazon.ErrorCodes;
 import com.axemblr.provisionr.amazon.KeyPairs;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
@@ -11,15 +14,22 @@ import com.google.common.io.Resources;
 import java.io.IOException;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EnsureKeyPairExistsLiveTest extends AmazonActivityLiveTest<EnsureKeyPairExists> {
-
-    public static final String TEST_KEY_FINGERPRINT = "2f:e9:a0:bc:17:71:3a:7e:d7:c0:16:99:0d:62:8e:be";
+public class DeleteKeyPairLiveTest extends AmazonActivityLiveTest<DeleteKeyPair> {
 
     private final String KEYPAIR_NAME = KeyPairs.formatNameFromBusinessKey(BUSINESS_KEY);
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        client.importKeyPair(new ImportKeyPairRequest().withKeyName(KEYPAIR_NAME)
+            .withPublicKeyMaterial(getResourceAsString("keys/test.pub")));
+    }
 
     @Override
     public void tearDown() throws Exception {
@@ -28,7 +38,7 @@ public class EnsureKeyPairExistsLiveTest extends AmazonActivityLiveTest<EnsureKe
     }
 
     @Test
-    public void testEnsureKeyPairExists() throws Exception {
+    public void testDeleteKeyPair() throws Exception {
         final AdminAccess adminAccess = AdminAccess.builder()
             .username("admin")
             .publicKey(getResourceAsString("keys/test.pub"))
@@ -38,26 +48,28 @@ public class EnsureKeyPairExistsLiveTest extends AmazonActivityLiveTest<EnsureKe
         DelegateExecution execution = mock(DelegateExecution.class);
         Pool pool = mock(Pool.class);
 
-        when(pool.getProvider()).thenReturn(provider);
         when(pool.getAdminAccess()).thenReturn(adminAccess);
+        when(pool.getProvider()).thenReturn(provider);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
         when(execution.getVariable("pool")).thenReturn(pool);
 
         activity.execute(execution);
-        assertKeyPairWasImportedAsExpected();
+        assertKeyNotFound(KEYPAIR_NAME);
 
-        /* the second call should just re-import the key */
+        /* the second call should just do nothing */
         activity.execute(execution);
-        assertKeyPairWasImportedAsExpected();
     }
 
-    private void assertKeyPairWasImportedAsExpected() {
-        final DescribeKeyPairsRequest request = new DescribeKeyPairsRequest().withKeyNames(KEYPAIR_NAME);
-        DescribeKeyPairsResult result = client.describeKeyPairs(request);
+    public void assertKeyNotFound(String keyName) {
+        final DescribeKeyPairsRequest request = new DescribeKeyPairsRequest().withKeyNames(keyName);
+        try {
+            DescribeKeyPairsResult result = client.describeKeyPairs(request);
+            fail("Found key " + result.getKeyPairs().get(0));
 
-        assertThat(result.getKeyPairs()).hasSize(1);
-        assertThat(result.getKeyPairs().get(0).getKeyFingerprint()).isEqualTo(TEST_KEY_FINGERPRINT);
+        } catch (AmazonServiceException e) {
+            assertThat(e.getErrorCode()).isEqualTo(ErrorCodes.KEYPAIR_NOT_FOUND);
+        }
     }
 
     public String getResourceAsString(String resource) throws IOException {

@@ -18,4 +18,8 @@
           class="com.axemblr.provisionr.amazon.activities.EnsureKeyPairExists"/>
     <service ref="amazon_ensureKeyPairExists" auto-export="interfaces"/>
 
+    <bean id="amazon_deleteKeyPair"
+          class="com.axemblr.provisionr.amazon.activities.DeleteKeyPair"/>
+    <service ref="amazon_deleteKeyPair" auto-export="interfaces"/>
+
 </blueprint>                     

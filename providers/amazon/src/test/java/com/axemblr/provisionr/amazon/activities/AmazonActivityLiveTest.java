@@ -59,7 +59,7 @@ public abstract class AmazonActivityLiveTest<T extends AmazonActivity> extends P
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         provider = collectProviderCredentialsFromSystemProperties()
             .option("region", getProviderProperty("region", "us-east-1")).createProvider();
         LOG.info("Using provider {}", provider);
@@ -69,7 +69,7 @@ public abstract class AmazonActivityLiveTest<T extends AmazonActivity> extends P
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         client.shutdown();
     }
 
