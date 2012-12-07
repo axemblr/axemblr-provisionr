@@ -2,7 +2,7 @@ package com.axemblr.provisionr.amazon;
 
 public class KeyPairs {
 
-    public KeyPairs() {
+    private KeyPairs() {
         /* singleton */
     }
 
