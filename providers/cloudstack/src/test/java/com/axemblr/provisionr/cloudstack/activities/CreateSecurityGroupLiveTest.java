@@ -36,6 +36,7 @@ public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<Crea
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        logSecurityGroupDetails();
         deleteSecurityGroupIfExists();
     }
 
@@ -43,6 +44,7 @@ public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<Crea
     @After
     public void tearDown() throws Exception {
         deleteSecurityGroupIfExists();
+        logSecurityGroupDetails();
         super.tearDown();
     }
 

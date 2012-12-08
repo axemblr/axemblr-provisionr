@@ -4,7 +4,9 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.pool.Pool;
 import java.util.NoSuchElementException;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.junit.After;
 import static org.junit.Assert.fail;
+import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -15,6 +17,20 @@ public class DeleteSecurityGroupLiveTest extends CloudStackActivityLiveTest<Dele
 
     private final Logger LOG = LoggerFactory.getLogger(DeleteSecurityGroupLiveTest.class);
     private final String SECURITY_GROUP_NAME = SecurityGroups.formatSecurityGroupNameFromProcessBusinessKey(BUSINESS_KEY);
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        logSecurityGroupDetails();
+    }
+
+    @Override
+    @After
+    public void tearDown() throws Exception {
+        logSecurityGroupDetails();
+        super.tearDown();
+    }
 
     @Test
     public void testDeleteSecurityGroup() throws Exception {
