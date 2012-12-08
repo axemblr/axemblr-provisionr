@@ -5,8 +5,9 @@ import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsRequest;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsResult;
 import com.amazonaws.services.ec2.model.ImportKeyPairRequest;
-import com.axemblr.provisionr.amazon.ErrorCodes;
-import com.axemblr.provisionr.amazon.KeyPairs;
+import com.axemblr.provisionr.amazon.ProcessVariables;
+import com.axemblr.provisionr.amazon.core.ErrorCodes;
+import com.axemblr.provisionr.amazon.core.KeyPairs;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -49,7 +50,7 @@ public class DeleteKeyPairLiveTest extends AmazonActivityLiveTest<DeleteKeyPair>
         when(pool.getProvider()).thenReturn(provider);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable("pool")).thenReturn(pool);
+        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
 
         activity.execute(execution);
         assertKeyNotFound(KEYPAIR_NAME);

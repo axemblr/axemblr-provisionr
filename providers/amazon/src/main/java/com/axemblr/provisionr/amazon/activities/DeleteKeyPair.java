@@ -2,7 +2,7 @@ package com.axemblr.provisionr.amazon.activities;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
-import com.axemblr.provisionr.amazon.KeyPairs;
+import com.axemblr.provisionr.amazon.core.KeyPairs;
 import com.axemblr.provisionr.api.pool.Pool;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;

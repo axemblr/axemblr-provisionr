@@ -1,0 +1,221 @@
+region, name, version, arch, type, release, ami-id, aki-id
+ap-northeast-1, natty, 11.04 EOL, amd64, ebs, 20121028, ami-087bc509, aki-d409a2d5
+ap-northeast-1, natty, 11.04 EOL, i386, ebs, 20121028, ami-067bc507, aki-d209a2d3
+ap-northeast-1, natty, 11.04 EOL, amd64, instance-store, 20121028, ami-e67ac4e7, aki-d409a2d5
+ap-northeast-1, natty, 11.04 EOL, i386, instance-store, 20121028, ami-8c7ac48d, aki-d209a2d3
+ap-southeast-1, natty, 11.04 EOL, amd64, ebs, 20121028, ami-240e4d76, aki-11d5aa43
+ap-southeast-1, natty, 11.04 EOL, i386, ebs, 20121028, ami-260e4d74, aki-13d5aa41
+ap-southeast-1, natty, 11.04 EOL, amd64, instance-store, 20121028, ami-220e4d70, aki-11d5aa43
+ap-southeast-1, natty, 11.04 EOL, i386, instance-store, 20121028, ami-180e4d4a, aki-13d5aa41
+eu-west-1, natty, 11.04 EOL, amd64, hvm, 20121028, ami-7b14170f, hvm
+eu-west-1, natty, 11.04 EOL, amd64, ebs, 20121028, ami-7914170d, aki-4feec43b
+eu-west-1, natty, 11.04 EOL, i386, ebs, 20121028, ami-7f14170b, aki-4deec439
+eu-west-1, natty, 11.04 EOL, amd64, instance-store, 20121028, ami-d71516a3, aki-4feec43b
+eu-west-1, natty, 11.04 EOL, i386, instance-store, 20121028, ami-23151657, aki-4deec439
+sa-east-1, natty, 11.04 EOL, amd64, ebs, 20121028, ami-d0548dcd, aki-d63ce3cb
+sa-east-1, natty, 11.04 EOL, i386, ebs, 20121028, ami-d6548dcb, aki-863ce39b
+sa-east-1, natty, 11.04 EOL, amd64, instance-store, 20121028, ami-a2548dbf, aki-d63ce3cb
+sa-east-1, natty, 11.04 EOL, i386, instance-store, 20121028, ami-b6548dab, aki-863ce39b
+us-east-1, natty, 11.04 EOL, amd64, hvm, 20121028, ami-beb10ad7, hvm
+us-east-1, natty, 11.04 EOL, amd64, ebs, 20121028, ami-bab10ad3, aki-427d952b
+us-east-1, natty, 11.04 EOL, i386, ebs, 20121028, ami-a6b10acf, aki-407d9529
+us-east-1, natty, 11.04 EOL, amd64, instance-store, 20121028, ami-1cb30875, aki-427d952b
+us-east-1, natty, 11.04 EOL, i386, instance-store, 20121028, ami-96b803ff, aki-407d9529
+us-west-1, natty, 11.04 EOL, amd64, ebs, 20121028, ami-132c0a56, aki-9ba0f1de
+us-west-1, natty, 11.04 EOL, i386, ebs, 20121028, ami-112c0a54, aki-99a0f1dc
+us-west-1, natty, 11.04 EOL, amd64, instance-store, 20121028, ami-712c0a34, aki-9ba0f1de
+us-west-1, natty, 11.04 EOL, i386, instance-store, 20121028, ami-b12f09f4, aki-99a0f1dc
+us-west-2, natty, 11.04 EOL, amd64, hvm, 20121028, ami-70b23b40, hvm
+us-west-2, natty, 11.04 EOL, amd64, ebs, 20121028, ami-0eb23b3e, aki-ace26f9c
+us-west-2, natty, 11.04 EOL, i386, ebs, 20121028, ami-0ab23b3a, aki-dce26fec
+us-west-2, natty, 11.04 EOL, amd64, instance-store, 20121028, ami-3ab23b0a, aki-ace26f9c
+us-west-2, natty, 11.04 EOL, i386, instance-store, 20121028, ami-a2b33a92, aki-dce26fec
+ap-northeast-1, lucid, 10.04 LTS, amd64, ebs, 20120913, ami-8876ca89, aki-d409a2d5
+ap-northeast-1, lucid, 10.04 LTS, i386, ebs, 20120913, ami-8676ca87, aki-d209a2d3
+ap-northeast-1, lucid, 10.04 LTS, amd64, instance-store, 20120913, ami-6c76ca6d, aki-d409a2d5
+ap-northeast-1, lucid, 10.04 LTS, i386, instance-store, 20120913, ami-2676ca27, aki-d209a2d3
+ap-southeast-1, lucid, 10.04 LTS, amd64, ebs, 20120913, ami-903575c2, aki-11d5aa43
+ap-southeast-1, lucid, 10.04 LTS, i386, ebs, 20120913, ami-923575c0, aki-13d5aa41
+ap-southeast-1, lucid, 10.04 LTS, amd64, instance-store, 20120913, ami-ec3575be, aki-11d5aa43
+ap-southeast-1, lucid, 10.04 LTS, i386, instance-store, 20120913, ami-fe3575ac, aki-13d5aa41
+ap-southeast-2, lucid, 10.04 LTS, amd64, ebs, 20120913, ami-9b8611a1, aki-31990e0b
+ap-southeast-2, lucid, 10.04 LTS, i386, ebs, 20120913, ami-a786119d, aki-33990e09
+ap-southeast-2, lucid, 10.04 LTS, amd64, instance-store, 20120913, ami-af861195, aki-31990e0b
+ap-southeast-2, lucid, 10.04 LTS, i386, instance-store, 20120913, ami-49861173, aki-33990e09
+eu-west-1, lucid, 10.04 LTS, amd64, ebs, 20120913, ami-5d4a4b29, aki-4feec43b
+eu-west-1, lucid, 10.04 LTS, i386, ebs, 20120913, ami-534a4b27, aki-4deec439
+eu-west-1, lucid, 10.04 LTS, amd64, instance-store, 20120913, ami-794a4b0d, aki-4feec43b
+eu-west-1, lucid, 10.04 LTS, i386, instance-store, 20120913, ami-8f4b4afb, aki-4deec439
+sa-east-1, lucid, 10.04 LTS, amd64, ebs, 20120913, ami-6ac91077, aki-d63ce3cb
+sa-east-1, lucid, 10.04 LTS, i386, ebs, 20120913, ami-68c91075, aki-863ce39b
+sa-east-1, lucid, 10.04 LTS, amd64, instance-store, 20120913, ami-6ec91073, aki-d63ce3cb
+sa-east-1, lucid, 10.04 LTS, i386, instance-store, 20120913, ami-7ec91063, aki-863ce39b
+us-east-1, lucid, 10.04 LTS, amd64, ebs, 20120913, ami-c7b202ae, aki-427d952b
+us-east-1, lucid, 10.04 LTS, i386, ebs, 20120913, ami-c5b202ac, aki-407d9529
+us-east-1, lucid, 10.04 LTS, amd64, instance-store, 20120913, ami-1db20274, aki-427d952b
+us-east-1, lucid, 10.04 LTS, i386, instance-store, 20120913, ami-53b2023a, aki-407d9529
+us-west-1, lucid, 10.04 LTS, amd64, ebs, 20120913, ami-bb88acfe, aki-9ba0f1de
+us-west-1, lucid, 10.04 LTS, i386, ebs, 20120913, ami-b988acfc, aki-99a0f1dc
+us-west-1, lucid, 10.04 LTS, amd64, instance-store, 20120913, ami-bd88acf8, aki-9ba0f1de
+us-west-1, lucid, 10.04 LTS, i386, instance-store, 20120913, ami-a188ace4, aki-99a0f1dc
+us-west-2, lucid, 10.04 LTS, amd64, ebs, 20120913, ami-1a4fc12a, aki-ace26f9c
+us-west-2, lucid, 10.04 LTS, i386, ebs, 20120913, ami-184fc128, aki-dce26fec
+us-west-2, lucid, 10.04 LTS, amd64, instance-store, 20120913, ami-3e4fc10e, aki-ace26f9c
+us-west-2, lucid, 10.04 LTS, i386, instance-store, 20120913, ami-304fc100, aki-dce26fec
+ap-northeast-1, hardy, 8.04 LTS, amd64, instance-store, 20121003, ami-d669d6d7, aki-d069d6d1
+ap-northeast-1, hardy, 8.04 LTS, i386, instance-store, 20121003, ami-ca69d6cb, aki-c469d6c5
+ap-southeast-1, hardy, 8.04 LTS, amd64, instance-store, 20121003, ami-f4a8e8a6, aki-f2a8e8a0
+ap-southeast-1, hardy, 8.04 LTS, i386, instance-store, 20121003, ami-cca8e89e, aki-c0a8e892
+eu-west-1, hardy, 8.04 LTS, amd64, instance-store, 20121003, ami-897575fd, aki-877575f3
+eu-west-1, hardy, 8.04 LTS, i386, instance-store, 20121003, ami-917575e5, aki-a97575dd
+sa-east-1, hardy, 8.04 LTS, amd64, instance-store, 20121003, ami-7008d16d, aki-7e08d163
+sa-east-1, hardy, 8.04 LTS, i386, instance-store, 20121003, ami-4208d15f, aki-4a08d157
+us-east-1, hardy, 8.04 LTS, amd64, instance-store, 20121003, ami-3c229e55, aki-5e229e37
+us-east-1, hardy, 8.04 LTS, i386, instance-store, 20121003, ami-6c229e05, aki-9c219df5
+us-west-1, hardy, 8.04 LTS, amd64, instance-store, 20121003, ami-3ff8df7a, aki-37f8df72
+us-west-1, hardy, 8.04 LTS, i386, instance-store, 20121003, ami-2ff8df6a, aki-25f8df60
+us-west-2, hardy, 8.04 LTS, amd64, instance-store, 20121003, ami-dc31bfec, aki-d631bfe6
+us-west-2, hardy, 8.04 LTS, i386, instance-store, 20121003, ami-ea31bfda, aki-e231bfd2
+ap-northeast-1, maverick, 10.10 EOL, amd64, ebs, 20120410, ami-741dac75, aki-d409a2d5
+ap-northeast-1, maverick, 10.10 EOL, i386, ebs, 20120410, ami-721dac73, aki-d209a2d3
+ap-northeast-1, maverick, 10.10 EOL, amd64, instance-store, 20120410, ami-701dac71, aki-d409a2d5
+ap-northeast-1, maverick, 10.10 EOL, i386, instance-store, 20120410, ami-641dac65, aki-d209a2d3
+ap-southeast-1, maverick, 10.10 EOL, amd64, ebs, 20120410, ami-0e8acd5c, aki-11d5aa43
+ap-southeast-1, maverick, 10.10 EOL, i386, ebs, 20120410, ami-0a8acd58, aki-13d5aa41
+ap-southeast-1, maverick, 10.10 EOL, amd64, instance-store, 20120410, ami-1a8acd48, aki-11d5aa43
+ap-southeast-1, maverick, 10.10 EOL, i386, instance-store, 20120410, ami-608acd32, aki-13d5aa41
+eu-west-1, maverick, 10.10 EOL, amd64, ebs, 20120410, ami-c57942b1, aki-4feec43b
+eu-west-1, maverick, 10.10 EOL, i386, ebs, 20120410, ami-db7942af, aki-4deec439
+eu-west-1, maverick, 10.10 EOL, amd64, instance-store, 20120410, ami-df7942ab, aki-4feec43b
+eu-west-1, maverick, 10.10 EOL, i386, instance-store, 20120410, ami-d57942a1, aki-4deec439
+sa-east-1, maverick, 10.10 EOL, amd64, ebs, 20120410, ami-10a9770d, aki-d63ce3cb
+sa-east-1, maverick, 10.10 EOL, i386, ebs, 20120410, ami-16a9770b, aki-863ce39b
+sa-east-1, maverick, 10.10 EOL, amd64, instance-store, 20120410, ami-1aa97707, aki-d63ce3cb
+sa-east-1, maverick, 10.10 EOL, i386, instance-store, 20120410, ami-1ea97703, aki-863ce39b
+us-east-1, maverick, 10.10 EOL, amd64, ebs, 20120410, ami-d78f57be, aki-427d952b
+us-east-1, maverick, 10.10 EOL, i386, ebs, 20120410, ami-d38f57ba, aki-407d9529
+us-east-1, maverick, 10.10 EOL, amd64, instance-store, 20120410, ami-098f5760, aki-427d952b
+us-east-1, maverick, 10.10 EOL, i386, instance-store, 20120410, ami-7b8f5712, aki-407d9529
+us-west-1, maverick, 10.10 EOL, amd64, ebs, 20120410, ami-3b154e7e, aki-9ba0f1de
+us-west-1, maverick, 10.10 EOL, i386, ebs, 20120410, ami-39154e7c, aki-99a0f1dc
+us-west-1, maverick, 10.10 EOL, amd64, instance-store, 20120410, ami-2b154e6e, aki-9ba0f1de
+us-west-1, maverick, 10.10 EOL, i386, instance-store, 20120410, ami-1d154e58, aki-99a0f1dc
+us-west-2, maverick, 10.10 EOL, amd64, ebs, 20120410, ami-64fd7154, aki-ace26f9c
+us-west-2, maverick, 10.10 EOL, i386, ebs, 20120410, ami-62fd7152, aki-dce26fec
+us-west-2, maverick, 10.10 EOL, amd64, instance-store, 20120410, ami-7efd714e, aki-ace26f9c
+us-west-2, maverick, 10.10 EOL, i386, instance-store, 20120410, ami-76fd7146, aki-dce26fec
+ap-northeast-1, oneiric, 11.10, amd64, ebs, 20120918, ami-9405b995, aki-ee5df7ef
+ap-northeast-1, oneiric, 11.10, i386, ebs, 20120918, ami-9205b993, aki-ec5df7ed
+ap-northeast-1, oneiric, 11.10, amd64, instance-store, 20120918, ami-8005b981, aki-ee5df7ef
+ap-northeast-1, oneiric, 11.10, i386, instance-store, 20120918, ami-6a05b96b, aki-ec5df7ed
+ap-southeast-1, oneiric, 11.10, amd64, ebs, 20120918, ami-a86424fa, aki-aa225af8
+ap-southeast-1, oneiric, 11.10, i386, ebs, 20120918, ami-aa6424f8, aki-a4225af6
+ap-southeast-1, oneiric, 11.10, amd64, instance-store, 20120918, ami-a46424f6, aki-aa225af8
+ap-southeast-1, oneiric, 11.10, i386, instance-store, 20120918, ami-a26424f0, aki-a4225af6
+ap-southeast-2, oneiric, 11.10, amd64, ebs, 20120918, ami-818611bb, aki-31990e0b
+ap-southeast-2, oneiric, 11.10, i386, ebs, 20120918, ami-838611b9, aki-33990e09
+ap-southeast-2, oneiric, 11.10, amd64, instance-store, 20120918, ami-5186116b, aki-31990e0b
+ap-southeast-2, oneiric, 11.10, i386, instance-store, 20120918, ami-5d861167, aki-33990e09
+eu-west-1, oneiric, 11.10, amd64, hvm, 20120918, ami-3fcacb4b, hvm
+eu-west-1, oneiric, 11.10, amd64, ebs, 20120918, ami-3dcacb49, aki-62695816
+eu-west-1, oneiric, 11.10, i386, ebs, 20120918, ami-33cacb47, aki-64695810
+eu-west-1, oneiric, 11.10, amd64, instance-store, 20120918, ami-41cacb35, aki-62695816
+eu-west-1, oneiric, 11.10, i386, instance-store, 20120918, ami-6fcacb1b, aki-64695810
+sa-east-1, oneiric, 11.10, amd64, ebs, 20120918, ami-00f22b1d, aki-cc3ce3d1
+sa-east-1, oneiric, 11.10, i386, ebs, 20120918, ami-06f22b1b, aki-bc3ce3a1
+sa-east-1, oneiric, 11.10, amd64, instance-store, 20120918, ami-08f22b15, aki-cc3ce3d1
+sa-east-1, oneiric, 11.10, i386, instance-store, 20120918, ami-10f22b0d, aki-bc3ce3a1
+us-east-1, oneiric, 11.10, amd64, hvm, 20120918, ami-cfc072a6, hvm
+us-east-1, oneiric, 11.10, amd64, ebs, 20120918, ami-cdc072a4, aki-825ea7eb
+us-east-1, oneiric, 11.10, i386, ebs, 20120918, ami-cbc072a2, aki-805ea7e9
+us-east-1, oneiric, 11.10, amd64, instance-store, 20120918, ami-35c0725c, aki-825ea7eb
+us-east-1, oneiric, 11.10, i386, instance-store, 20120918, ami-71c07218, aki-805ea7e9
+us-west-1, oneiric, 11.10, amd64, ebs, 20120918, ami-fb5176be, aki-8d396bc8
+us-west-1, oneiric, 11.10, i386, ebs, 20120918, ami-ff5176ba, aki-83396bc6
+us-west-1, oneiric, 11.10, amd64, instance-store, 20120918, ami-e95176ac, aki-8d396bc8
+us-west-1, oneiric, 11.10, i386, instance-store, 20120918, ami-d951769c, aki-83396bc6
+us-west-2, oneiric, 11.10, amd64, hvm, 20120918, ami-b67af486, hvm
+us-west-2, oneiric, 11.10, amd64, ebs, 20120918, ami-b47af484, aki-98e26fa8
+us-west-2, oneiric, 11.10, i386, ebs, 20120918, ami-b27af482, aki-c2e26ff2
+us-west-2, oneiric, 11.10, amd64, instance-store, 20120918, ami-4a7af47a, aki-98e26fa8
+us-west-2, oneiric, 11.10, i386, instance-store, 20120918, ami-447af474, aki-c2e26ff2
+ap-northeast-1, karmic, 9.10 EOL, amd64, instance-store, 20100826, ami-2a0fa42b, aki-260fa427
+ap-northeast-1, karmic, 9.10 EOL, i386, instance-store, 20100826, ami-240fa425, aki-0a0fa40b
+ap-southeast-1, karmic, 9.10 EOL, amd64, instance-store, 20100826, ami-90344ac2, aki-ec344abe
+ap-southeast-1, karmic, 9.10 EOL, i386, instance-store, 20100826, ami-e6344ab4, aki-e2344ab0
+eu-west-1, karmic, 9.10 EOL, amd64, instance-store, 20100826, ami-28b9935c, aki-20b99354
+eu-west-1, karmic, 9.10 EOL, i386, instance-store, 20100826, ami-24b99350, aki-34b99340
+us-east-1, karmic, 9.10 EOL, amd64, instance-store, 20100826, ami-6832d801, aki-1c3dd775
+us-east-1, karmic, 9.10 EOL, i386, instance-store, 20100826, ami-563dd73f, aki-c43cd6ad
+us-west-1, karmic, 9.10 EOL, amd64, instance-store, 20100826, ami-0af0a14f, aki-68f0a12d
+us-west-1, karmic, 9.10 EOL, i386, instance-store, 20100826, ami-6ef0a12b, aki-5af0a11f
+ap-northeast-1, quantal, 12.10, amd64, ebs, 20121017, ami-3c07b83d, aki-ee5df7ef
+ap-northeast-1, quantal, 12.10, i386, ebs, 20121017, ami-3a07b83b, aki-ec5df7ed
+ap-northeast-1, quantal, 12.10, amd64, instance-store, 20121017, ami-0407b805, aki-ee5df7ef
+ap-northeast-1, quantal, 12.10, i386, instance-store, 20121017, ami-7008b771, aki-ec5df7ed
+ap-southeast-1, quantal, 12.10, amd64, ebs, 20121017, ami-8ed393dc, aki-aa225af8
+ap-southeast-1, quantal, 12.10, i386, ebs, 20121017, ami-88d393da, aki-a4225af6
+ap-southeast-1, quantal, 12.10, amd64, instance-store, 20121017, ami-e6d393b4, aki-aa225af8
+ap-southeast-1, quantal, 12.10, i386, instance-store, 20121017, ami-28d3937a, aki-a4225af6
+ap-southeast-2, quantal, 12.10, amd64, ebs, 20121017, ami-df8611e5, aki-31990e0b
+ap-southeast-2, quantal, 12.10, i386, ebs, 20121017, ami-d98611e3, aki-33990e09
+ap-southeast-2, quantal, 12.10, amd64, instance-store, 20121017, ami-db8611e1, aki-31990e0b
+ap-southeast-2, quantal, 12.10, i386, instance-store, 20121017, ami-e38611d9, aki-33990e09
+eu-west-1, quantal, 12.10, amd64, hvm, 20121017, ami-ebeded9f, hvm
+eu-west-1, quantal, 12.10, amd64, ebs, 20121017, ami-e9eded9d, aki-62695816
+eu-west-1, quantal, 12.10, i386, ebs, 20121017, ami-efeded9b, aki-64695810
+eu-west-1, quantal, 12.10, amd64, instance-store, 20121017, ami-69eded1d, aki-62695816
+eu-west-1, quantal, 12.10, i386, instance-store, 20121017, ami-b5ececc1, aki-64695810
+sa-east-1, quantal, 12.10, amd64, ebs, 20121017, ami-cc30e9d1, aki-cc3ce3d1
+sa-east-1, quantal, 12.10, i386, ebs, 20121017, ami-d230e9cf, aki-bc3ce3a1
+sa-east-1, quantal, 12.10, amd64, instance-store, 20121017, ami-d030e9cd, aki-cc3ce3d1
+sa-east-1, quantal, 12.10, i386, instance-store, 20121017, ami-b230e9af, aki-bc3ce3a1
+us-east-1, quantal, 12.10, amd64, hvm, 20121017, ami-9665dbff, hvm
+us-east-1, quantal, 12.10, amd64, ebs, 20121017, ami-9465dbfd, aki-825ea7eb
+us-east-1, quantal, 12.10, i386, ebs, 20121017, ami-9265dbfb, aki-805ea7e9
+us-east-1, quantal, 12.10, amd64, instance-store, 20121017, ami-e864da81, aki-825ea7eb
+us-east-1, quantal, 12.10, i386, instance-store, 20121017, ami-dc66d8b5, aki-805ea7e9
+us-west-1, quantal, 12.10, amd64, ebs, 20121017, ami-8f83a4ca, aki-8d396bc8
+us-west-1, quantal, 12.10, i386, ebs, 20121017, ami-8d83a4c8, aki-83396bc6
+us-west-1, quantal, 12.10, amd64, instance-store, 20121017, ami-fd83a4b8, aki-8d396bc8
+us-west-1, quantal, 12.10, i386, instance-store, 20121017, ami-0983a44c, aki-83396bc6
+us-west-2, quantal, 12.10, amd64, hvm, 20121017, ami-42f97072, hvm
+us-west-2, quantal, 12.10, amd64, ebs, 20121017, ami-40f97070, aki-98e26fa8
+us-west-2, quantal, 12.10, i386, ebs, 20121017, ami-5ef9706e, aki-c2e26ff2
+us-west-2, quantal, 12.10, amd64, instance-store, 20121017, ami-50f97060, aki-98e26fa8
+us-west-2, quantal, 12.10, i386, instance-store, 20121017, ami-00f97030, aki-c2e26ff2
+ap-northeast-1, precise, 12.04 LTS, amd64, ebs, 20121026.1, ami-eca719ed, aki-ee5df7ef
+ap-northeast-1, precise, 12.04 LTS, i386, ebs, 20121026.1, ami-eaa719eb, aki-ec5df7ed
+ap-northeast-1, precise, 12.04 LTS, amd64, instance-store, 20121026.1, ami-e0a719e1, aki-ee5df7ef
+ap-northeast-1, precise, 12.04 LTS, i386, instance-store, 20121026.1, ami-aca719ad, aki-ec5df7ed
+ap-southeast-1, precise, 12.04 LTS, amd64, ebs, 20121026.1, ami-fefcbcac, aki-aa225af8
+ap-southeast-1, precise, 12.04 LTS, i386, ebs, 20121026.1, ami-f8fcbcaa, aki-a4225af6
+ap-southeast-1, precise, 12.04 LTS, amd64, instance-store, 20121026.1, ami-fafcbca8, aki-aa225af8
+ap-southeast-1, precise, 12.04 LTS, i386, instance-store, 20121026.1, ami-d4fcbc86, aki-a4225af6
+ap-southeast-2, precise, 12.04 LTS, amd64, ebs, 20121026.1, ami-fb8611c1, aki-31990e0b
+ap-southeast-2, precise, 12.04 LTS, i386, ebs, 20121026.1, ami-858611bf, aki-33990e09
+ap-southeast-2, precise, 12.04 LTS, amd64, instance-store, 20121026.1, ami-cf8710f5, aki-31990e0b
+ap-southeast-2, precise, 12.04 LTS, i386, instance-store, 20121026.1, ami-898710b3, aki-33990e09
+eu-west-1, precise, 12.04 LTS, amd64, hvm, 20121026.1, ami-25656651, hvm
+eu-west-1, precise, 12.04 LTS, amd64, ebs, 20121026.1, ami-3b65664f, aki-62695816
+eu-west-1, precise, 12.04 LTS, i386, ebs, 20121026.1, ami-3965664d, aki-64695810
+eu-west-1, precise, 12.04 LTS, amd64, instance-store, 20121026.1, ami-a16665d5, aki-62695816
+eu-west-1, precise, 12.04 LTS, i386, instance-store, 20121026.1, ami-2966655d, aki-64695810
+sa-east-1, precise, 12.04 LTS, amd64, ebs, 20121026.1, ami-b45b82a9, aki-cc3ce3d1
+sa-east-1, precise, 12.04 LTS, i386, ebs, 20121026.1, ami-ba5b82a7, aki-bc3ce3a1
+sa-east-1, precise, 12.04 LTS, amd64, instance-store, 20121026.1, ami-805b829d, aki-cc3ce3d1
+sa-east-1, precise, 12.04 LTS, i386, instance-store, 20121026.1, ami-945b8289, aki-bc3ce3a1
+us-east-1, precise, 12.04 LTS, amd64, hvm, 20121026.1, ami-9078c0f9, hvm
+us-east-1, precise, 12.04 LTS, amd64, ebs, 20121026.1, ami-9c78c0f5, aki-825ea7eb
+us-east-1, precise, 12.04 LTS, i386, ebs, 20121026.1, ami-9878c0f1, aki-805ea7e9
+us-east-1, precise, 12.04 LTS, amd64, instance-store, 20121026.1, ami-9a873ff3, aki-825ea7eb
+us-east-1, precise, 12.04 LTS, i386, instance-store, 20121026.1, ami-52863e3b, aki-805ea7e9
+us-west-1, precise, 12.04 LTS, amd64, ebs, 20121026.1, ami-bb4f69fe, aki-8d396bc8
+us-west-1, precise, 12.04 LTS, i386, ebs, 20121026.1, ami-b94f69fc, aki-83396bc6
+us-west-1, precise, 12.04 LTS, amd64, instance-store, 20121026.1, ami-a34f69e6, aki-8d396bc8
+us-west-1, precise, 12.04 LTS, i386, instance-store, 20121026.1, ami-e34f69a6, aki-83396bc6
+us-west-2, precise, 12.04 LTS, amd64, hvm, 20121026.1, ami-60ab2250, hvm
+us-west-2, precise, 12.04 LTS, amd64, ebs, 20121026.1, ami-7eab224e, aki-98e26fa8
+us-west-2, precise, 12.04 LTS, i386, ebs, 20121026.1, ami-7cab224c, aki-c2e26ff2
+us-west-2, precise, 12.04 LTS, amd64, instance-store, 20121026.1, ami-1aab222a, aki-98e26fa8
+us-west-2, precise, 12.04 LTS, i386, instance-store, 20121026.1, ami-3aab220a, aki-c2e26ff2
