@@ -26,7 +26,11 @@
             org.ops4j.pax.exam.options.extra,
             com.axemblr.provisionr.api.provider;version="[0.0.1, 1.0.0)",
             com.google.common.base;version="[13.0, 14.0)",
-            com.google.common.io;version="[13.0, 14.0)"
+            com.google.common.io;version="[13.0, 14.0)",
+            com.google.common.collect;version="[13.0, 14.0)",
+            org.mockito.invocation;optional:=true,
+            org.mockito.stubbing;optional:=true,
+            org.slf4j
         </osgi.import>
     </properties>
 
