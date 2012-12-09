@@ -1,5 +1,6 @@
 package com.axemblr.provisionr.api.software;
 
+import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableList;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Define the software environment for all the machines in the pool
  */
-public class Software implements Serializable {
+public class Software extends WithOptions {
 
     public static SoftwareBuilder builder() {
         return new SoftwareBuilder();
@@ -22,14 +23,12 @@ public class Software implements Serializable {
     private final Map<String, String> files;
     private final List<String> packages;
 
-    private final Map<String, String> options;
-
     Software(String baseOperatingSystem, Map<String, String> files, List<String> packages,
              Map<String, String> options) {
+        super(options);
         this.baseOperatingSystem = checkNotNull(baseOperatingSystem, "baseOperatingSystem is null");
         this.files = ImmutableMap.copyOf(files);
         this.packages = ImmutableList.copyOf(packages);
-        this.options = ImmutableMap.copyOf(options);
     }
 
     public String getBaseOperatingSystem() {
@@ -52,17 +51,15 @@ public class Software implements Serializable {
         return packages;
     }
 
-    public Map<String, String> getOptions() {
-        return options;
-    }
 
     public SoftwareBuilder toBuilder() {
-        return builder().baseOperatingSystem(baseOperatingSystem).files(files).packages(packages).options(options);
+        return builder().baseOperatingSystem(baseOperatingSystem).files(files)
+            .packages(packages).options(getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(baseOperatingSystem, files, packages, options);
+        return Objects.hashCode(baseOperatingSystem, files, packages, getOptions());
     }
 
     @Override
@@ -75,8 +72,10 @@ public class Software implements Serializable {
         }
 
         final Software other = (Software) obj;
-        return Objects.equal(this.baseOperatingSystem, other.baseOperatingSystem) && Objects.equal(this.files, other.files)
-            && Objects.equal(this.packages, other.packages) && Objects.equal(this.options, other.options);
+        return Objects.equal(this.baseOperatingSystem, other.baseOperatingSystem)
+            && Objects.equal(this.files, other.files)
+            && Objects.equal(this.packages, other.packages)
+            && Objects.equal(this.getOptions(), other.getOptions());
     }
 
     @Override
@@ -85,7 +84,7 @@ public class Software implements Serializable {
             "baseOperatingSystem='" + baseOperatingSystem + '\'' +
             ", files=" + files +
             ", packages=" + packages +
-            ", options=" + options +
+            ", options=" + getOptions() +
             '}';
     }
 }

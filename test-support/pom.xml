@@ -26,7 +26,11 @@
             org.ops4j.pax.exam.options.extra,
             com.axemblr.provisionr.api.provider;version="[0.0.1, 1.0.0)",
             com.google.common.base;version="[13.0, 14.0)",
-            com.google.common.io;version="[13.0, 14.0)"
+            com.google.common.io;version="[13.0, 14.0)",
+            com.google.common.collect;version="[13.0, 14.0)",
+            org.slf4j,
+            org.mockito.invocation;resolution:=optional,
+            org.mockito.stubbing;resolution:=optional
         </osgi.import>
     </properties>
 
@@ -107,6 +111,11 @@
                     <artifactId>org.eclipse.osgi</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

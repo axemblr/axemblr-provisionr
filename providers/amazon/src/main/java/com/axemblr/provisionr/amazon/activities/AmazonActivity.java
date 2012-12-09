@@ -7,6 +7,8 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.DescribeRegionsRequest;
 import com.amazonaws.services.ec2.model.DescribeRegionsResult;
+import com.axemblr.provisionr.amazon.ProviderOptions;
+import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Optional;
@@ -22,7 +24,6 @@ public abstract class AmazonActivity implements JavaDelegate {
     public static final Logger LOG = LoggerFactory.getLogger(AmazonActivity.class);
 
     public static final String AXEMBLR_USER_AGENT = "Axemblr Provisionr aws-sdk-java/1.3.14";
-    public static final String DEFAULT_REGION = "us-east-1";
 
     /**
      * Amazon specific activity implementation
@@ -38,9 +39,9 @@ public abstract class AmazonActivity implements JavaDelegate {
      */
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Pool pool = (Pool) execution.getVariable("pool");
+        Pool pool = (Pool) execution.getVariable(ProcessVariables.POOL);
         checkNotNull(pool, "Please add the pool description as a process " +
-            "variable with the name 'pool'.");
+            "variable with the name '%s'.", ProcessVariables.POOL);
 
         AmazonEC2 client = null;
         try {
@@ -57,7 +58,8 @@ public abstract class AmazonActivity implements JavaDelegate {
      * Create a new Amazon EC2 client using the provider details
      */
     AmazonEC2 newAmazonEc2Client(Provider provider) {
-        String region = Optional.fromNullable(provider.getOptions().get("region")).or(DEFAULT_REGION);
+        String region = Optional.fromNullable(provider.getOptions().get(ProviderOptions.REGION))
+            .or(ProviderOptions.DEFAULT_REGION);
 
         AWSCredentials credentials = new BasicAWSCredentials(provider.getAccessKey(), provider.getSecretKey());
         AmazonEC2 client = new AmazonEC2Client(credentials, new ClientConfiguration()

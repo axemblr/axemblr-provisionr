@@ -34,7 +34,7 @@ public class AmazonProvisionr implements Provisionr {
         LOG.info("**** Amazon Provisionr (createPool) id: " + id + " pool: " + pool);
 
         Map<String, Object> arguments = Maps.newHashMap();
-        arguments.put("pool", pool);
+        arguments.put(ProcessVariables.POOL, pool);
 
         ProcessInstance instance = processEngine.getRuntimeService()
             .startProcessInstanceByKey(PROCESS_KEY, id, arguments);
