@@ -6,7 +6,8 @@ import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.RevokeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.SecurityGroup;
-import com.axemblr.provisionr.amazon.SecurityGroups;
+import com.axemblr.provisionr.amazon.ProcessVariables;
+import com.axemblr.provisionr.amazon.core.SecurityGroups;
 import com.axemblr.provisionr.amazon.functions.ConvertIpPermissionToRule;
 import com.axemblr.provisionr.amazon.functions.ConvertRuleToIpPermission;
 import com.axemblr.provisionr.api.network.Network;
@@ -58,7 +59,7 @@ public class EnsureSecurityGroupExistsLiveTest extends AmazonActivityLiveTest<En
         when(pool.getProvider()).thenReturn(provider);
         when(pool.getNetwork()).thenReturn(network);
 
-        when(execution.getVariable("pool")).thenReturn(pool);
+        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
         activity.execute(execution);

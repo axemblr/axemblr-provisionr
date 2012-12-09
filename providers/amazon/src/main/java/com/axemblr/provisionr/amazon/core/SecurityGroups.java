@@ -1,4 +1,4 @@
-package com.axemblr.provisionr.amazon;
+package com.axemblr.provisionr.amazon.core;
 
 public class SecurityGroups {
 

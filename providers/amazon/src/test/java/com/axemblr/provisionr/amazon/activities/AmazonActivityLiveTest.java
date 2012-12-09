@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DeleteSecurityGroupRequest;
 import com.axemblr.provisionr.amazon.AmazonProvisionr;
+import com.axemblr.provisionr.amazon.ProviderOptions;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.test.Generics;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
@@ -60,8 +61,9 @@ public abstract class AmazonActivityLiveTest<T extends AmazonActivity> extends P
 
     @Before
     public void setUp() throws Exception {
+        final String region = getProviderProperty(ProviderOptions.REGION, ProviderOptions.DEFAULT_REGION);
         provider = collectProviderCredentialsFromSystemProperties()
-            .option("region", getProviderProperty("region", "us-east-1")).createProvider();
+            .option(ProviderOptions.REGION, region).createProvider();
         LOG.info("Using provider {}", provider);
 
         activity = createAmazonActivityInstance();

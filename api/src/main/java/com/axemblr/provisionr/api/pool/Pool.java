@@ -5,6 +5,7 @@ import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -12,7 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.util.Map;
 
-public class Pool implements Serializable {
+public class Pool extends WithOptions {
 
     public static PoolBuilder builder() {
         return new PoolBuilder();
@@ -31,12 +32,12 @@ public class Pool implements Serializable {
     private final boolean cacheBaseImage;
     private final int bootstrapTimeInSeconds;
 
-    private final Map<String, String> options;
-
     Pool(Provider provider, Network network, AdminAccess adminAccess, Software software, Hardware hardware,
          int minSize, int expectedSize, boolean cacheBaseImage, int bootstrapTimeInSeconds,
          Map<String, String> options
     ) {
+        super(options);
+
         checkArgument(minSize > 0, "minSize should be positive");
         checkArgument(minSize <= expectedSize, "minSize should be smaller or equal to expectedSize");
         checkArgument(bootstrapTimeInSeconds > 0, "bootstrapTimeInSeconds should be positive");
@@ -50,7 +51,6 @@ public class Pool implements Serializable {
         this.expectedSize = expectedSize;
         this.cacheBaseImage = cacheBaseImage;
         this.bootstrapTimeInSeconds = bootstrapTimeInSeconds;
-        this.options = ImmutableMap.copyOf(options);
     }
 
     public Provider getProvider() {
@@ -92,20 +92,16 @@ public class Pool implements Serializable {
         return bootstrapTimeInSeconds;
     }
 
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
     public PoolBuilder toBuilder() {
         return builder().provider(provider).network(network).adminAccess(adminAccess).software(software)
             .hardware(hardware).minSize(minSize).cacheBaseImage(cacheBaseImage).expectedSize(expectedSize)
-            .bootstrapTimeInSeconds(bootstrapTimeInSeconds);
+            .bootstrapTimeInSeconds(bootstrapTimeInSeconds).options(getOptions());
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(provider, network, adminAccess, software, hardware,
-            minSize, expectedSize, cacheBaseImage, bootstrapTimeInSeconds, options);
+            minSize, expectedSize, cacheBaseImage, bootstrapTimeInSeconds, getOptions());
     }
 
     @Override
@@ -123,7 +119,7 @@ public class Pool implements Serializable {
             && Objects.equal(this.expectedSize, other.expectedSize)
             && this.cacheBaseImage == other.cacheBaseImage
             && Objects.equal(this.bootstrapTimeInSeconds, other.bootstrapTimeInSeconds)
-            && Objects.equal(this.options, other.options);
+            && Objects.equal(this.getOptions(), other.getOptions());
     }
 
     @Override
@@ -138,6 +134,7 @@ public class Pool implements Serializable {
             ", cacheBaseImage=" + cacheBaseImage +
             ", expectedSize=" + expectedSize +
             ", bootstrapTimeInSeconds=" + bootstrapTimeInSeconds +
+            ", options=" + getOptions() +
             '}';
     }
 }

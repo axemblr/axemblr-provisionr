@@ -3,7 +3,8 @@ package com.axemblr.provisionr.amazon.activities;
 import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsRequest;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsResult;
-import com.axemblr.provisionr.amazon.KeyPairs;
+import com.axemblr.provisionr.amazon.ProcessVariables;
+import com.axemblr.provisionr.amazon.core.KeyPairs;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -14,6 +15,9 @@ import static org.mockito.Mockito.when;
 
 public class EnsureKeyPairExistsLiveTest extends AmazonActivityLiveTest<EnsureKeyPairExists> {
 
+    /**
+     * Computed in an Amazon specific way
+     */
     public static final String TEST_KEY_FINGERPRINT = "2f:e9:a0:bc:17:71:3a:7e:d7:c0:16:99:0d:62:8e:be";
 
     private final String KEYPAIR_NAME = KeyPairs.formatNameFromBusinessKey(BUSINESS_KEY);
@@ -39,7 +43,7 @@ public class EnsureKeyPairExistsLiveTest extends AmazonActivityLiveTest<EnsureKe
         when(pool.getAdminAccess()).thenReturn(adminAccess);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable("pool")).thenReturn(pool);
+        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
 
         activity.execute(execution);
         assertKeyPairWasImportedAsExpected();
