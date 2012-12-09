@@ -2,7 +2,7 @@
 
 if [ -z $1 ]; 
 then
-    echo "Usage: karaf_test_provider.sh <provider-id> (e.g. amazon or cloudstack)"
+    echo "Usage: process_test.sh <provider-id> (e.g. amazon or cloudstack)"
     echo
     echo "Make sure you add your credentials to ~/.m2/settings.xml"
     echo "See README for documentation"
