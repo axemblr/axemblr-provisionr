@@ -2,12 +2,10 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.cloudstack.CloudStackProvisionr;
+import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import com.axemblr.provisionr.test.Generics;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
-import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
-import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 import org.jclouds.cloudstack.CloudStackAsyncClient;

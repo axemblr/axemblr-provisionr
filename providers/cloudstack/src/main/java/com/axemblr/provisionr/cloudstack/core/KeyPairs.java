@@ -1,4 +1,4 @@
-package com.axemblr.provisionr.cloudstack;
+package com.axemblr.provisionr.cloudstack.core;
 
 public class KeyPairs {
 

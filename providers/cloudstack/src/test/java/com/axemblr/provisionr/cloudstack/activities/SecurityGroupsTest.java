@@ -1,5 +1,6 @@
 package com.axemblr.provisionr.cloudstack.activities;
 
+import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
 

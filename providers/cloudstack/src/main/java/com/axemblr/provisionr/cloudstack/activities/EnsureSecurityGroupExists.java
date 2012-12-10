@@ -2,6 +2,7 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import static com.google.common.base.Preconditions.checkNotNull;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.jclouds.cloudstack.CloudStackClient;
@@ -13,9 +14,9 @@ import org.slf4j.LoggerFactory;
  * Creates a CloudStack {@link SecurityGroup} with specified rules. If a SecurityGroup with the same name exists,
  * it will be deleted first.
  */
-public class CreateSecurityGroup extends CloudStackActivity {
+public class EnsureSecurityGroupExists extends CloudStackActivity {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateSecurityGroup.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EnsureSecurityGroupExists.class);
 
     @Override
     public void execute(CloudStackClient cloudStackClient, Pool pool, DelegateExecution execution) {

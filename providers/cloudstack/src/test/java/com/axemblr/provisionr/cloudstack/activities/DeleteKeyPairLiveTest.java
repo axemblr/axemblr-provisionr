@@ -2,7 +2,7 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
-import com.axemblr.provisionr.cloudstack.KeyPairs;
+import com.axemblr.provisionr.cloudstack.core.KeyPairs;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.After;

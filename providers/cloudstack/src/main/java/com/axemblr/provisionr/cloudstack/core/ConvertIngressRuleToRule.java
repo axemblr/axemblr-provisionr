@@ -1,4 +1,4 @@
-package com.axemblr.provisionr.cloudstack.functions;
+package com.axemblr.provisionr.cloudstack.core;
 
 import com.axemblr.provisionr.api.network.Protocol;
 import com.axemblr.provisionr.api.network.Rule;

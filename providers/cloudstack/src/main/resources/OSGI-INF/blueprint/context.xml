@@ -8,7 +8,7 @@
 
     <service ref="cloudstackService" interface="com.axemblr.provisionr.api.Provisionr"/>
 
-    <bean id="cloudstack_createSecurityGroup" class="com.axemblr.provisionr.cloudstack.activities.CreateSecurityGroup"/>
+    <bean id="cloudstack_createSecurityGroup" class="com.axemblr.provisionr.cloudstack.activities.EnsureSecurityGroupExists"/>
     <service ref="cloudstack_createSecurityGroup" auto-export="interfaces"/>
 
     <bean id="cloudstack_deleteSecurityGroup" class="com.axemblr.provisionr.cloudstack.activities.DeleteSecurityGroup"/>
