@@ -22,4 +22,8 @@
           class="com.axemblr.provisionr.amazon.activities.DeleteKeyPair"/>
     <service ref="amazon_deleteKeyPair" auto-export="interfaces"/>
 
+    <bean id="amazon_runOnDemandInstances"
+          class="com.axemblr.provisionr.amazon.activities.RunOnDemandInstances"/>
+    <service ref="amazon_runOnDemandInstances" auto-export="interfaces"/>
+
 </blueprint>                     
