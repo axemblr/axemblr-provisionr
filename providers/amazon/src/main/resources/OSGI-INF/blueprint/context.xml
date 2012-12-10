@@ -26,4 +26,8 @@
           class="com.axemblr.provisionr.amazon.activities.RunOnDemandInstances"/>
     <service ref="amazon_runOnDemandInstances" auto-export="interfaces"/>
 
+    <bean id="amazon_terminateInstances"
+          class="com.axemblr.provisionr.amazon.activities.TerminateInstances"/>
+    <service ref="amazon_terminateInstances" auto-export="interfaces"/>
+
 </blueprint>                     
