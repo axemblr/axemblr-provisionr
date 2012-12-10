@@ -33,7 +33,7 @@ public class CloudStackProvisionr implements Provisionr {
     }
 
     @Override
-    public void startCreatePoolProcess(String id, Pool pool) {
+    public void startPoolManagementProcess(String id, Pool pool) {
         LOG.info("**** CloudStack (startCreatePoolProcess) id: " + id + " pool: " + pool);
         //TODO: make sure the all information in the pool is valid - i.e. it will not make the cloud scream at us !!
         Map<String, Object> arguments = Maps.newHashMap();

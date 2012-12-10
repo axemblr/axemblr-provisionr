@@ -30,7 +30,7 @@ public class AmazonProvisionr implements Provisionr {
     }
 
     @Override
-    public void startCreatePoolProcess(String id, Pool pool) {
+    public void startPoolManagementProcess(String id, Pool pool) {
         LOG.info("**** Amazon Provisionr (createPool) id: " + id + " pool: " + pool);
 
         Map<String, Object> arguments = Maps.newHashMap();
