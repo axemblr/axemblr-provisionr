@@ -32,7 +32,7 @@ public abstract class AmazonActivity implements JavaDelegate {
      * @param pool      Virtual machines pool description
      * @param execution Activiti execution context
      */
-    public abstract void execute(AmazonEC2 client, Pool pool, DelegateExecution execution);
+    public abstract void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws Exception;
 
     /**
      * Wrap the abstract {@code execute} method with the logic that knows how to create the Amazon client
@@ -45,6 +45,8 @@ public abstract class AmazonActivity implements JavaDelegate {
 
         AmazonEC2 client = null;
         try {
+            // TODO: refactor to re-use the same client instance for all activities (per provider)
+            // we need some sort of connection pool implementation
             client = newAmazonEc2Client(pool.getProvider());
             execute(client, pool, execution);
         } finally {
