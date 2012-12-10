@@ -13,21 +13,17 @@ import com.axemblr.provisionr.amazon.core.KeyPairs;
 import com.axemblr.provisionr.amazon.core.SecurityGroups;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.delegate.VariableScope;
 
 public class RunOnDemandInstances extends AmazonActivity {
 
     public static final String DEFAULT_ARCH = "amd64";
     public static final String DEFAULT_TYPE = "instance-store";
-
-    private ImageTable table;
-
-    public RunOnDemandInstances() throws IOException {
-        this.table = ImageTable.fromCsvResource("amis/ubuntu.csv");
-    }
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) {
@@ -37,7 +33,8 @@ public class RunOnDemandInstances extends AmazonActivity {
         final String keyPairName = KeyPairs.formatNameFromBusinessKey(businessKey);
 
         final String instanceType = pool.getHardware().getType();
-        final String imageId = queryImageTableForId(pool.getProvider(), instanceType);
+        final String imageId = getImageIdFromProcessVariablesOrQueryImageTable(
+            execution, pool.getProvider(), instanceType);
 
         final RunInstancesRequest request = new RunInstancesRequest()
             .withClientToken(businessKey)
@@ -52,22 +49,36 @@ public class RunOnDemandInstances extends AmazonActivity {
 
         LOG.info(">> Sending RunInstances request: {}", request);
         RunInstancesResult result = client.runInstances(request);
+        LOG.info("<< Got RunInstances result: {}", result);
 
         // TODO tag instances: managed-by: Axemblr Provisionr, business-key: ID etc.
 
-        LOG.info("<< RunInstances result: {}", result);
         execution.setVariable(ProcessVariables.RESERVATION_ID,
             result.getReservation().getReservationId());
         execution.setVariable(ProcessVariables.INSTANCES,
             collectInstanceIdsAsArray(result.getReservation().getInstances()));
     }
 
-    private String queryImageTableForId(Provider provider, String instanceType) {
+    private String getImageIdFromProcessVariablesOrQueryImageTable(
+        VariableScope execution, Provider provider, String instanceType
+    ) {
+        final String imageId = (String) execution.getVariable(ProcessVariables.CACHED_IMAGE_ID);
+        if (imageId != null) {
+            return imageId;
+        }
+
+        ImageTable imageTable;
+        try {
+            imageTable = ImageTable.fromCsvResource("amis/ubuntu.csv");
+        } catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
+
         final String region = provider.getOptionOr(ProviderOptions.REGION, ProviderOptions.DEFAULT_REGION);
         final String version = provider.getOptionOr(SoftwareOptions.BASE_OPERATING_SYSTEM_VERSION,
             SoftwareOptions.DEFAULT_BASE_OPERATING_SYSTEM_VERSION);
 
-        ImageTableQuery query = table.query()
+        ImageTableQuery query = imageTable.query()
             .filterBy("region", region)
             .filterBy("version", version)
             .filterBy("arch", DEFAULT_ARCH);

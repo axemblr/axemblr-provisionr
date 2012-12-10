@@ -70,7 +70,7 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final Pool pool = Pool.builder().network(network).provider(provider).adminAccess(adminAccess)
             .software(software).hardware(hardware).minSize(1).expectedSize(1).createPool();
 
-        provisionr.startCreatePoolProcess(UUID.randomUUID().toString(), pool);
+        provisionr.startPoolManagementProcess(UUID.randomUUID().toString(), pool);
         TimeUnit.SECONDS.sleep(10);  // TODO replace with wait on process to finish
     }
 }

@@ -11,12 +11,14 @@ public interface Provisionr {
 
     /**
      * Start a provisioning process based on the pool description
+     * <p/>
+     * This process will run until the pool is destroyed
      *
-     * @param id   external process ID (e.g. job ID)
+     * @param id   external process ID (e.g. job ID, business key)
      * @param pool pool description
      * @return internal process ID
      */
-    void startCreatePoolProcess(String id, Pool pool);
+    void startPoolManagementProcess(String id, Pool pool);
 
     /**
      * Destroy all the machines from the pool with that id
