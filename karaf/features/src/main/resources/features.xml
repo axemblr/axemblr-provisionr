@@ -29,6 +29,7 @@
         <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-api/${project.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-core/${project.version}</bundle>
+        <bundle>mvn:com.axemblr.provisionr/provisionr-commands/${project.version}</bundle>
     </feature>
 
     <feature name="axemblr-provisionr-amazon" version="${project.version}">
