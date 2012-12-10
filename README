@@ -57,9 +57,9 @@ How to run?
 $ cd karaf/assembly/target/
 $ tar xvfz com.axemblr.provisionr-*.tar.gz
 $ cd com.axemblr.provisionr*
-$ bin/karaf
+$ bin/provisionr
 
-TODO: do more branding, add commands to create pool, show how to use the REST endpoint 
+TODO: add commands to create pool, show how to use the REST endpoint 
 
 Supported cloud providers
 -------------------------

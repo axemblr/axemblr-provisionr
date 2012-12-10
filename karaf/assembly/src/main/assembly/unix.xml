@@ -54,4 +54,26 @@
             <directory>target/features-repo</directory>
         </fileSet>
     </fileSets>
+
+    <files>
+        <file>
+            <source>${basedir}/target/dependencies/unix/apache-karaf-${karaf.version}/bin/karaf</source>
+            <outputDirectory>/bin/</outputDirectory>
+            <destName>provisionr</destName>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>
+    </files>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/lib</outputDirectory>
+            <outputFileNameMapping>provisionr-version.jar</outputFileNameMapping>
+            <fileMode>0644</fileMode>
+            <includes>
+                <include>com.axemblr.provisionr:provisionr-branding</include>
+            </includes>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+        </dependencySet>
+    </dependencySets>
 </assembly>

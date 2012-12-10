@@ -15,6 +15,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-branding</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-amazon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-cloudstack</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.karaf</groupId>
             <artifactId>apache-karaf</artifactId>
             <version>${karaf.version}</version>

@@ -10,10 +10,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.axemblr.provisionr</groupId>
+    <name>Axemblr Provisionr :: Karaf Features</name>
     <artifactId>provisionr-features</artifactId>
     <packaging>jar</packaging>
-    <name>Axemblr Provisionr :: Karaf Features</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

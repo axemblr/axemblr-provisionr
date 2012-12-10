@@ -34,6 +34,7 @@
             <modules>
                 <module>activiti/commands</module>
                 <!--<module>activiti/explorer</module>-->
+                <module>karaf/branding</module>
                 <module>karaf/features</module>
             </modules>
         </profile>
