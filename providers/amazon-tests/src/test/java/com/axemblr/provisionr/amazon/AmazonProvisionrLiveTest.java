@@ -61,14 +61,13 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final Software software = Software.builder().baseOperatingSystem("ubuntu-10.04")
             .packages("nginx").createSoftware();
 
-        final AdminAccess adminAccess = AdminAccess.builder().username("admin").publicKey("ssh-rsa ")
-            .privateKey("-----BEGIN RSA PRIVATE KEY-----").createAdminAccess();
-
+        final AdminAccess adminAccess = collectCurrentUserCredentialsForAdminAccess();
+        
         final Pool pool = Pool.builder().provider(provider).network(network).adminAccess(adminAccess)
             .software(software).hardware(hardware).minSize(1).expectedSize(1).createPool();
 
         provisionr.startPoolManagementProcess("j-" + UUID.randomUUID().toString(), pool);
-        TimeUnit.SECONDS.sleep(5);  // TODO replace with wait on process to finish
+        TimeUnit.SECONDS.sleep(120);  // TODO replace with wait on process to finish
 
         // TODO: get the list of machines and check that nginx is listening on port 80
     }
