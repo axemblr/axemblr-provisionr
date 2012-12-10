@@ -13,7 +13,7 @@ public class ImageTableTest {
 
     @Test
     public void testLoadAmiTableFromResource() throws IOException {
-        ImageTable table = ImageTable.fromCsvResource("amis/ubuntu.csv");
+        ImageTable table = ImageTable.fromCsvResource("/com/axemblr/provisionr/amazon/ubuntu.csv");
 
         String id = table.query().filterBy("region", "us-east-1").filterBy("version", "12.04 LTS")
             .filterBy("arch", "amd64").filterBy("type", "instance-store").singleResult();

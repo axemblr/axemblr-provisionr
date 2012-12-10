@@ -30,4 +30,12 @@
           class="com.axemblr.provisionr.amazon.activities.TerminateInstances"/>
     <service ref="amazon_terminateInstances" auto-export="interfaces"/>
 
+    <bean id="amazon_checkAllInstancesAreRunning"
+          class="com.axemblr.provisionr.amazon.activities.CheckAllInstancesAreRunning"/>
+    <service ref="amazon_checkAllInstancesAreRunning" auto-export="interfaces"/>
+
+    <bean id="amazon_checkAllInstancesAreTerminated"
+          class="com.axemblr.provisionr.amazon.activities.CheckAllInstancesAreTerminated"/>
+    <service ref="amazon_checkAllInstancesAreTerminated" auto-export="interfaces"/>
+
 </blueprint>                     

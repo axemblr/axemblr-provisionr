@@ -36,7 +36,7 @@ public class ImageTable {
     public static ImageTable fromCsvResource(String resource) throws IOException {
         checkNotNull(resource, "resource is null");
 
-        List<String> lines = Resources.readLines(Resources.getResource(resource), Charsets.UTF_8);
+        List<String> lines = Resources.readLines(Resources.getResource(ImageTable.class, resource), Charsets.UTF_8);
         checkArgument(!lines.isEmpty(), "the resource is an empty file");
 
         final ImmutableTable.Builder<String, String, String> table = ImmutableTable.builder();
