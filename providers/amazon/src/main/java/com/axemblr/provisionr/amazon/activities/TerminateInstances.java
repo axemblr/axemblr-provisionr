@@ -1,5 +1,7 @@
 package com.axemblr.provisionr.amazon.activities;
 
+import java.util.Arrays;
+
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.axemblr.provisionr.amazon.ProcessVariables;
@@ -17,6 +19,7 @@ public class TerminateInstances extends AmazonActivity {
         String[] instances = (String[]) execution.getVariable(ProcessVariables.INSTANCES);
         checkNotNull(instances, "process variable '{}' not found", ProcessVariables.INSTANCES);
 
+        LOG.info(">> Terminating instances: {}", Arrays.toString(instances));
         client.terminateInstances(new TerminateInstancesRequest().withInstanceIds(instances));
     }
 }

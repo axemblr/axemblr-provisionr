@@ -8,7 +8,7 @@ public class ImageTableQueryTest {
     public final ImageTable table;
 
     public ImageTableQueryTest() throws IOException {
-        this.table = ImageTable.fromCsvResource("amis/ubuntu.csv");
+        this.table = ImageTable.fromCsvResource("/com/axemblr/provisionr/amazon/ubuntu.csv");
     }
 
     @Test(expected = IllegalArgumentException.class)

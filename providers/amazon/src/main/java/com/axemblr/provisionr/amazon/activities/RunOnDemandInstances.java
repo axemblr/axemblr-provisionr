@@ -69,7 +69,7 @@ public class RunOnDemandInstances extends AmazonActivity {
 
         ImageTable imageTable;
         try {
-            imageTable = ImageTable.fromCsvResource("amis/ubuntu.csv");
+            imageTable = ImageTable.fromCsvResource("/com/axemblr/provisionr/amazon/ubuntu.csv");
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
