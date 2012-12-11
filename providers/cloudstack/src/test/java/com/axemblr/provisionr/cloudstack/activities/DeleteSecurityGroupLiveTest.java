@@ -2,6 +2,8 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.cloudstack.ProcessVariables;
+import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import java.util.NoSuchElementException;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.junit.After;
@@ -16,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class DeleteSecurityGroupLiveTest extends CloudStackActivityLiveTest<DeleteSecurityGroup> {
 
     private final Logger LOG = LoggerFactory.getLogger(DeleteSecurityGroupLiveTest.class);
-    private final String SECURITY_GROUP_NAME = SecurityGroups.formatSecurityGroupNameFromProcessBusinessKey(BUSINESS_KEY);
+    private final String SECURITY_GROUP_NAME = SecurityGroups.formatNameFromBusinessKey(BUSINESS_KEY);
 
     @Override
     @Before
@@ -42,7 +44,7 @@ public class DeleteSecurityGroupLiveTest extends CloudStackActivityLiveTest<Dele
         when(pool.getProvider()).thenReturn(provider);
         when(pool.getNetwork()).thenReturn(network);
 
-        when(execution.getVariable("pool")).thenReturn(pool);
+        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
         SecurityGroups.createSecurityGroup(context.getApi(), SECURITY_GROUP_NAME);

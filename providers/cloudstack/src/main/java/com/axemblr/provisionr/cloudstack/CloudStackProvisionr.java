@@ -37,7 +37,7 @@ public class CloudStackProvisionr implements Provisionr {
         LOG.info("**** CloudStack (startCreatePoolProcess) id: " + id + " pool: " + pool);
         //TODO: make sure the all information in the pool is valid - i.e. it will not make the cloud scream at us !!
         Map<String, Object> arguments = Maps.newHashMap();
-        arguments.put("pool", pool);
+        arguments.put(ProcessVariables.POOL, pool);
 
         RuntimeService runtimeService = processEngine.getRuntimeService();
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, id, arguments);
