@@ -18,4 +18,4 @@ target
 .bpmn
 core/.xml
 felix-cache
-
+.metadata
