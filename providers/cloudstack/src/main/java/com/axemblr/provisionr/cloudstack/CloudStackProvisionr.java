@@ -2,6 +2,8 @@ package com.axemblr.provisionr.cloudstack;
 
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.provider.Provider;
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import org.activiti.engine.ProcessEngine;
@@ -33,18 +35,25 @@ public class CloudStackProvisionr implements Provisionr {
     }
 
     @Override
-    public void startPoolManagementProcess(String id, Pool pool) {
-        LOG.info("**** CloudStack (startCreatePoolProcess) id: " + id + " pool: " + pool);
+    public Optional<Provider> getDefaultProvider() {
+        return Optional.absent();
+    }
+
+    @Override
+    public String startPoolManagementProcess(String businessKey, Pool pool) {
+        LOG.info("**** CloudStack (startCreatePoolProcess) id: " + businessKey + " pool: " + pool);
         //TODO: make sure the all information in the pool is valid - i.e. it will not make the cloud scream at us !!
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put(ProcessVariables.POOL, pool);
 
         RuntimeService runtimeService = processEngine.getRuntimeService();
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, id, arguments);
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, businessKey, arguments);
+
+        return instance.getProcessInstanceId();
     }
 
     @Override
-    public void destroyPool(String id) {
-        LOG.info("**** CloudStack (destroyPool) id: " + id);
+    public void destroyPool(String businessKey) {
+        LOG.info("**** CloudStack (destroyPool) id: " + businessKey);
     }
 }

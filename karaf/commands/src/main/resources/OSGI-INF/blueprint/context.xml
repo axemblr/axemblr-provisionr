@@ -3,9 +3,26 @@
            xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
            xmlns:cfg="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
 
+    <reference-list id="provisionrServices" interface="com.axemblr.provisionr.api.Provisionr"
+                    availability="optional" activation="eager"/>
+
+    <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
+
     <shell:command-bundle>
-        <shell:command name="provisionr/list">
-            <shell:action class="com.axemblr.provisionr.commands.ListCommand"/>
+        <shell:command name="provisionr/services">
+            <shell:action class="com.axemblr.provisionr.commands.ListServicesCommand">
+                <shell:argument ref="provisionrServices"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="provisionr/create">
+            <shell:action class="com.axemblr.provisionr.commands.CreatePoolCommand">
+                <shell:argument ref="provisionrServices"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="provisionr/destroy">
+            <shell:action class="com.axemblr.provisionr.commands.DestroyPoolCommand">
+                <shell:argument ref="provisionrServices"/>
+            </shell:action>
         </shell:command>
     </shell:command-bundle>
 </blueprint>
