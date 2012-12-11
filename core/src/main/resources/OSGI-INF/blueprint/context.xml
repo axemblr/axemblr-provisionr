@@ -1,18 +1,18 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
            xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0"
-           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0">
+           xmlns:cfg="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0">
 
     <ext:property-placeholder/>
 
-    <cm:property-placeholder persistent-id="com.axemblr.provisionr"
-                             placeholder-prefix="$(" placeholder-suffix=")" update-strategy="reload">
-        <cm:default-properties>
-            <cm:property name="activiti.db.url" value="jdbc:h2:mem:axemblr;DB_CLOSE_DELAY=-1"/>
-            <cm:property name="activiti.db.user" value="sa"/>
-            <cm:property name="activiti.db.password" value=""/>
-            <cm:property name="activiti.db.schemaUpdate" value="true"/>
-        </cm:default-properties>
-    </cm:property-placeholder>
+    <cfg:property-placeholder persistent-id="com.axemblr.provisionr"
+                              placeholder-prefix="$(" placeholder-suffix=")" update-strategy="reload">
+        <cfg:default-properties>
+            <cfg:property name="activiti.db.url" value="jdbc:h2:mem:axemblr;DB_CLOSE_DELAY=-1"/>
+            <cfg:property name="activiti.db.user" value="sa"/>
+            <cfg:property name="activiti.db.password" value=""/>
+            <cfg:property name="activiti.db.schemaUpdate" value="true"/>
+        </cfg:default-properties>
+    </cfg:property-placeholder>
 
     <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource" scope="singleton">
         <property name="URL" value="$(activiti.db.url)"/>

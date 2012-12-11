@@ -1,7 +1,10 @@
 package com.axemblr.provisionr.amazon;
 
+import com.axemblr.provisionr.amazon.config.DefaultProviderConfig;
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.provider.Provider;
+import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import java.util.Map;
@@ -18,10 +21,17 @@ public class AmazonProvisionr implements Provisionr {
     public static final String PROCESS_KEY = "amazon";
 
     private final ProcessEngine processEngine;
+    private final Optional<Provider> defaultProvider;
 
-    public AmazonProvisionr(ProcessEngine processEngine) {
+    public AmazonProvisionr(ProcessEngine processEngine, DefaultProviderConfig defaultProviderConfig) {
         this.processEngine = checkNotNull(processEngine, "processEngine is null");
-        LOG.info("*** Amazon Provisionr constructor");
+        this.defaultProvider = defaultProviderConfig.createProvider();
+
+        if (defaultProvider.isPresent()) {
+            LOG.info("Default provider for AmazonProvisionr is {}", defaultProvider.get());
+        } else {
+            LOG.info("No default provider configured for AmazonProvisionr");
+        }
     }
 
     @Override
@@ -30,20 +40,23 @@ public class AmazonProvisionr implements Provisionr {
     }
 
     @Override
-    public void startPoolManagementProcess(String id, Pool pool) {
-        LOG.info("**** Amazon Provisionr (createPool) id: " + id + " pool: " + pool);
+    public Optional<Provider> getDefaultProvider() {
+        return defaultProvider;
+    }
 
+    @Override
+    public String startPoolManagementProcess(String businessKey, Pool pool) {
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put(ProcessVariables.POOL, pool);
 
         ProcessInstance instance = processEngine.getRuntimeService()
-            .startProcessInstanceByKey(PROCESS_KEY, id, arguments);
+            .startProcessInstanceByKey(PROCESS_KEY, businessKey, arguments);
 
-        // TODO do something wih the ProcessInstance. maybe return?
+        return instance.getProcessInstanceId();
     }
 
     @Override
-    public void destroyPool(String id) {
-        LOG.info("**** Amazon Provisionr (destroyPool) id: " + id);
+    public void destroyPool(String businessKey) {
+        LOG.info("**** Amazon Provisionr (destroyPool) id: " + businessKey);
     }
 }
