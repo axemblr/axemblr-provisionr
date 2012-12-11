@@ -1,4 +1,3 @@
-
 Axemblr Provisionr
 ==================
 
@@ -9,8 +8,9 @@ Features
 
 * Can provision 10s or 100s of VMs across multiple clouds
 * Fully persistent granular internal workflow
-* Can be restarted while starting VMs
+* Can be restarted at any time with no impact
 * Has a modular architecture based on OSGi and Apache Karaf
+* Can be used as an interactive tool or as a service 
 
 License
 -------
