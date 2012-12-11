@@ -1,9 +1,7 @@
-package com.axemblr.provisionr.cloudstack.functions;
+package com.axemblr.provisionr.cloudstack.core;
 
 import com.axemblr.provisionr.api.network.Protocol;
 import com.axemblr.provisionr.api.network.Rule;
-import com.axemblr.provisionr.cloudstack.core.ConvertIngressRuleToRule;
-import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.jclouds.cloudstack.domain.IngressRule;
 import org.junit.Test;

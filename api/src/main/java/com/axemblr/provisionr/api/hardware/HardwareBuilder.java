@@ -12,6 +12,13 @@ public class HardwareBuilder extends BuilderWithOptions<HardwareBuilder> {
         return this;
     }
 
+    /**
+     * This is similar to <a href="http://aws.amazon.com/ec2/instance-types/">'instance type'</a> on Amazon
+     * or <a href="http://docs.cloudstack.org/Glossary">'service offering'</a> on CloudStack
+     *
+     * @param type
+     * @return
+     */
     public HardwareBuilder type(String type) {
         this.type = checkNotNull(type, "type is null");
         return this;

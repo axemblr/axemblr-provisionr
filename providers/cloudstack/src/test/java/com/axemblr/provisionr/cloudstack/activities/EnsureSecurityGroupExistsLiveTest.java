@@ -4,6 +4,7 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.cloudstack.core.ConvertIngressRuleToRule;
+import com.axemblr.provisionr.cloudstack.ProcessVariables;
 import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -20,9 +21,9 @@ import static org.mockito.Mockito.when;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<EnsureSecurityGroupExists> {
+public class EnsureSecurityGroupExistsLiveTest extends CloudStackActivityLiveTest<EnsureSecurityGroupExists> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateSecurityGroupLiveTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EnsureSecurityGroupExistsLiveTest.class);
 
     private final String SECURITY_GROUP_NAME = "network-" + BUSINESS_KEY;
 
@@ -71,7 +72,7 @@ public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<Ensu
         when(pool.getProvider()).thenReturn(provider);
         when(pool.getNetwork()).thenReturn(network);
 
-        when(execution.getVariable("pool")).thenReturn(pool);
+        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
         activity.execute(execution);
@@ -86,7 +87,7 @@ public class CreateSecurityGroupLiveTest extends CloudStackActivityLiveTest<Ensu
 
         when(pool.getProvider()).thenReturn(provider);
 
-        when(execution.getVariable("pool")).thenReturn(pool);
+        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
         // create the SecurityGroup with an extra Network Rule, then call the activity

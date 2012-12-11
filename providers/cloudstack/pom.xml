@@ -111,6 +111,12 @@
                             </test.cloudstack.provider.accessKey>
                             <test.cloudstack.provider.secretKey>${test.cloudstack.provider.secretKey}
                             </test.cloudstack.provider.secretKey>
+                            <test.cloudstack.provider.serviceOffering>${test.cloudstack.provider.serviceOffering}
+                            </test.cloudstack.provider.serviceOffering>
+                            <test.cloudstack.provider.templateId>${test.cloudstack.provider.templateId}
+                            </test.cloudstack.provider.templateId>
+                            <test.cloudstack.provider.zoneId>${test.cloudstack.provider.zoneId}
+                            </test.cloudstack.provider.zoneId>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

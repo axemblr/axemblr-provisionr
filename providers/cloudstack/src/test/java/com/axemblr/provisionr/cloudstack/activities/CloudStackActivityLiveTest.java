@@ -12,6 +12,7 @@ import org.jclouds.cloudstack.CloudStackAsyncClient;
 import org.jclouds.cloudstack.CloudStackClient;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 import org.jclouds.cloudstack.domain.SshKeyPair;
+import org.jclouds.cloudstack.domain.VirtualMachine;
 import org.jclouds.rest.RestContext;
 import org.junit.After;
 import org.junit.Before;
@@ -86,6 +87,14 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
         LOG.info("Access Key count is {}", keys.size());
         for (SshKeyPair keyPair : keys) {
             LOG.info("\tKey {}", keyPair.getName());
+        }
+    }
+
+    protected void logVirtualMachines() {
+        Set<VirtualMachine> vms = context.getApi().getVirtualMachineClient().listVirtualMachines();
+        LOG.info("Virtual machines count is {}", vms.size());
+        for (VirtualMachine vm : vms) {
+            LOG.info("\tVirtual machine {}", vm.toString());
         }
     }
 }

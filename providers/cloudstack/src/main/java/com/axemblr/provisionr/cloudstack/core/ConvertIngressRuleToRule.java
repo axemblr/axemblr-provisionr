@@ -3,7 +3,6 @@ package com.axemblr.provisionr.cloudstack.core;
 import com.axemblr.provisionr.api.network.Protocol;
 import com.axemblr.provisionr.api.network.Rule;
 import com.google.common.base.Function;
-import com.google.common.collect.Ranges;
 import org.jclouds.cloudstack.domain.IngressRule;
 
 public enum ConvertIngressRuleToRule implements Function<IngressRule, Rule> {

@@ -13,7 +13,7 @@ public class DeleteSecurityGroup extends CloudStackActivity {
 
     @Override
     public void execute(CloudStackClient cloudStackClient, Pool pool, DelegateExecution execution) {
-        String securityGroupName = SecurityGroups.formatSecurityGroupNameFromProcessBusinessKey(execution.getProcessBusinessKey());
+        String securityGroupName = SecurityGroups.formatNameFromBusinessKey(execution.getProcessBusinessKey());
         SecurityGroups.deleteByName(cloudStackClient, securityGroupName);
     }
 }
