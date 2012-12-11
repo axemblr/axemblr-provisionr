@@ -6,11 +6,24 @@ Pool management service for 10s or 100s of virtual machines.
 Features
 --------
 
-* Can provision 10s or 100s of VMs across multiple clouds
-* Fully persistent granular internal workflow
+* Can provision 10s or 100s of virtual machines across multiple clouds
+* Fully persistent granular internal workflows
 * Can be restarted at any time with no impact
 * Has a modular architecture based on OSGi and Apache Karaf
 * Can be used as an interactive tool or as a service 
+
+How does it look like?
+----------------------
+
+TODO add Activiti Explorer screenshot or diagram + Karaf shell photo
+
+Who is behind this?
+-------------------
+
+Core committers:
+
+* Andrei Savu - asavu@axemblr.com - http://www.linkedin.com/in/sandrei
+* Ioan Eugen Stan - ieugen@axemblr.com - http://www.linkedin.com/in/sandrei
 
 License
 -------
@@ -18,27 +31,10 @@ License
 Apache License Version 2.0
 http://apache.org/licenses/LICENSE-2.0.txt
 
-API Endpoints
--------------
+Supported cloud providers
+-------------------------
 
-GET /pools - list all pools
-GET /pools/<id> - retrieve a specific pool
-POST /pools/<id> - resize an existing pool
-POST /pools - create new pool
-DELETE /pools/<id> - delete pool
-
-See com.axemblr.provisionr.api.pool.Pool to understand the
-object structure for the POST request.
-
-How to build?
--------------
-
-Maven as usual:
-
-$ mvn clean install 
-
-This will download dependencies, compile the sources and run
-unit tests and some of the integration tests (karaf feature install)
+We are working on making all this run as expected on Amazon EC2 & CloudStack. 
 
 How to create a distribution?
 -----------------------------
@@ -59,12 +55,17 @@ $ tar xvfz com.axemblr.provisionr-*.tar.gz
 $ cd com.axemblr.provisionr*
 $ bin/provisionr
 
-TODO: add commands to create pool, show how to use the REST endpoint 
+TODO: explain configuration & add commands to create pool 
 
-Supported cloud providers
--------------------------
+How to build?
+-------------
 
-We are working on making all this run as expected on Amazon EC2 & CloudStack. 
+Maven as usual:
+
+$ mvn clean install 
+
+This will download dependencies, compile the sources and run
+unit tests and some of the integration tests (karaf feature install)
 
 How to test?
 ------------
