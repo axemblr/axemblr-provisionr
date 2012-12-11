@@ -3,6 +3,9 @@ Axemblr Provisionr
 
 Pool management service for 10s or 100s of virtual machines.
 
+Our long term objective is to create a simple robust enterprise-class
+foundation for service deployment automation on cloud infrastructure. 
+
 Features
 --------
 
