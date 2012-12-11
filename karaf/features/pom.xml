@@ -33,6 +33,11 @@
             <artifactId>activiti-karaf-commands</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-commands</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
