@@ -62,7 +62,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
             .packages("nginx").createSoftware();
 
         final AdminAccess adminAccess = collectCurrentUserCredentialsForAdminAccess();
-        
+
         final Pool pool = Pool.builder().provider(provider).network(network).adminAccess(adminAccess)
             .software(software).hardware(hardware).minSize(1).expectedSize(1).createPool();
 

@@ -1,10 +1,30 @@
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0"
+           xmlns:cfg="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0">
+
+    <cfg:property-placeholder persistent-id="com.axemblr.provisionr.amazon"
+                              placeholder-prefix="$(" placeholder-suffix=")" update-strategy="reload">
+        <cfg:default-properties>
+            <cfg:property name="accessKey" value=""/>
+            <cfg:property name="secretKey" value=""/>
+            <cfg:property name="region" value="us-east-1"/>
+        </cfg:default-properties>
+    </cfg:property-placeholder>
+
+    <bean id="defaultProviderConfig" class="com.axemblr.provisionr.amazon.config.DefaultProviderConfig">
+        <argument value="$(accessKey)"/>
+        <argument value="$(secretKey)"/>
+        <argument value="$(region)"/>
+    </bean>
 
     <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
     <bean id="amazonService" class="com.axemblr.provisionr.amazon.AmazonProvisionr">
         <argument ref="processEngine"/>
+        <argument ref="defaultProviderConfig"/>
     </bean>
     <service ref="amazonService" interface="com.axemblr.provisionr.api.Provisionr"/>
+
+    <!-- Process activities that are specific to Amazon -->
 
     <bean id="amazon_ensureSecurityGroupExists"
           class="com.axemblr.provisionr.amazon.activities.EnsureSecurityGroupExists"/>

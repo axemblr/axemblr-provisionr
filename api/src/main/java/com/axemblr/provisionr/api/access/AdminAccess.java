@@ -67,7 +67,6 @@ public class AdminAccess implements Serializable {
         return "AdminAccess{" +
             "username='" + username + '\'' +
             ", publicKey='" + publicKey + '\'' +
-            ", privateKey='" + privateKey + '\'' +
             '}';
     }
 }
