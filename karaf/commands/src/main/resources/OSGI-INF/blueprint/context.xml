@@ -14,6 +14,11 @@
                 <shell:argument ref="provisionrServices"/>
             </shell:action>
         </shell:command>
+        <shell:command name="provisionr/pools">
+            <shell:action class="com.axemblr.provisionr.commands.ListPoolsCommand">
+                <shell:argument ref="processEngine"/>
+            </shell:action>
+        </shell:command>
         <shell:command name="provisionr/create">
             <shell:action class="com.axemblr.provisionr.commands.CreatePoolCommand">
                 <shell:argument ref="provisionrServices"/>
