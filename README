@@ -91,7 +91,7 @@ Your credentials should be in ~/.m2/settings.xml or sent as system properties
         <properties>
             <test.cloudstack.provider.accessKey>cs-key</test.cloudstack.provider.accessKey>
             <test.cloudstack.provider.secretKey>cs-secret</test.cloudstack.provider.secretKey>
-            <test.cloudstack.provider.endpoint>http://api.example.com/v1/</test.cloudstack.provider.endpoint>
+            <test.cloudstack.provider.endpoint>...</test.cloudstack.provider.endpoint>
 
             <test.amazon.provider.accessKey>xxxxx</test.amazon.provider.accessKey>
             <test.amazon.provider.secretKey>xxxxx</test.amazon.provider.secretKey>
