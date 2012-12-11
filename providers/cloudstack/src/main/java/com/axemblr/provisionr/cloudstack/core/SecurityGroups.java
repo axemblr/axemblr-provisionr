@@ -1,4 +1,4 @@
-package com.axemblr.provisionr.cloudstack.activities;
+package com.axemblr.provisionr.cloudstack.core;
 
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Protocol;
@@ -22,7 +22,7 @@ public class SecurityGroups {
     public static final int DEFAULT_ICMP_CODE = 0;
     public static final int DEFAULT_ICMP_TYPE = 8;
 
-    static String formatSecurityGroupNameFromProcessBusinessKey(String processBusinessKey) {
+    public static String formatNameFromBusinessKey(String processBusinessKey) {
         return String.format("network-%s", processBusinessKey);
     }
 
@@ -31,17 +31,17 @@ public class SecurityGroups {
      *
      * @throws NoSuchElementException if securityGroup does not exist.
      */
-    static SecurityGroup getByName(CloudStackClient cloudStackClient, String securityGroup) {
+    public static SecurityGroup getByName(CloudStackClient cloudStackClient, String securityGroup) {
         return Iterables.getOnlyElement(cloudStackClient
             .getSecurityGroupClient()
             .listSecurityGroups(named(securityGroup)));
     }
 
-    static Set<SecurityGroup> getAll(CloudStackClient cloudStackClient) {
+    public static Set<SecurityGroup> getAll(CloudStackClient cloudStackClient) {
         return cloudStackClient.getSecurityGroupClient().listSecurityGroups();
     }
 
-    static void deleteByName(CloudStackClient cloudStackClient, String securityGroupName) {
+    public static void deleteByName(CloudStackClient cloudStackClient, String securityGroupName) {
         try {
             SecurityGroup securityGroup = getByName(cloudStackClient, securityGroupName);
             LOG.info("Deleting SecurityGroup {}", securityGroup.getName());
@@ -51,18 +51,18 @@ public class SecurityGroups {
         }
     }
 
-    static SecurityGroup createSecurityGroup(CloudStackClient cloudStackClient, String securityGroupName) {
+    public static SecurityGroup createSecurityGroup(CloudStackClient cloudStackClient, String securityGroupName) {
         SecurityGroupClient securityGroupClient = cloudStackClient.getSecurityGroupClient();
         return securityGroupClient.createSecurityGroup(securityGroupName);
     }
 
-    static void deleteNetworkRules(CloudStackClient cloudStackClient, SecurityGroup securityGroup) {
+    public static void deleteNetworkRules(CloudStackClient cloudStackClient, SecurityGroup securityGroup) {
         for (IngressRule rule : securityGroup.getIngressRules()) {
             cloudStackClient.getSecurityGroupClient().revokeIngressRule(rule.getId());
         }
     }
 
-    static void applyNetworkRules(CloudStackClient cloudStackClient, SecurityGroup securityGroup, Network network) {
+    public static void applyNetworkRules(CloudStackClient cloudStackClient, SecurityGroup securityGroup, Network network) {
         SecurityGroupClient securityGroupClient = cloudStackClient.getSecurityGroupClient();
         for (Rule rule : network.getIngress()) {
             if (rule.getProtocol() == Protocol.ICMP) {
@@ -77,6 +77,4 @@ public class SecurityGroups {
             }
         }
     }
-
-
 }

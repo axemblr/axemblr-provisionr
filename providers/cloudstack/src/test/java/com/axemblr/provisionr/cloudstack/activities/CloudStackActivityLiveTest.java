@@ -2,18 +2,17 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.cloudstack.CloudStackProvisionr;
+import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import com.axemblr.provisionr.test.Generics;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
-import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
-import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 import org.jclouds.cloudstack.CloudStackAsyncClient;
 import org.jclouds.cloudstack.CloudStackClient;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 import org.jclouds.cloudstack.domain.SshKeyPair;
+import org.jclouds.cloudstack.domain.VirtualMachine;
 import org.jclouds.rest.RestContext;
 import org.junit.After;
 import org.junit.Before;
@@ -88,6 +87,14 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
         LOG.info("Access Key count is {}", keys.size());
         for (SshKeyPair keyPair : keys) {
             LOG.info("\tKey {}", keyPair.getName());
+        }
+    }
+
+    protected void logVirtualMachines() {
+        Set<VirtualMachine> vms = context.getApi().getVirtualMachineClient().listVirtualMachines();
+        LOG.info("Virtual machines count is {}", vms.size());
+        for (VirtualMachine vm : vms) {
+            LOG.info("\tVirtual machine {}", vm.toString());
         }
     }
 }

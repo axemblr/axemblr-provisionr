@@ -1,7 +1,7 @@
 package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.pool.Pool;
-import com.axemblr.provisionr.cloudstack.KeyPairs;
+import com.axemblr.provisionr.cloudstack.core.KeyPairs;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.jclouds.cloudstack.CloudStackClient;
 import org.slf4j.Logger;
