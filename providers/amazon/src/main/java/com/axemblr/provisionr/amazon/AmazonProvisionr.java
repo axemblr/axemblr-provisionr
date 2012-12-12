@@ -7,8 +7,12 @@ import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
+
+import java.util.List;
 import java.util.Map;
 import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +61,28 @@ public class AmazonProvisionr implements Provisionr {
 
     @Override
     public void destroyPool(String businessKey) {
-        LOG.info("**** Amazon Provisionr (destroyPool) id: " + businessKey);
+    	// TODO check current process status
+    	triggerSignalEvent(businessKey, "terminatePoolEvent");
+    }
+
+    private void triggerSignalEvent(String businessKey, String signalName) {
+    	RuntimeService runtimeService = processEngine.getRuntimeService();
+    	
+    	ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+    			.processInstanceBusinessKey(businessKey).singleResult();
+    	
+    	List<Execution> executions = runtimeService.createExecutionQuery()
+    			.processInstanceId(processInstance.getProcessInstanceId())
+    			.signalEventSubscriptionName(signalName).list();
+    	
+    	if (executions.isEmpty()) {
+    		LOG.error("No executions found waiting for signal '{}' on process {}", signalName, businessKey);
+    	}
+    	for (Execution execution : executions) {
+    		LOG.info("Sending '{}' signal to execution {} for process {}",
+    				new Object[] {signalName, execution.getId(), businessKey});
+    		runtimeService.signalEventReceived(signalName, execution.getId());
+    		
+    	}
     }
 }
