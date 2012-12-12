@@ -118,6 +118,11 @@
             <artifactId>mockito-all</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
