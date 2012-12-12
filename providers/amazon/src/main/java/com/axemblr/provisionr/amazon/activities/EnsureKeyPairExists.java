@@ -7,7 +7,10 @@ import com.amazonaws.services.ec2.model.ImportKeyPairRequest;
 import com.amazonaws.services.ec2.model.ImportKeyPairResult;
 import com.axemblr.provisionr.amazon.core.ErrorCodes;
 import com.axemblr.provisionr.amazon.core.KeyPairs;
+import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.provider.Provider;
+import com.google.common.cache.LoadingCache;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,10 @@ import org.slf4j.LoggerFactory;
 public class EnsureKeyPairExists extends AmazonActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(EnsureKeyPairExists.class);
+
+    public EnsureKeyPairExists(ProviderClientCache cache) {
+        super(cache);
+    }
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) {
