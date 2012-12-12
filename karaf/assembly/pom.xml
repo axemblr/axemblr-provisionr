@@ -125,8 +125,10 @@
                                 </descriptor>
                             </descriptors>
                             <features>
+                                <feature>config</feature>
+                                <feature>management</feature>
+                                <feature>webconsole</feature>
                                 <feature>axemblr-provisionr</feature>
-                                <feature>activiti-karaf-commands</feature>
                             </features>
                             <includeMvnBasedDescriptors>true</includeMvnBasedDescriptors>
                             <repository>target/features-repo</repository>
