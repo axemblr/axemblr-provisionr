@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
     <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
@@ -8,10 +9,23 @@
 
     <service ref="cloudstackService" interface="com.axemblr.provisionr.api.Provisionr"/>
 
-    <bean id="cloudstack_createSecurityGroup" class="com.axemblr.provisionr.cloudstack.activities.EnsureSecurityGroupExists"/>
-    <service ref="cloudstack_createSecurityGroup" auto-export="interfaces"/>
+    <bean id="cloudstack_ensureSecurityGroupExists"
+          class="com.axemblr.provisionr.cloudstack.activities.EnsureSecurityGroupExists"/>
+    <service ref="cloudstack_ensureSecurityGroupExists"
+             auto-export="interfaces"/>
 
-    <bean id="cloudstack_deleteSecurityGroup" class="com.axemblr.provisionr.cloudstack.activities.DeleteSecurityGroup"/>
-    <service ref="cloudstack_deleteSecurityGroup" auto-export="interfaces"/>
+    <bean id="cloudstack_deleteSecurityGroup"
+          class="com.axemblr.provisionr.cloudstack.activities.DeleteSecurityGroup"/>
+    <service ref="cloudstack_deleteSecurityGroup" auto-export="interfaces">
+    </service>
+    <bean id="cloudstack_ensureKeyPairExists"
+          class="com.axemblr.provisionr.cloudstack.activities.EnsureKeyPairExists"/>
+    <service ref="cloudstack_ensureKeyPairExists" auto-export="interfaces">
+    </service>
+
+    <bean id="cloudstack_deleteKeyPair"
+          class="com.axemblr.provisionr.cloudstack.activities.DeleteKeyPair"/>
+    <service ref="cloudstack_deleteKeyPair" auto-export="interfaces">
+    </service>
 
 </blueprint>

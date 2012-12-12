@@ -14,7 +14,6 @@ import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropert
 import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.ops4j.pax.exam.CoreOptions.maven;
@@ -47,8 +46,7 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
     @Test
     public void startProvisioningProcess() throws Exception {
-        // TODO: We need to wait for the process to be registered before we call it. Replace with something smarter
-        TimeUnit.SECONDS.sleep(5);
+        waitForProcessDeployment(CloudStackProvisionr.ID);
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
         final Provider provider = collectProviderCredentialsFromSystemProperties()
@@ -62,15 +60,15 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final Software software = Software.builder().baseOperatingSystem("ubuntu-10.04")
             .packages("nginx").createSoftware();
 
-        final AdminAccess adminAccess = AdminAccess.builder().username("admin").publicKey("ssh-rsa ")
-            .privateKey("-----BEGIN RSA PRIVATE KEY-----").createAdminAccess();
+        final AdminAccess adminAccess = collectCurrentUserCredentialsForAdminAccess();
 
         final Hardware hardware = Hardware.builder().type("offering").createHardware();
 
         final Pool pool = Pool.builder().network(network).provider(provider).adminAccess(adminAccess)
             .software(software).hardware(hardware).minSize(1).expectedSize(1).createPool();
 
-        provisionr.startPoolManagementProcess(UUID.randomUUID().toString(), pool);
-        TimeUnit.SECONDS.sleep(10);  // TODO replace with wait on process to finish
+        String processId = provisionr.startPoolManagementProcess(UUID.randomUUID().toString(), pool);
+        waitForProcessEnd(processId);
+        // TODO: check that the environment is clean
     }
 }

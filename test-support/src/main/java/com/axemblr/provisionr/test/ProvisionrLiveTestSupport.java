@@ -5,16 +5,17 @@ import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.provider.ProviderBuilder;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
-import com.google.common.base.Throwables;
-
 import static com.google.common.base.Preconditions.checkNotNull;
-
+import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -66,19 +67,19 @@ public class ProvisionrLiveTestSupport {
     protected String getProviderProperty(String property) {
         return System.getProperty(String.format("test.%s.provider.%s", provisionrId, property));
     }
-    
+
     protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
-    	String userHome = System.getProperty("user.home");
-    	
-    	try {
-			String publicKey = Files.toString(new File(userHome, ".ssh/id_rsa.pub"), Charsets.UTF_8);
-			String privateKey = Files.toString(new File(userHome, ".ssh/id_rsa"), Charsets.UTF_8);
-			
-			return AdminAccess.builder().username(System.getProperty("user.name"))
-					.publicKey(publicKey).privateKey(privateKey).createAdminAccess();
-		} catch (Exception e) {
-			throw Throwables.propagate(e);
-		}
+        String userHome = System.getProperty("user.home");
+
+        try {
+            String publicKey = Files.toString(new File(userHome, ".ssh/id_rsa.pub"), Charsets.UTF_8);
+            String privateKey = Files.toString(new File(userHome, ".ssh/id_rsa"), Charsets.UTF_8);
+
+            return AdminAccess.builder().username(System.getProperty("user.name"))
+                .publicKey(publicKey).privateKey(privateKey).createAdminAccess();
+        } catch (Exception e) {
+            throw Throwables.propagate(e);
+        }
     }
 
     /**
@@ -90,5 +91,44 @@ public class ProvisionrLiveTestSupport {
 
     public String getResourceAsString(String resource) throws IOException {
         return Resources.toString(Resources.getResource(resource), Charsets.UTF_8);
+    }
+
+    /**
+     * Must be called inside a test method to be able to access OSGi infrastructure,
+     *
+     * @param processKey
+     * @throws InterruptedException
+     */
+    public void waitForProcessDeployment(String processKey) throws InterruptedException {
+        ProcessEngine engine = getOsgiService(ProcessEngine.class, 5000);
+        ProcessDefinition definition;
+        boolean keepWaiting = true;
+        while (keepWaiting) {
+            definition = engine.getRepositoryService()
+                .createProcessDefinitionQuery()
+                .processDefinitionKey(processKey).singleResult();
+            if (definition != null) {
+                keepWaiting = false;
+            }
+            TimeUnit.MILLISECONDS.sleep(500);
+        }
+    }
+
+    public void waitForProcessEnd(final String processId) throws InterruptedException {
+        while (processNotEnded(processId)) {
+            TimeUnit.SECONDS.sleep(1);
+        }
+    }
+
+    private boolean processNotEnded(final String processId) throws InterruptedException {
+        ProcessInstance localInstance = getProcessInstanceById(processId);
+        return localInstance != null && !localInstance.isEnded();
+    }
+
+    private ProcessInstance getProcessInstanceById(final String processId) throws InterruptedException {
+        ProcessEngine engine = getOsgiService(ProcessEngine.class, 5000);
+        return engine.getRuntimeService().createProcessInstanceQuery()
+            .processInstanceId(processId)
+            .singleResult();
     }
 }

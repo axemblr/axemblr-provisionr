@@ -1,7 +1,5 @@
 package com.axemblr.provisionr.sample.tasks;
 
-import org.activiti.engine.impl.pvm.ProcessDefinitionBuilder;
-import org.activiti.engine.impl.pvm.PvmProcessDefinition;
 import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
 import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
 
