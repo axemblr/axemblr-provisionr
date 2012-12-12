@@ -25,6 +25,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-features</artifactId>
             <scope>test</scope>
