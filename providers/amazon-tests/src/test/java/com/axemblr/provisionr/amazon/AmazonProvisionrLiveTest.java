@@ -44,6 +44,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
     @Test
     public void startProvisioningProcess() throws Exception {
+        waitForProcessDeployment(AmazonProvisionr.ID);
         final Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
         final Provider provider = collectProviderCredentialsFromSystemProperties()

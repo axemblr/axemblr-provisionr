@@ -1,21 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             targetNamespace="http://www.bpmnwithactiviti.org"
-             xmlns:activiti="http://activiti.org/bpmn">
-
-    <process id="cloudstack" name="CloudStack Process" isExecutable="true">
-        <startEvent id="start"/>
-        <endEvent id="end"/>
-
-        <serviceTask id="createSecurityGroup" name="Create Security Group"
-                     activiti:delegateExpression="${cloudstack_createSecurityGroup}"
-                     activiti:async="true"/>
-        <serviceTask id="deleteSecurityGroup" name="Delete Security group"
-                     activiti:delegateExpression="${cloudstack_deleteSecurityGroup}"
-                     activiti:async="true"/>
-
-        <sequenceFlow sourceRef="start" targetRef="createSecurityGroup"/>
-        <sequenceFlow sourceRef="createSecurityGroup" targetRef="deleteSecurityGroup"/>
-        <sequenceFlow sourceRef="deleteSecurityGroup" targetRef="end"/>
-    </process>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.bpmnwithactiviti.org">
+  <process id="cloudstack" name="cloudstack">
+    <documentation>CloudStackProcess</documentation>
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <parallelGateway id="parallelgateway1" name="Parallel Gateway"></parallelGateway>
+    <serviceTask id="cloudstack_ensureSecurityGroupExists" name="EnsureSecurityGroupExists" activiti:async="true" activiti:delegateExpression="${cloudstack_ensureSecurityGroupExists}"></serviceTask>
+    <serviceTask id="cloudstack_ensureKeyPairExists" name="EnsureKeyPairExists" activiti:async="true" activiti:delegateExpression="${cloudstack_ensureKeyPairExists}"></serviceTask>
+    <serviceTask id="cloudstack_deleteSecurityGroup" name="DeleteSecurityGroup" activiti:async="true" activiti:delegateExpression="${cloudstack_deleteSecurityGroup}"></serviceTask>
+    <serviceTask id="cloudstack_deleteKeyPair" name="DeleteKeyPair" activiti:async="true" activiti:delegateExpression="${cloudstack_deleteKeyPair}"></serviceTask>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow1" name="" sourceRef="startevent1" targetRef="parallelgateway1"></sequenceFlow>
+    <sequenceFlow id="flow2" name="" sourceRef="parallelgateway1" targetRef="cloudstack_ensureSecurityGroupExists"></sequenceFlow>
+    <sequenceFlow id="flow3" name="" sourceRef="parallelgateway1" targetRef="cloudstack_ensureKeyPairExists"></sequenceFlow>
+    <sequenceFlow id="flow4" name="" sourceRef="cloudstack_ensureSecurityGroupExists" targetRef="parallelgateway2"></sequenceFlow>
+    <sequenceFlow id="flow5" name="" sourceRef="cloudstack_ensureKeyPairExists" targetRef="parallelgateway2"></sequenceFlow>
+    <sequenceFlow id="flow6" name="" sourceRef="parallelgateway2" targetRef="parallelgateway3"></sequenceFlow>
+    <sequenceFlow id="flow7" name="" sourceRef="parallelgateway3" targetRef="cloudstack_deleteSecurityGroup"></sequenceFlow>
+    <sequenceFlow id="flow8" name="" sourceRef="parallelgateway3" targetRef="cloudstack_deleteKeyPair"></sequenceFlow>
+    <sequenceFlow id="flow9" name="" sourceRef="cloudstack_deleteSecurityGroup" targetRef="parallelgateway4"></sequenceFlow>
+    <sequenceFlow id="flow10" name="" sourceRef="cloudstack_deleteKeyPair" targetRef="parallelgateway4"></sequenceFlow>
+    <sequenceFlow id="flow11" name="" sourceRef="parallelgateway4" targetRef="endevent1"></sequenceFlow>
+    <parallelGateway id="parallelgateway2" name="Exclusive Gateway"></parallelGateway>
+    <parallelGateway id="parallelgateway3" name="Exclusive Gateway"></parallelGateway>
+    <parallelGateway id="parallelgateway4" name="Exclusive Gateway"></parallelGateway>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_cloudstack">
+    <bpmndi:BPMNPlane bpmnElement="cloudstack" id="BPMNPlane_cloudstack">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35" width="35" x="80" y="230"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="parallelgateway1" id="BPMNShape_parallelgateway1">
+        <omgdc:Bounds height="40" width="40" x="160" y="227"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cloudstack_ensureSecurityGroupExists" id="BPMNShape_cloudstack_ensureSecurityGroupExists">
+        <omgdc:Bounds height="55" width="105" x="232" y="176"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cloudstack_ensureKeyPairExists" id="BPMNShape_cloudstack_ensureKeyPairExists">
+        <omgdc:Bounds height="55" width="105" x="232" y="267"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cloudstack_deleteSecurityGroup" id="BPMNShape_cloudstack_deleteSecurityGroup">
+        <omgdc:Bounds height="55" width="105" x="533" y="176"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cloudstack_deleteKeyPair" id="BPMNShape_cloudstack_deleteKeyPair">
+        <omgdc:Bounds height="55" width="105" x="533" y="267"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35" width="35" x="759" y="230"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="parallelgateway2" id="BPMNShape_parallelgateway2">
+        <omgdc:Bounds height="40" width="40" x="377" y="227"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="parallelgateway3" id="BPMNShape_parallelgateway3">
+        <omgdc:Bounds height="40" width="40" x="463" y="227"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="parallelgateway4" id="BPMNShape_parallelgateway4">
+        <omgdc:Bounds height="40" width="40" x="674" y="227"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="115" y="247"></omgdi:waypoint>
+        <omgdi:waypoint x="160" y="247"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="180" y="227"></omgdi:waypoint>
+        <omgdi:waypoint x="180" y="202"></omgdi:waypoint>
+        <omgdi:waypoint x="232" y="203"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="180" y="267"></omgdi:waypoint>
+        <omgdi:waypoint x="179" y="294"></omgdi:waypoint>
+        <omgdi:waypoint x="232" y="294"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="337" y="203"></omgdi:waypoint>
+        <omgdi:waypoint x="396" y="203"></omgdi:waypoint>
+        <omgdi:waypoint x="397" y="227"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="337" y="294"></omgdi:waypoint>
+        <omgdi:waypoint x="397" y="294"></omgdi:waypoint>
+        <omgdi:waypoint x="397" y="267"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="417" y="247"></omgdi:waypoint>
+        <omgdi:waypoint x="463" y="247"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="483" y="227"></omgdi:waypoint>
+        <omgdi:waypoint x="483" y="204"></omgdi:waypoint>
+        <omgdi:waypoint x="533" y="203"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="483" y="267"></omgdi:waypoint>
+        <omgdi:waypoint x="483" y="293"></omgdi:waypoint>
+        <omgdi:waypoint x="533" y="294"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="638" y="203"></omgdi:waypoint>
+        <omgdi:waypoint x="693" y="203"></omgdi:waypoint>
+        <omgdi:waypoint x="694" y="227"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="638" y="294"></omgdi:waypoint>
+        <omgdi:waypoint x="694" y="294"></omgdi:waypoint>
+        <omgdi:waypoint x="694" y="267"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="714" y="247"></omgdi:waypoint>
+        <omgdi:waypoint x="759" y="247"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
 </definitions>

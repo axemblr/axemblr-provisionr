@@ -13,7 +13,7 @@
     <name>Axemblr Provisionr :: CloudStack Integration Tests</name>
     <artifactId>provisionr-cloudstack-tests</artifactId>
 
-    <dependencies>
+    <dependencies>    
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-api</artifactId>
@@ -41,6 +41,11 @@
             <type>xml</type>
             <classifier>features</classifier>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+        	<groupId>org.activiti</groupId>
+        	<artifactId>activiti-engine</artifactId>
+        	<scope>provided</scope>
         </dependency>
     </dependencies>
 
