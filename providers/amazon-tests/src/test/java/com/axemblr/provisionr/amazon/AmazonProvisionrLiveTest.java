@@ -66,8 +66,15 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final Pool pool = Pool.builder().provider(provider).network(network).adminAccess(adminAccess)
             .software(software).hardware(hardware).minSize(1).expectedSize(1).createPool();
 
-        provisionr.startPoolManagementProcess("j-" + UUID.randomUUID().toString(), pool);
-        TimeUnit.SECONDS.sleep(120);  // TODO replace with wait on process to finish
+        final String businessKey = "j-" + UUID.randomUUID().toString();
+        provisionr.startPoolManagementProcess(businessKey, pool);
+        
+        TimeUnit.SECONDS.sleep(60);  // TODO replace with wait on process to finish
+        
+        provisionr.destroyPool(businessKey);
+        
+        TimeUnit.SECONDS.sleep(60);
+        
 
         // TODO: get the list of machines and check that nginx is listening on port 80
     }
