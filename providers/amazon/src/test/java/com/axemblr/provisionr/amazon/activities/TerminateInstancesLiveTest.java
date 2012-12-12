@@ -22,6 +22,7 @@ public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<Terminate
     private ProcessVariablesCollector collector;
 
     @Override
+    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         super.setUp();
 
@@ -54,16 +55,20 @@ public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<Terminate
         collector = new ProcessVariablesCollector();
         doAnswer(collector).when(execution).setVariable(Matchers.<String>any(), any());
 
-        new EnsureSecurityGroupExists().execute(execution);
-        new EnsureKeyPairExists().execute(execution);
-        new RunOnDemandInstances().execute(execution);
+        executeActivitiesInSequence(execution,
+            EnsureKeyPairExists.class,
+            EnsureSecurityGroupExists.class,
+            RunOnDemandInstances.class
+        );
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void tearDown() throws Exception {
-        new DeleteKeyPair().execute(execution);
-        new DeleteSecurityGroup().execute(execution);
-
+        executeActivitiesInSequence(execution,
+            DeleteKeyPair.class,
+            DeleteSecurityGroup.class
+        );
         super.tearDown();
     }
 

@@ -24,38 +24,59 @@
     </bean>
     <service ref="amazonService" interface="com.axemblr.provisionr.api.Provisionr"/>
 
+    <!-- Initialize the cache for AmazonEC2 client instances -->
+
+    <bean id="cacheSupplier" class="com.axemblr.provisionr.amazon.core.ProviderClientCacheSupplier"/>
+    <bean id="providerClientCache" factory-ref="cacheSupplier" factory-method="get"/>
+
     <!-- Process activities that are specific to Amazon -->
 
     <bean id="amazon_ensureSecurityGroupExists"
-          class="com.axemblr.provisionr.amazon.activities.EnsureSecurityGroupExists"/>
+          class="com.axemblr.provisionr.amazon.activities.EnsureSecurityGroupExists">
+        <argument ref="providerClientCache"/>
+    </bean>
     <service ref="amazon_ensureSecurityGroupExists" auto-export="interfaces"/>
 
     <bean id="amazon_deleteSecurityGroup"
-          class="com.axemblr.provisionr.amazon.activities.DeleteSecurityGroup"/>
+          class="com.axemblr.provisionr.amazon.activities.DeleteSecurityGroup">
+        <argument ref="providerClientCache"/>
+    </bean>
     <service ref="amazon_deleteSecurityGroup" auto-export="interfaces"/>
 
     <bean id="amazon_ensureKeyPairExists"
-          class="com.axemblr.provisionr.amazon.activities.EnsureKeyPairExists"/>
+          class="com.axemblr.provisionr.amazon.activities.EnsureKeyPairExists">
+        <argument ref="providerClientCache"/>
+    </bean>
     <service ref="amazon_ensureKeyPairExists" auto-export="interfaces"/>
 
     <bean id="amazon_deleteKeyPair"
-          class="com.axemblr.provisionr.amazon.activities.DeleteKeyPair"/>
+          class="com.axemblr.provisionr.amazon.activities.DeleteKeyPair">
+        <argument ref="providerClientCache"/>
+    </bean>
     <service ref="amazon_deleteKeyPair" auto-export="interfaces"/>
 
     <bean id="amazon_runOnDemandInstances"
-          class="com.axemblr.provisionr.amazon.activities.RunOnDemandInstances"/>
+          class="com.axemblr.provisionr.amazon.activities.RunOnDemandInstances">
+        <argument ref="providerClientCache"/>
+    </bean>
     <service ref="amazon_runOnDemandInstances" auto-export="interfaces"/>
 
     <bean id="amazon_terminateInstances"
-          class="com.axemblr.provisionr.amazon.activities.TerminateInstances"/>
+          class="com.axemblr.provisionr.amazon.activities.TerminateInstances">
+        <argument ref="providerClientCache"/>
+    </bean>
     <service ref="amazon_terminateInstances" auto-export="interfaces"/>
 
     <bean id="amazon_checkAllInstancesAreRunning"
-          class="com.axemblr.provisionr.amazon.activities.CheckAllInstancesAreRunning"/>
+          class="com.axemblr.provisionr.amazon.activities.CheckAllInstancesAreRunning">
+        <argument ref="providerClientCache"/>
+    </bean>
     <service ref="amazon_checkAllInstancesAreRunning" auto-export="interfaces"/>
 
     <bean id="amazon_checkAllInstancesAreTerminated"
-          class="com.axemblr.provisionr.amazon.activities.CheckAllInstancesAreTerminated"/>
+          class="com.axemblr.provisionr.amazon.activities.CheckAllInstancesAreTerminated">
+        <argument ref="providerClientCache"/>
+    </bean>
     <service ref="amazon_checkAllInstancesAreTerminated" auto-export="interfaces"/>
 
 </blueprint>                     
