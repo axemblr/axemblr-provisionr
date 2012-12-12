@@ -10,20 +10,30 @@ import com.axemblr.provisionr.amazon.SoftwareOptions;
 import com.axemblr.provisionr.amazon.core.ImageTable;
 import com.axemblr.provisionr.amazon.core.ImageTableQuery;
 import com.axemblr.provisionr.amazon.core.KeyPairs;
+import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.amazon.core.SecurityGroups;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Throwables;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.VariableScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RunOnDemandInstances extends AmazonActivity {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RunOnDemandInstances.class);
+
     public static final String DEFAULT_ARCH = "amd64";
     public static final String DEFAULT_TYPE = "instance-store";
+
+    public RunOnDemandInstances(ProviderClientCache cache) {
+        super(cache);
+    }
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) {

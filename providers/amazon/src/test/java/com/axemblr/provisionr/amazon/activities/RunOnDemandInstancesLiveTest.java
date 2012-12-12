@@ -28,6 +28,7 @@ public class RunOnDemandInstancesLiveTest extends AmazonActivityLiveTest<RunOnDe
     private Pool pool;
 
     @Override
+    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         super.setUp();
 
@@ -57,15 +58,19 @@ public class RunOnDemandInstancesLiveTest extends AmazonActivityLiveTest<RunOnDe
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
         when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
 
-        new EnsureSecurityGroupExists().execute(execution);
-        new EnsureKeyPairExists().execute(execution);
+        executeActivitiesInSequence(execution,
+            EnsureKeyPairExists.class,
+            EnsureSecurityGroupExists.class
+        );
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void tearDown() throws Exception {
-        new DeleteKeyPair().execute(execution);
-        new DeleteSecurityGroup().execute(execution);
-
+        executeActivitiesInSequence(execution,
+            DeleteSecurityGroup.class,
+            DeleteKeyPair.class
+        );
         super.tearDown();
     }
 

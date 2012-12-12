@@ -2,6 +2,7 @@ package com.axemblr.provisionr.amazon.activities;
 
 import com.amazonaws.services.ec2.model.Instance;
 import com.axemblr.provisionr.amazon.ProcessVariables;
+import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.google.common.base.Predicate;
 
 public class CheckAllInstancesAreTerminated extends AllInstancesMatchPredicate {
@@ -11,14 +12,14 @@ public class CheckAllInstancesAreTerminated extends AllInstancesMatchPredicate {
         public boolean apply(Instance instance) {
             return instance.getState().getName().equalsIgnoreCase("terminated");
         }
-        
+
         @Override
         public String toString() {
-        	return "InstanceIsTerminated{}";
+            return "InstanceIsTerminated{}";
         }
     }
 
-    public CheckAllInstancesAreTerminated() {
-        super(ProcessVariables.ALL_INSTANCES_TERMINATED, new InstanceIsTerminated());
+    public CheckAllInstancesAreTerminated(ProviderClientCache cache) {
+        super(cache, ProcessVariables.ALL_INSTANCES_TERMINATED, new InstanceIsTerminated());
     }
 }

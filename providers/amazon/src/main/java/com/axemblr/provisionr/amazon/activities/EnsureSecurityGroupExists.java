@@ -10,11 +10,14 @@ import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.RevokeSecurityGroupIngressRequest;
 import com.axemblr.provisionr.amazon.core.ErrorCodes;
+import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.amazon.core.SecurityGroups;
 import com.axemblr.provisionr.amazon.functions.ConvertRuleToIpPermission;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Throwables;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import static com.google.common.collect.Iterables.getOnlyElement;
@@ -27,6 +30,10 @@ import org.slf4j.LoggerFactory;
 public class EnsureSecurityGroupExists extends AmazonActivity {
 
     public static final Logger LOG = LoggerFactory.getLogger(EnsureSecurityGroupExists.class);
+
+    public EnsureSecurityGroupExists(ProviderClientCache cache) {
+        super(cache);
+    }
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) {

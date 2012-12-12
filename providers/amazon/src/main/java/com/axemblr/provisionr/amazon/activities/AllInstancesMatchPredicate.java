@@ -5,22 +5,29 @@ import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
 import com.axemblr.provisionr.amazon.ProcessVariables;
+import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-
 import java.util.Arrays;
 import java.util.List;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AllInstancesMatchPredicate extends AmazonActivity {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AllInstancesMatchPredicate.class);
 
     private final String resultVariable;
     private final Predicate<Instance> predicate;
 
-    protected AllInstancesMatchPredicate(String resultVariable, Predicate<Instance> predicate) {
+    protected AllInstancesMatchPredicate(ProviderClientCache cache,
+                                         String resultVariable, Predicate<Instance> predicate) {
+        super(cache);
+
         this.resultVariable = checkNotNull(resultVariable, "resultVariable is null");
         this.predicate = checkNotNull(predicate, "predicate is null");
     }
@@ -36,8 +43,9 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
 
         List<Instance> instances = result.getReservations().get(0).getInstances();
         boolean allInstancesMatch = Iterables.all(instances, predicate);
-        LOG.info(">> Checking {} instances with predicate {}. Result: {}", 
-        		new Object[]{Arrays.toString(instanceIds), predicate, allInstancesMatch});
+        LOG.info(">> Checking {} instances with predicate {}. Result: {}",
+            new Object[]{Arrays.toString(instanceIds), predicate, allInstancesMatch});
+
         execution.setVariable(resultVariable, allInstancesMatch);
     }
 }
