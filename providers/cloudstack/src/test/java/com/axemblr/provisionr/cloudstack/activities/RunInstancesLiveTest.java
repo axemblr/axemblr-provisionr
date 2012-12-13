@@ -22,8 +22,8 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.software.Software;
-import com.axemblr.provisionr.cloudstack.ProcessVariables;
 import com.axemblr.provisionr.cloudstack.core.VirtualMachines;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -77,7 +77,7 @@ public class RunInstancesLiveTest extends CloudStackActivityLiveTest<RunInstance
         when(pool.getOptions()).thenReturn(options);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
 
         new EnsureSecurityGroupExists().execute(execution);
         new EnsureKeyPairExists().execute(execution);

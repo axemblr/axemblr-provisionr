@@ -19,6 +19,7 @@ package com.axemblr.provisionr.cloudstack.activities;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.cloudstack.ProcessVariables;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableSet;
@@ -44,10 +45,6 @@ public abstract class CloudStackActivity implements JavaDelegate {
 
     /**
      * Implement activity logic in this method. It will be called with a reference to the {@link CloudStackClient}
-     *
-     * @param cloudStackClient
-     * @param pool
-     * @param execution
      */
     public abstract void execute(CloudStackClient cloudStackClient, Pool pool, DelegateExecution execution);
 
@@ -56,7 +53,7 @@ public abstract class CloudStackActivity implements JavaDelegate {
 
         RestContext<CloudStackClient, CloudStackAsyncClient> restContext = null;
         try {
-            Pool pool = Pool.class.cast(checkNotNull(execution.getVariable(ProcessVariables.POOL),
+            Pool pool = Pool.class.cast(checkNotNull(execution.getVariable(CoreProcessVariables.POOL),
                 "Please add 'pool' variable to the process"));
             // delegate
             restContext = newCloudStackClient(pool.getProvider());

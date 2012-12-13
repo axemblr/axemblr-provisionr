@@ -22,6 +22,7 @@ import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.test.ProcessVariablesCollector;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.junit.Test;
@@ -66,7 +67,7 @@ public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<Terminate
         when(pool.getHardware()).thenReturn(hardware);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
 
         collector = new ProcessVariablesCollector();
         doAnswer(collector).when(execution).setVariable(Matchers.<String>any(), any());
