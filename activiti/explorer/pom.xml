@@ -68,6 +68,16 @@
         <activiti.artifact>
             org.activiti.karaf.web.explorer
         </activiti.artifact>
+        <activiti.osgi.import.pkg>
+            ${activiti.karaf.no.import.pkg},
+            org.activiti.engine.*;version=${activiti.version},
+            org.activiti.spring.*;version=${activiti.version},
+            org.activiti.osgi.*;version=${activiti.version},
+            ${activiti.osgi.import.before.defaults},
+            *
+        </activiti.osgi.import.pkg>
+        <activiti.osgi.import>${activiti.osgi.import.pkg}</activiti.osgi.import>
+        <activiti.osgi.include.resource>{maven-resources}</activiti.osgi.include.resource>
     </properties>
 
     <dependencies>
@@ -133,7 +143,7 @@
         <dependency>
             <groupId>com.thebuzzmedia</groupId>
             <artifactId>imgscalr-lib</artifactId>
-            <version>3.1</version>
+            <version>${imgscalr-lib.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -259,6 +269,10 @@
                         <Embed-Directory>WEB-INF/lib</Embed-Directory>
                         <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>
                         <Webapp-Context>activiti-explorer</Webapp-Context>
+                        <Bundle-Name>${project.name}</Bundle-Name>
+                        <Import-Package>org.activiti.osgi*;resolution:=optional, ${activiti.osgi.import}</Import-Package>
+                        <DynamicImport-Package>${activiti.osgi.dynamic}</DynamicImport-Package>
+                        <Include-Resource>${activiti.osgi.include.resource}</Include-Resource>
                     </instructions>
                 </configuration>
             </plugin>

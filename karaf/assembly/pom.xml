@@ -144,6 +144,7 @@
                                 <feature>config</feature>
                                 <feature>management</feature>
                                 <feature>webconsole</feature>
+                                <feature>war</feature>
                                 <feature>axemblr-provisionr</feature>
                             </features>
                             <includeMvnBasedDescriptors>true</includeMvnBasedDescriptors>
