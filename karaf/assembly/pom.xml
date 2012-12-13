@@ -137,13 +137,14 @@
                                     mvn:com.axemblr.provisionr/provisionr-features/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.version}/xml/features
+                                    mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.karaf.version}/xml/features
                                 </descriptor>
                             </descriptors>
                             <features>
                                 <feature>config</feature>
                                 <feature>management</feature>
                                 <feature>webconsole</feature>
+                                <feature>war</feature>
                                 <feature>axemblr-provisionr</feature>
                             </features>
                             <includeMvnBasedDescriptors>true</includeMvnBasedDescriptors>

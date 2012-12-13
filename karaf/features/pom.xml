@@ -45,14 +45,20 @@
             <artifactId>provisionr-cloudstack</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-commands</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.activiti.karaf</groupId>
             <artifactId>activiti-karaf-commands</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-commands</artifactId>
+            <groupId>org.activiti.karaf</groupId>
+            <artifactId>activiti-karaf-web-explorer</artifactId>
             <version>${project.version}</version>
+            <type>war</type>
         </dependency>
     </dependencies>
 
