@@ -40,9 +40,10 @@
             org.ops4j.pax.exam,
             org.ops4j.pax.exam.options,
             org.ops4j.pax.exam.options.extra,
-            org.activiti.engine, 
-            org.activiti.engine.repository, 
+            org.activiti.engine,
+            org.activiti.engine.repository,
             org.activiti.engine.runtime,
+            org.activiti.engine.delegate,
             com.axemblr.provisionr.api.provider;version="[0.0.1, 1.0.0)",
             com.axemblr.provisionr.api.access;version="[0.0.1, 1.0.0)",
             com.google.common.base;version="[13.0, 14.0)",
@@ -50,7 +51,8 @@
             com.google.common.collect;version="[13.0, 14.0)",
             org.slf4j,
             org.mockito.invocation;resolution:=optional,
-            org.mockito.stubbing;resolution:=optional
+            org.mockito.stubbing;resolution:=optional,
+            org.mockito;resolution:=optional
         </osgi.import>
     </properties>
 

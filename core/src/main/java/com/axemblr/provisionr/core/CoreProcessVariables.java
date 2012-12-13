@@ -28,4 +28,11 @@ public class CoreProcessVariables {
      */
     public static final String POOL = "pool";
 
+    /**
+     * Contains a list of machines that are running
+     *
+     * @see com.axemblr.provisionr.api.pool.Machine
+     */
+    public static final String MACHINES = "machines";
+
 }

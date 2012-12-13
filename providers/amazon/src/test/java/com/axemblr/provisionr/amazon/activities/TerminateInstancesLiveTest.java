@@ -70,7 +70,7 @@ public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<Terminate
         when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
 
         collector = new ProcessVariablesCollector();
-        doAnswer(collector).when(execution).setVariable(Matchers.<String>any(), any());
+        collector.install(execution);
 
         executeActivitiesInSequence(execution,
             EnsureKeyPairExists.class,
@@ -91,8 +91,8 @@ public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<Terminate
 
     @Test
     public void testTerminateInstances() throws Exception {
-        when(execution.getVariable(ProcessVariables.INSTANCES))
-            .thenReturn(collector.getVariable(ProcessVariables.INSTANCES));
+        when(execution.getVariable(ProcessVariables.INSTANCE_IDS))
+            .thenReturn(collector.getVariable(ProcessVariables.INSTANCE_IDS));
 
         activity.execute(execution);
 

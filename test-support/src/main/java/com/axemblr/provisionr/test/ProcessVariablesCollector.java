@@ -19,6 +19,10 @@ package com.axemblr.provisionr.test;
 import com.google.common.collect.Maps;
 import java.util.Arrays;
 import java.util.Map;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.mockito.Matchers;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
@@ -29,6 +33,13 @@ public class ProcessVariablesCollector implements Answer<Void> {
     public static final Logger LOG = LoggerFactory.getLogger(ProcessVariablesCollector.class);
 
     private Map<String, Object> variables = Maps.newConcurrentMap();
+
+    /**
+     * Install the collector on the setVariable class
+     */
+    public void install(DelegateExecution execution) {
+        doAnswer(this).when(execution).setVariable(Matchers.<String>any(), any());
+    }
 
     @Override
     public Void answer(InvocationOnMock invocation) throws Throwable {

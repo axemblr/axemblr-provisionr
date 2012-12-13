@@ -35,11 +35,11 @@ public class ProcessVariables {
     public static final String RESERVATION_ID = "reservationId";
 
     /**
-     * String[] of instance IDs as returned by Amazon
+     * List of instance IDs as returned by Amazon
      *
      * @see com.axemblr.provisionr.amazon.activities.RunOnDemandInstances
      */
-    public static final String INSTANCES = "instanceIds";
+    public static final String INSTANCE_IDS = "instanceIds";
 
     /**
      * Are all started instances running?
