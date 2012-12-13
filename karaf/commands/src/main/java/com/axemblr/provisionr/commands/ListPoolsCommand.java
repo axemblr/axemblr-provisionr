@@ -25,7 +25,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
-@Command(scope = "provisionr", name = "list", description = "List active pools")
+@Command(scope = "provisionr", name = "pools", description = "List active pools")
 public class ListPoolsCommand extends OsgiCommandSupport {
 
     private static final PrintStream out = System.out;
