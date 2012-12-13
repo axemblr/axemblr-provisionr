@@ -20,6 +20,7 @@ import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.cloudstack.core.KeyPairs;
 import com.axemblr.provisionr.cloudstack.ProcessVariables;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import java.io.IOException;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -65,7 +66,7 @@ public class EnsureKeyPairExistsLiveTest extends CloudStackActivityLiveTest<Ensu
         when(pool.getAdminAccess()).thenReturn(adminAccess);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
 
         activity.execute(execution);
         assertKeyPairWasImportedAsExpected();

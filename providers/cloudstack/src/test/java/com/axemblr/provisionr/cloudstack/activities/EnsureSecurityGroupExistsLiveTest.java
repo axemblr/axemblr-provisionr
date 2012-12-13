@@ -22,6 +22,7 @@ import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.cloudstack.core.ConvertIngressRuleToRule;
 import com.axemblr.provisionr.cloudstack.ProcessVariables;
 import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import java.util.NoSuchElementException;
@@ -88,7 +89,7 @@ public class EnsureSecurityGroupExistsLiveTest extends CloudStackActivityLiveTes
         when(pool.getProvider()).thenReturn(provider);
         when(pool.getNetwork()).thenReturn(network);
 
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
         activity.execute(execution);
@@ -103,7 +104,7 @@ public class EnsureSecurityGroupExistsLiveTest extends CloudStackActivityLiveTes
 
         when(pool.getProvider()).thenReturn(provider);
 
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
         // create the SecurityGroup with an extra Network Rule, then call the activity

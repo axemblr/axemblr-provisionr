@@ -17,26 +17,26 @@
 package com.axemblr.provisionr.amazon.activities;
 
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import static com.google.common.base.Preconditions.checkNotNull;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 
 public abstract class AmazonActivity implements JavaDelegate {
 
-    private final ProviderClientCache clientCache;
+    private final ProviderClientCache providerClientCache;
 
-    protected AmazonActivity(ProviderClientCache clientCache) {
-        this.clientCache = checkNotNull(clientCache, "clientCache is null");
+    protected AmazonActivity(ProviderClientCache providerClientCache) {
+        this.providerClientCache = checkNotNull(providerClientCache, "providerClientCache is null");
     }
 
     /**
      * Amazon specific activity implementation
      *
      * @param client    Amazon client created using the pool provider
-     * @param pool      Virtual machines pool description              
+     * @param pool      Virtual machines pool description
      * @param execution Activiti execution context
      */
     public abstract void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws Exception;
@@ -46,10 +46,10 @@ public abstract class AmazonActivity implements JavaDelegate {
      */
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Pool pool = (Pool) execution.getVariable(ProcessVariables.POOL);
+        Pool pool = (Pool) execution.getVariable(CoreProcessVariables.POOL);
         checkNotNull(pool, "Please add the pool description as a process " +
-            "variable with the name '%s'.", ProcessVariables.POOL);
+            "variable with the name '%s'.", CoreProcessVariables.POOL);
 
-        execute(clientCache.getUnchecked(pool.getProvider()), pool, execution);
+        execute(providerClientCache.getUnchecked(pool.getProvider()), pool, execution);
     }
 }

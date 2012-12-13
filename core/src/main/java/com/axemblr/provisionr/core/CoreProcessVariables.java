@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package com.axemblr.provisionr.cloudstack;
+package com.axemblr.provisionr.core;
 
-public class ProcessVariables {
+public class CoreProcessVariables {
 
-    private ProcessVariables() {
-        // prevent instantiation
+    private CoreProcessVariables() {
     }
+
+    /**
+     * Pool configuration description
+     *
+     * @see com.axemblr.provisionr.api.pool.Pool
+     */
+    public static final String POOL = "pool";
+
 }
