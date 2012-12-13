@@ -29,6 +29,7 @@ import com.axemblr.provisionr.amazon.functions.ConvertRuleToIpPermission;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.google.common.collect.ImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.transform;
@@ -75,7 +76,7 @@ public class EnsureSecurityGroupExistsLiveTest extends AmazonActivityLiveTest<En
         when(pool.getProvider()).thenReturn(provider);
         when(pool.getNetwork()).thenReturn(network);
 
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
         activity.execute(execution);

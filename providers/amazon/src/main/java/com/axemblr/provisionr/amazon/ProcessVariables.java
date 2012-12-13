@@ -23,13 +23,6 @@ public class ProcessVariables {
     }
 
     /**
-     * Pool description object
-     *
-     * @see com.axemblr.provisionr.api.pool.Pool
-     */
-    public static final String POOL = "pool";
-
-    /**
      * ID of the cached base image
      */
     public static final String CACHED_IMAGE_ID = "cachedImageId";

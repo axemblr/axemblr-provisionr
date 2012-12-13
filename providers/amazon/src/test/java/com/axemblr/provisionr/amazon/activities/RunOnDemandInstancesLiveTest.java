@@ -19,6 +19,7 @@ package com.axemblr.provisionr.amazon.activities;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.test.ProcessVariablesCollector;
 import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.api.access.AdminAccess;
@@ -72,7 +73,7 @@ public class RunOnDemandInstancesLiveTest extends AmazonActivityLiveTest<RunOnDe
         when(pool.getHardware()).thenReturn(hardware);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
 
         executeActivitiesInSequence(execution,
             EnsureKeyPairExists.class,

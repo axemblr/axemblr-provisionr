@@ -17,6 +17,7 @@
 package com.axemblr.provisionr.commands;
 
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.PrintStream;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ListPoolsCommand extends OsgiCommandSupport {
     private final ProcessEngine processEngine;
 
     public ListPoolsCommand(ProcessEngine processEngine) {
-        this.processEngine = checkNotNull(processEngine, "processEngine");
+        this.processEngine = checkNotNull(processEngine, "processEngine is null");
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ListPoolsCommand extends OsgiCommandSupport {
         }
         for (ProcessInstance instance : processes) {
             Pool pool = (Pool) processEngine.getRuntimeService()
-                .getVariable(instance.getId(), "pool");
+                .getVariable(instance.getId(), CoreProcessVariables.POOL);
 
             // TODO: try to retrieve the actual list of machines for this pool
 

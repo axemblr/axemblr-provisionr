@@ -20,6 +20,7 @@ import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.cloudstack.core.KeyPairs;
 import com.axemblr.provisionr.cloudstack.ProcessVariables;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.After;
@@ -63,7 +64,7 @@ public class DeleteKeyPairLiveTest extends CloudStackActivityLiveTest<DeleteKeyP
         when(pool.getProvider()).thenReturn(provider);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
 
         activity.execute(execution);
         assertKeyNotFound(KEYPAIR_NAME);

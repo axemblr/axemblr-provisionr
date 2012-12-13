@@ -26,6 +26,7 @@ import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.software.Software;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
@@ -52,7 +53,7 @@ public class DeleteSecurityGroupLiveTest extends AmazonActivityLiveTest<DeleteSe
         Pool pool = mock(Pool.class);
 
         when(pool.getProvider()).thenReturn(provider);
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
 
         client.createSecurityGroup(new CreateSecurityGroupRequest()

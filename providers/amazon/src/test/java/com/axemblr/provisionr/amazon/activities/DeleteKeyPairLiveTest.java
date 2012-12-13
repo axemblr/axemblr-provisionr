@@ -26,6 +26,7 @@ import com.axemblr.provisionr.amazon.core.ErrorCodes;
 import com.axemblr.provisionr.amazon.core.KeyPairs;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -66,7 +67,7 @@ public class DeleteKeyPairLiveTest extends AmazonActivityLiveTest<DeleteKeyPair>
         when(pool.getProvider()).thenReturn(provider);
 
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable(ProcessVariables.POOL)).thenReturn(pool);
+        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
 
         activity.execute(execution);
         assertKeyNotFound(KEYPAIR_NAME);

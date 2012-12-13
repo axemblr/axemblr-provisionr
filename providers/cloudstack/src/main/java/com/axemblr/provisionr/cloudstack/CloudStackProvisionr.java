@@ -16,10 +16,10 @@
 
 package com.axemblr.provisionr.cloudstack;
 
-import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.pool.Pool;
-import com.axemblr.provisionr.api.provider.Provider;
-import com.google.common.base.Optional;
+import com.axemblr.provisionr.core.CoreProcessVariables;
+import com.axemblr.provisionr.core.ProvisionrSupport;
+import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import org.activiti.engine.ProcessEngine;
@@ -28,7 +28,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CloudStackProvisionr implements Provisionr {
+public class CloudStackProvisionr extends ProvisionrSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(CloudStackProvisionr.class);
     public static final String ID = "cloudstack";
@@ -40,9 +40,8 @@ public class CloudStackProvisionr implements Provisionr {
 
     private final ProcessEngine processEngine;
 
-    public CloudStackProvisionr(ProcessEngine engine) {
-        this.processEngine = engine;
-        LOG.info("**** CloudStack (init)");
+    public CloudStackProvisionr(ProcessEngine processEngine) {
+        this.processEngine = checkNotNull(processEngine, "processEngine is null");
     }
 
     @Override
@@ -51,16 +50,11 @@ public class CloudStackProvisionr implements Provisionr {
     }
 
     @Override
-    public Optional<Provider> getDefaultProvider() {
-        return Optional.absent();
-    }
-
-    @Override
     public String startPoolManagementProcess(String businessKey, Pool pool) {
         LOG.info("**** CloudStack (startCreatePoolProcess) id: " + businessKey + " pool: " + pool);
         //TODO: make sure the all information in the pool is valid - i.e. it will not make the cloud scream at us !!
         Map<String, Object> arguments = Maps.newHashMap();
-        arguments.put(ProcessVariables.POOL, pool);
+        arguments.put(CoreProcessVariables.POOL, pool);
 
         RuntimeService runtimeService = processEngine.getRuntimeService();
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, businessKey, arguments);
@@ -71,5 +65,6 @@ public class CloudStackProvisionr implements Provisionr {
     @Override
     public void destroyPool(String businessKey) {
         LOG.info("**** CloudStack (destroyPool) id: " + businessKey);
+        // TODO use triggerSignalEvent as needed
     }
 }
