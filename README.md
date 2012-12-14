@@ -1,4 +1,3 @@
-
 Axemblr Provisionr
 ==================
 
@@ -43,6 +42,19 @@ License
 
 Apache License Version 2.0
 http://apache.org/licenses/LICENSE-2.0.txt
+
+Get involved in the commuinty 
+----------------------------
+
+For those of you who really dig our software We have created two mailing lists that yo can join depending on your involvement: 
+
+* If you are a user join: [provisionr-users@googlegroups.com](https://groups.google.com/forum/?fromgroups#!forum/provisionr-users)
+* If you wish to develop Provisionr go to [provisionr-dev@googlegroups.com](https://groups.google.com/forum/?fromgroups#!forum/provisionr-dev)
+
+Join us on IRC channel *#axemblr* on *irc.freenode.net*.
+
+We appreciate any kind of help so don't heasitate. 
+
 
 Supported cloud providers
 -------------------------
@@ -131,7 +143,7 @@ If you want to manage Apache Karaf you can access the webconsole at
 
 And don't forget to destroy the pool
 
-    provisionr [0.0.1-SNAPSHOT] $ provisionr:destroy --id amazon --key mypool
+    provisionr [0.0.1-SNAPSHOT] $ provisionr:destroy --id amazon --key mypool    
 
 How to build?
 -------------
