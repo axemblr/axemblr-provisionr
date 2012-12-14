@@ -22,6 +22,14 @@ For each cloud provider we define an Activiti pool management process similar to
 
 ![Sample pool management process](http://people.apache.org/~asavu/sample.bpmn20.png)
 
+You can use Activiti Explorer to inspect the process while running:
+
+![Activiti Explorer](http://people.apache.org/~asavu/explorer.png)
+
+... and manage everything from an interactive shell:
+
+![Shell](http://people.apache.org/~asavu/shell.png)
+
 Who is behind this?
 -------------------
 
