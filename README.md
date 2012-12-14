@@ -121,7 +121,7 @@ You should see an Activiti process in execution:
      Definition  Ins  Executions    
     [amazon:1:4][9  ][13,14,16,19,9]
 
-Make sure you also check the Activiti Explorer at: 
+Make sure you also check the Activiti Explorer at (login kermit:kermit): 
 
     http://localhost:8181/activiti-explorer/
 
