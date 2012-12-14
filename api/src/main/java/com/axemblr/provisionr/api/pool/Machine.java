@@ -33,7 +33,7 @@ public class Machine extends WithOptions {
     }
 
     /**
-     * External provider specific unique ID
+     * External, provider specific, unique ID
      */
     private final String externalId;
 
