@@ -56,6 +56,7 @@ public class CloudStackProvisionr extends ProvisionrSupport {
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put(CoreProcessVariables.POOL, pool);
 
+        processEngine.getIdentityService().setAuthenticatedUserId("kermit");
         RuntimeService runtimeService = processEngine.getRuntimeService();
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, businessKey, arguments);
 

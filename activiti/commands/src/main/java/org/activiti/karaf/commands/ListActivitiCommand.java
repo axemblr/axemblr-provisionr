@@ -71,7 +71,7 @@ public class ListActivitiCommand extends ActivitiCommand {
 
         if (this.deployments) {
             RepositoryService repo = pe.getRepositoryService();
-            printBPMNDeployments(out, repo);
+            printDeployments(out, repo);
         }
 
         if (this.definitions) {
@@ -110,15 +110,15 @@ public class ListActivitiCommand extends ActivitiCommand {
         }
     }
 
-    private void printBPMNDeployments(PrintWriter out, RepositoryService repo) {
+    private void printDeployments(PrintWriter out, RepositoryService repo) {
 
         List<Deployment> depList = repo.createDeploymentQuery().orderByDeploymenTime().asc().list();
 
         out.println();
-        out.println("BPMN Deployments");
-        out.println("----------------");
+        out.println("Activiti Deployments");
+        out.println("--------------------");
         if (depList.isEmpty()) {
-            out.println("No BPMN Deployments Found.");
+            out.println("No Activiti Deployments Found.");
             return;
         }
 
@@ -132,22 +132,20 @@ public class ListActivitiCommand extends ActivitiCommand {
     }
 
     private void printProcessDefinitions(PrintWriter out, RepositoryService repo) {
-        // RepositoryService repo = pe.getRepositoryService();
-
-        List<ProcessDefinition> pdList =
-            repo.createProcessDefinitionQuery().orderByDeploymentId().asc().list();
+        List<ProcessDefinition> pdList = repo.createProcessDefinitionQuery()
+            .orderByDeploymentId().asc().list();
 
         out.println();
-        out.println("BPMN Process Definitions");
-        out.println("-------------------------");
+        out.println("Activiti Process Definitions");
+        out.println("----------------------------");
         if (pdList.isEmpty()) {
-            out.println("No BPMN Process Defintions Found.");
+            out.println("No Activiti Process Definitions Found.");
             return;
         }
 
         TextTable txtTable = new TextTable(4);
 
-        txtTable.addHeaders("Definition ID", "Name", "Ver", "Resource");
+        txtTable.addHeaders("Definition ID", "Name", "Version", "Resource");
         for (ProcessDefinition pd : pdList) {
             Integer ver = pd.getVersion();
             txtTable.addRow(pd.getId(), pd.getName(), ver.toString(), formatBpmResource(pd.getResourceName()));
@@ -177,10 +175,10 @@ public class ListActivitiCommand extends ActivitiCommand {
         List<ProcessInstance> piList = rt.createProcessInstanceQuery().orderByProcessInstanceId().asc().list();
 
         out.println();
-        out.println("Active BPMN Process Instances");
-        out.println("-----------------------------");
+        out.println("Active Process Instances");
+        out.println("------------------------");
         if (piList.isEmpty()) {
-            out.println("No Active BPMN Process Instances Found.");
+            out.println("No Active Process Instances Found.");
             return;
         }
 
@@ -196,13 +194,14 @@ public class ListActivitiCommand extends ActivitiCommand {
 
     private void printHistoricProcessInstances(PrintWriter out, HistoryService his, boolean printActive) {
 
-        List<HistoricProcessInstance> hpiList = his.createHistoricProcessInstanceQuery().orderByProcessDefinitionId().asc().list();
+        List<HistoricProcessInstance> hpiList = his.createHistoricProcessInstanceQuery()
+            .orderByProcessDefinitionId().asc().list();
 
         out.println();
-        out.println("History of BPMN Process Instances");
-        out.println("---------------------------------");
+        out.println("History of Activiti Process Instances");
+        out.println("-------------------------------------");
         if (hpiList.isEmpty()) {
-            out.println("No History on BPMN Processes.");
+            out.println("No History on Activiti Processes.");
             return;
         }
 
@@ -212,9 +211,10 @@ public class ListActivitiCommand extends ActivitiCommand {
         for (HistoricProcessInstance hpi : hpiList) {
             Date endTime = hpi.getEndTime();
             if (endTime == null && !printActive) {
-                continue;  // dont print active instance history if printActive is false - default.
+                continue;  // don't print active instance history if printActive is false - default.
             }
-            txtTable.addRow(hpi.getProcessDefinitionId(), hpi.getId(), formatDate(hpi.getStartTime()), formatDate(hpi.getEndTime()));
+            txtTable.addRow(hpi.getProcessDefinitionId(), hpi.getId(),
+                formatDate(hpi.getStartTime()), formatDate(hpi.getEndTime()));
         }
         txtTable.print(out);
     }
