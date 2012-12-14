@@ -27,6 +27,7 @@ import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
+import java.util.List;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
@@ -94,13 +95,14 @@ public class RunOnDemandInstancesLiveTest extends AmazonActivityLiveTest<RunOnDe
     @Test
     public void testRunInstances() throws Exception {
         ProcessVariablesCollector collector = new ProcessVariablesCollector();
-        doAnswer(collector).when(execution).setVariable(Matchers.<String>any(), any());
+        collector.install(execution);
 
         activity.execute(execution);
 
         verify(execution).setVariable(eq(ProcessVariables.RESERVATION_ID), anyString());
-        verify(execution).setVariable(eq(ProcessVariables.INSTANCES), any());
-        String[] instanceIds = (String[]) collector.getVariable(ProcessVariables.INSTANCES);
+        verify(execution).setVariable(eq(ProcessVariables.INSTANCE_IDS), any());
+
+        String[] instanceIds = (String[]) collector.getVariable(ProcessVariables.INSTANCE_IDS);
 
         /* the second call should do nothing */
         activity.execute(execution);

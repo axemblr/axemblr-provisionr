@@ -60,7 +60,8 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
     @Test
     public void startProvisioningProcess() throws Exception {
-        waitForProcessDeployment(AmazonProvisionr.ID);
+        waitForProcessDeployment(AmazonProvisionr.PROCESS_KEY);
+
         final Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
         final Provider provider = collectProviderCredentialsFromSystemProperties()
@@ -85,13 +86,13 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
         final String businessKey = "j-" + UUID.randomUUID().toString();
         provisionr.startPoolManagementProcess(businessKey, pool);
-        
+
         TimeUnit.SECONDS.sleep(60);  // TODO replace with wait on process to finish
-        
+
         provisionr.destroyPool(businessKey);
-        
+
         TimeUnit.SECONDS.sleep(60);
-        
+
 
         // TODO: get the list of machines and check that nginx is listening on port 80
     }
