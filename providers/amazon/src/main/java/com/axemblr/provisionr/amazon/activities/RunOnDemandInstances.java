@@ -30,8 +30,8 @@ import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.amazon.core.SecurityGroups;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.google.common.base.Function;
 import com.google.common.base.Throwables;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
@@ -81,7 +81,7 @@ public class RunOnDemandInstances extends AmazonActivity {
 
         execution.setVariable(ProcessVariables.RESERVATION_ID,
             result.getReservation().getReservationId());
-        execution.setVariable(ProcessVariables.INSTANCES,
+        execution.setVariable(ProcessVariables.INSTANCE_IDS,
             collectInstanceIdsAsArray(result.getReservation().getInstances()));
     }
 
@@ -119,10 +119,14 @@ public class RunOnDemandInstances extends AmazonActivity {
     }
 
     private String[] collectInstanceIdsAsArray(List<Instance> instances) {
-        List<String> ids = Lists.newArrayList();
-        for (Instance instance : instances) {
-            ids.add(instance.getInstanceId());
-        }
+        List<String> ids = Lists.transform(instances,
+            new Function<Instance, String>() {
+                @Override
+                public String apply(Instance instance) {
+                    return instance.getInstanceId();
+                }
+            });
+
         return ids.toArray(new String[ids.size()]);
     }
 }

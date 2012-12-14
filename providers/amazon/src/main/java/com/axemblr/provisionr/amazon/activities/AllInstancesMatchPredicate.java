@@ -43,15 +43,14 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
     protected AllInstancesMatchPredicate(ProviderClientCache cache,
                                          String resultVariable, Predicate<Instance> predicate) {
         super(cache);
-
         this.resultVariable = checkNotNull(resultVariable, "resultVariable is null");
         this.predicate = checkNotNull(predicate, "predicate is null");
     }
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws Exception {
-        String[] instanceIds = (String[]) execution.getVariable(ProcessVariables.INSTANCES);
-        checkNotNull(instanceIds, "process variable '{}' not found", ProcessVariables.INSTANCES);
+        String[] instanceIds = (String[]) execution.getVariable(ProcessVariables.INSTANCE_IDS);
+        checkNotNull(instanceIds, "process variable '{}' not found", ProcessVariables.INSTANCE_IDS);
 
         DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
             .withInstanceIds(instanceIds));

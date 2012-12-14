@@ -63,6 +63,7 @@
 
     <feature name="axemblr-provisionr-core" version="${project.version}">
         <feature version="${activiti.version}">activiti</feature>
+        <bundle dependency="true">mvn:com.google.code.gson/gson/${gson.version}</bundle>
         <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-api/${project.version}</bundle>
         <bundle>mvn:com.axemblr.provisionr/provisionr-core/${project.version}</bundle>

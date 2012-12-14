@@ -95,4 +95,10 @@
     </bean>
     <service ref="amazon_checkAllInstancesAreTerminated" auto-export="interfaces"/>
 
+    <bean id="amazon_publishListOfMachines"
+          class="com.axemblr.provisionr.amazon.activities.PublishArraysOfMachines">
+        <argument ref="providerClientCache"/>
+    </bean>
+    <service ref="amazon_publishListOfMachines" auto-export="interfaces"/>
+
 </blueprint>                     

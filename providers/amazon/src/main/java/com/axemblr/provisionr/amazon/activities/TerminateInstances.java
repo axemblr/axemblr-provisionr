@@ -40,10 +40,10 @@ public class TerminateInstances extends AmazonActivity {
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) {
-        String[] instances = (String[]) execution.getVariable(ProcessVariables.INSTANCES);
-        checkNotNull(instances, "process variable '{}' not found", ProcessVariables.INSTANCES);
+        String[] instanceIds = (String[]) execution.getVariable(ProcessVariables.INSTANCE_IDS);
+        checkNotNull(instanceIds, "process variable '{}' not found", ProcessVariables.INSTANCE_IDS);
 
-        LOG.info(">> Terminating instances: {}", Arrays.toString(instances));
-        client.terminateInstances(new TerminateInstancesRequest().withInstanceIds(instances));
+        LOG.info(">> Terminating instances: {}", Arrays.toString(instanceIds));
+        client.terminateInstances(new TerminateInstancesRequest().withInstanceIds(instanceIds));
     }
 }

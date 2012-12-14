@@ -39,7 +39,7 @@ public class ProcessVariables {
      *
      * @see com.axemblr.provisionr.amazon.activities.RunOnDemandInstances
      */
-    public static final String INSTANCES = "instanceIds";
+    public static final String INSTANCE_IDS = "instanceIds";
 
     /**
      * Are all started instances running?
