@@ -27,7 +27,7 @@ import org.apache.felix.gogo.commands.Option;
 /**
  * @author Srinivasan Chikkala
  */
-@Command(scope = "activiti", name = "clean-history", description = "Removes history of the BPMN process instances")
+@Command(scope = "activiti", name = "clean-history", description = "Removes history of the Activiti process instances")
 public class CleanHistoryActivitiCommand extends ActivitiCommand {
 
     @Argument(index = 0, name = "instanceIDs", description = "Instance IDs to remove from history",

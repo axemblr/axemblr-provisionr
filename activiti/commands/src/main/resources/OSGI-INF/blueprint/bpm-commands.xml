@@ -1,62 +1,92 @@
 <?xml version="1.0" encoding="windows-1252"?>
-    <!--
-        Copyright 2012 Cisco Systems
-        
-        Licensed to the Apache Software Foundation (ASF) under one or more
-        contributor license agreements.  See the NOTICE file distributed with
-        this work for additional information regarding copyright ownership.
-        The ASF licenses this file to You under the Apache License, Version 2.0
-        (the "License"); you may not use this file except in compliance with
-        the License.  You may obtain a copy of the License at
+<!--
+    Copyright 2012 Cisco Systems
+    
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
 
-           http://www.apache.org/licenses/LICENSE-2.0
+       http://www.apache.org/licenses/LICENSE-2.0
 
-        Unless required by applicable law or agreed to in writing, software
-        distributed under the License is distributed on an "AS IS" BASIS,
-        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-        See the License for the specific language governing permissions and
-        limitations under the License.
-    --> 
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-	xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
-	xmlns:cfg="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
-	<shell:command-bundle>
-		<shell:command name="activiti/list">
-			<shell:action class="org.activiti.karaf.commands.ListActivitiCommand">
-				<shell:property name="processEngine" ref="processEngineRef" />
-			</shell:action>
-		</shell:command>
-		<shell:command name="activiti/start">
-			<shell:action class="org.activiti.karaf.commands.StartActivitiCommand">
-				<shell:property name="processEngine" ref="processEngineRef" />
-			</shell:action>
-		</shell:command>
-		<shell:command name="activiti/kill">
-			<shell:action class="org.activiti.karaf.commands.KillActivitiCommand">
-				<shell:property name="processEngine" ref="processEngineRef" />
-			</shell:action>
-		</shell:command>
-		<shell:command name="activiti/signal">
-			<shell:action class="org.activiti.karaf.commands.SignalActivitiCommand">
-				<shell:property name="processEngine" ref="processEngineRef" />
-			</shell:action>
-		</shell:command>
-		<shell:command name="activiti/undeploy">
-			<shell:action class="org.activiti.karaf.commands.UndeployActivitiCommand">
-				<shell:property name="processEngine" ref="processEngineRef" />
-			</shell:action>
-		</shell:command>
-		<shell:command name="activiti/clean-history">
-			<shell:action class="org.activiti.karaf.commands.CleanHistoryActivitiCommand">
-				<shell:property name="processEngine" ref="processEngineRef" />
-			</shell:action>
-		</shell:command>
-		<shell:command name="activiti/info">
-			<shell:action class="org.activiti.karaf.commands.InfoActivitiCommand">
-				<shell:property name="processEngine" ref="processEngineRef" />
-			</shell:action>
-		</shell:command>
-	</shell:command-bundle>
-	<reference id="processEngineRef" interface="org.activiti.engine.ProcessEngine" />
+           xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
+           xmlns:cfg="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+    <shell:command-bundle>
+        <shell:command name="activiti/list">
+            <shell:action class="org.activiti.karaf.commands.ListActivitiCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/start">
+            <shell:action class="org.activiti.karaf.commands.StartActivitiCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/kill">
+            <shell:action class="org.activiti.karaf.commands.KillActivitiCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/signal">
+            <shell:action class="org.activiti.karaf.commands.SignalActivitiCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/undeploy">
+            <shell:action class="org.activiti.karaf.commands.UndeployActivitiCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/clean-history">
+            <shell:action class="org.activiti.karaf.commands.CleanHistoryActivitiCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/info">
+            <shell:action class="org.activiti.karaf.commands.InfoActivitiCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/add-user">
+            <shell:action class="org.activiti.karaf.commands.AddUserCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/delete-user">
+            <shell:action class="org.activiti.karaf.commands.DeleteUserCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/add-group">
+            <shell:action class="org.activiti.karaf.commands.AddGroupCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/delete-group">
+            <shell:action class="org.activiti.karaf.commands.DeleteGroupCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/list-groups">
+            <shell:action class="org.activiti.karaf.commands.ListGroupsCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="activiti/list-users">
+            <shell:action class="org.activiti.karaf.commands.ListUsersCommand">
+                <shell:property name="processEngine" ref="processEngineRef"/>
+            </shell:action>
+        </shell:command>
+    </shell:command-bundle>
+    <reference id="processEngineRef" interface="org.activiti.engine.ProcessEngine"/>
 
 </blueprint>
