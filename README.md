@@ -43,10 +43,10 @@ License
 Apache License Version 2.0
 http://apache.org/licenses/LICENSE-2.0.txt
 
-Get involved in the commuinty 
-----------------------------
+Get involved in the community 
+-----------------------------
 
-For those of you who really dig our software We have created two mailing lists that yo can join depending on your involvement: 
+For those of you who really dig our software, we have created two mailing lists that yo can join depending on your involvement: 
 
 * If you are a user join: [provisionr-users@googlegroups.com](https://groups.google.com/forum/?fromgroups#!forum/provisionr-users)
 * If you wish to develop Provisionr go to [provisionr-dev@googlegroups.com](https://groups.google.com/forum/?fromgroups#!forum/provisionr-dev)
