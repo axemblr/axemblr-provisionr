@@ -22,15 +22,16 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 
 /**
- *
  * @author Srinivasan Chikkala
  */
-@Command(scope = "act", name = "start", description = "Starts the BPMN process instance from a deployed process definition")
+@Command(scope = "activiti", name = "start",
+    description = "Starts the Activiti process instance from a deployed process definition")
 public class StartActivitiCommand extends ActivitiCommand {
 
-    @Argument(index=0, name = "definitionID", description = "BPMN Process definition ID to start an instance of it.", required=true, multiValued=false)
+    @Argument(index = 0, name = "definitionID", required = true, multiValued = false,
+        description = "Activiti Process definition ID to start an instance of it.")
     private String definitionID;
-    
+
     @Override
     protected Object doExecute() throws Exception {
         ProcessEngine pe = this.getProcessEngine();

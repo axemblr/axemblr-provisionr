@@ -37,6 +37,10 @@
     <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
     <bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>
 
+    <bean id="demoDataGenerator" class="org.activiti.explorer.demo.DemoDataGenerator">
+        <property name="processEngine" ref="processEngine" />
+    </bean>
+
     <bean id="activitiLoginHandler" class="org.activiti.explorer.ui.login.DefaultLoginHandler">
         <property name="identityService" ref="identityService"/>
     </bean>

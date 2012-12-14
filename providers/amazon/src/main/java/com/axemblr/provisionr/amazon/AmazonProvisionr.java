@@ -66,6 +66,7 @@ public class AmazonProvisionr extends ProvisionrSupport {
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put(CoreProcessVariables.POOL, pool);
 
+        processEngine.getIdentityService().setAuthenticatedUserId("kermit");
         ProcessInstance instance = processEngine.getRuntimeService()
             .startProcessInstanceByKey(PROCESS_KEY, businessKey, arguments);
 
