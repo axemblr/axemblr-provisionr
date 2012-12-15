@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.axemblr.provisionr.amazon;
+package com.axemblr.provisionr.amazon.options;
 
 public class SoftwareOptions {
 
     private SoftwareOptions() {
         /* singleton */
     }
+
+    public static final String DEFAULT_BASE_OPERATING_SYSTEM = "ubuntu";
 
     public static final String BASE_OPERATING_SYSTEM_VERSION = "version";
     public static final String DEFAULT_BASE_OPERATING_SYSTEM_VERSION = "12.04 LTS";
