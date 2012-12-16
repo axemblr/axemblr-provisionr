@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.axemblr.provisionr.amazon;
+package com.axemblr.provisionr.amazon.options;
 
 public class ProviderOptions {
 

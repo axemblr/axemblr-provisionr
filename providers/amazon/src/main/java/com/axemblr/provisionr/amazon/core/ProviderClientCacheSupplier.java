@@ -23,7 +23,7 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.DescribeRegionsRequest;
 import com.amazonaws.services.ec2.model.DescribeRegionsResult;
-import com.axemblr.provisionr.amazon.ProviderOptions;
+import com.axemblr.provisionr.amazon.options.ProviderOptions;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkArgument;
