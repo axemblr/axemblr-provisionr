@@ -15,12 +15,39 @@
   ~ limitations under the License.
   -->
 
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
+           xmlns:cfg="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0">
+
+    <cfg:property-placeholder persistent-id="com.axemblr.provisionr.cloudstack"
+                              placeholder-prefix="$(" placeholder-suffix=")" update-strategy="reload">
+        <cfg:default-properties>
+            <cfg:property name="endPoint" value=""/>
+            <cfg:property name="accessKey" value=""/>
+            <cfg:property name="secretKey" value=""/>
+            <cfg:property name="zoneId" value="1"/>
+            <cfg:property name="templateId" value="1"/>
+            <cfg:property name="serviceOffering" value="1"/>
+        </cfg:default-properties>
+    </cfg:property-placeholder>
+
+    <!-- Configure a DefaultProviderConfiguration via ConfigAdmin
+        WARNING: Order of arguments is important.
+    -->
+    <bean id="defaultProviderConfig" class="com.axemblr.provisionr.cloudstack.DefaultProviderConfig">
+        <argument value="$(endPoint)"/>
+        <argument value="$(accessKey)"/>
+        <argument value="$(secretKey)"/>
+        <argument value="$(zoneId)"/>
+        <argument value="$(templateId)"/>
+        <argument value="$(serviceOffering)"/>
+    </bean>
 
     <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
 
     <bean id="cloudstackService" class="com.axemblr.provisionr.cloudstack.CloudStackProvisionr">
         <argument ref="processEngine"/>
+        <argument ref="defaultProviderConfig"/>
     </bean>
 
     <service ref="cloudstackService" interface="com.axemblr.provisionr.api.Provisionr"/>
@@ -44,4 +71,12 @@
     <service ref="cloudstack_deleteKeyPair" auto-export="interfaces">
     </service>
 
+    <!-- CloudStack Karaf shell commands -->
+    <shell:command-bundle>
+        <shell:command name="cloudstack/zones">
+            <shell:action class="com.axemblr.provisionr.cloudstack.commands.ZonesCommand">
+                <shell:argument ref="defaultProviderConfig"/>
+            </shell:action>
+        </shell:command>
+    </shell:command-bundle>
 </blueprint>

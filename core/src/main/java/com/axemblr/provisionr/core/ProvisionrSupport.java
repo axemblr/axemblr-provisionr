@@ -38,7 +38,8 @@ public abstract class ProvisionrSupport implements Provisionr {
     }
 
     /**
-     * Trigger a signal event on all executions for a specific business key
+     * Trigger a signal event on all executions for a specific business key.
+     * See http://www.activiti.org/userguide/index.html#bpmnSignalEventDefinition
      */
     protected void triggerSignalEvent(ProcessEngine processEngine, String businessKey, String signalName) {
         RuntimeService runtimeService = processEngine.getRuntimeService();
