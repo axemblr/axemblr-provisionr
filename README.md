@@ -157,7 +157,10 @@ This will download dependencies, compile the sources and run unit tests and some
 How to test?
 ------------
 
-All the unit tests are executed as part of the normal build
+All the unit tests are executed as part of the normal build.
+
+For SSH tests we assume the current user can do "ssh localhost" and authenticate
+automatically using the local ssh keys. 
 
 You can run tests against a specific cloud provider for individual activities by running:
 

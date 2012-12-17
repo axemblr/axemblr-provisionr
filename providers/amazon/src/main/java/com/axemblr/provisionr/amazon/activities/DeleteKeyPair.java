@@ -21,8 +21,6 @@ import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
 import com.axemblr.provisionr.amazon.core.KeyPairs;
 import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
-import com.axemblr.provisionr.api.provider.Provider;
-import com.google.common.cache.LoadingCache;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

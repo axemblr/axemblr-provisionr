@@ -16,8 +16,12 @@
 
 package com.axemblr.provisionr.api.access;
 
+import com.google.common.base.Charsets;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Throwables;
+import com.google.common.io.Files;
+import java.io.File;
 
 public class AdminAccessBuilder {
 
@@ -41,6 +45,20 @@ public class AdminAccessBuilder {
             "The key does not start with -----BEGIN RSA PRIVATE KEY----- as expected");
         this.privateKey = checkNotNull(privateKey, "privateKey is null");
         return this;
+    }
+
+    public AdminAccessBuilder asCurrentUser() {
+        String userHome = System.getProperty("user.home");
+
+        try {
+            String publicKey = Files.toString(new File(userHome, ".ssh/id_rsa.pub"), Charsets.UTF_8);
+            String privateKey = Files.toString(new File(userHome, ".ssh/id_rsa"), Charsets.UTF_8);
+
+            return username(System.getProperty("user.name")).publicKey(publicKey).privateKey(privateKey);
+
+        } catch (Exception e) {
+            throw Throwables.propagate(e);
+        }
     }
 
     public AdminAccess createAdminAccess() {

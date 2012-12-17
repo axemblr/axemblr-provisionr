@@ -17,6 +17,7 @@
 package com.axemblr.provisionr.api.pool;
 
 import com.axemblr.provisionr.api.util.BuilderWithOptions;
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class MachineBuilder extends BuilderWithOptions<MachineBuilder> {
 
@@ -25,6 +26,7 @@ public class MachineBuilder extends BuilderWithOptions<MachineBuilder> {
     private String publicIp;
     private String privateDnsName;
     private String privateIp;
+    private int sshPort = 22;
 
     @Override
     protected MachineBuilder getThis() {
@@ -56,8 +58,14 @@ public class MachineBuilder extends BuilderWithOptions<MachineBuilder> {
         return this;
     }
 
+    public MachineBuilder sshPort(int sshPort) {
+        checkArgument(sshPort > 0 && sshPort < 65535, "invalid port number for ssh");
+        this.sshPort = sshPort;
+        return this;
+    }
+
     public Machine createMachine() {
         return new Machine(externalId, publicDnsName, publicIp,
-            privateDnsName, privateIp, buildOptions());
+            privateDnsName, privateIp, sshPort, buildOptions());
     }
 }

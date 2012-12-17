@@ -34,6 +34,7 @@ public class MachineTest {
             .createMachine();
 
         assertThat(machine.getPrivateIp()).startsWith("10.0");
+        assertThat(machine.getSshPort()).isEqualTo(22);
         assertThat(machine.toBuilder().createMachine()).isEqualTo(machine);
 
         assertSerializable(machine, Machine.class);
