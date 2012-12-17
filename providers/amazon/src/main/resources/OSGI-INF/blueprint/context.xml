@@ -96,9 +96,20 @@
     <service ref="amazon_checkAllInstancesAreTerminated" auto-export="interfaces"/>
 
     <bean id="amazon_publishListOfMachines"
-          class="com.axemblr.provisionr.amazon.activities.PublishArraysOfMachines">
+          class="com.axemblr.provisionr.amazon.activities.PublishListOfMachines">
         <argument ref="providerClientCache"/>
     </bean>
     <service ref="amazon_publishListOfMachines" auto-export="interfaces"/>
+
+    <bean id="amazon_setupAdminAccess"
+          class="com.axemblr.provisionr.amazon.activities.SetupAdminAccess"/>
+    <service ref="amazon_setupAdminAccess" auto-export="interfaces"/>
+
+    <bean id="amazon_checkSshPortIsOpen"
+          class="com.axemblr.provisionr.amazon.activities.IsMachinePortOpen">
+        <argument value="sshPortIsOpen"/>
+        <argument value="22"/>
+    </bean>
+    <service ref="amazon_checkSshPortIsOpen" auto-export="interfaces"/>
 
 </blueprint>                     

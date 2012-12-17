@@ -34,17 +34,14 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.compendium</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-engine</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
@@ -58,7 +55,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

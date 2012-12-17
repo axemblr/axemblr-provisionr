@@ -45,54 +45,49 @@
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>4.3.0</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-api</artifactId>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam</artifactId>
             <version>${pax.exam.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.karaf.tooling.exam</groupId>
             <artifactId>org.apache.karaf.tooling.exam.container</artifactId>
             <version>${karaf.tooling.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam-junit4</artifactId>
             <version>${pax.exam.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam-link-mvn</artifactId>
             <version>${pax.exam.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.url</groupId>
             <artifactId>pax-url-aether</artifactId>
             <version>${pax.url.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.framework</artifactId>
             <version>${felix.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.swissbox</groupId>
             <artifactId>pax-swissbox-tinybundles</artifactId>
             <version>${tinybundles.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
@@ -122,11 +117,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-engine</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
