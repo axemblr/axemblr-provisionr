@@ -16,16 +16,12 @@
 
 package com.axemblr.provisionr.test;
 
-import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.provider.ProviderBuilder;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.base.Throwables;
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -82,20 +78,6 @@ public class ProvisionrLiveTestSupport {
      */
     protected String getProviderProperty(String property) {
         return System.getProperty(String.format("test.%s.provider.%s", provisionrId, property));
-    }
-
-    protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
-        String userHome = System.getProperty("user.home");
-
-        try {
-            String publicKey = Files.toString(new File(userHome, ".ssh/id_rsa.pub"), Charsets.UTF_8);
-            String privateKey = Files.toString(new File(userHome, ".ssh/id_rsa"), Charsets.UTF_8);
-
-            return AdminAccess.builder().username(System.getProperty("user.name"))
-                .publicKey(publicKey).privateKey(privateKey).createAdminAccess();
-        } catch (Exception e) {
-            throw Throwables.propagate(e);
-        }
     }
 
     /**

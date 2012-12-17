@@ -96,6 +96,10 @@
         <jclouds.version>1.5.3</jclouds.version>
         <jclouds.karaf.version>1.5.3_1</jclouds.karaf.version>
         <imgscalr-lib.version>3.1</imgscalr-lib.version>
+        <sshj.version>0.8.1</sshj.version>
+        <bouncycastle.version>1.46</bouncycastle.version>
+        <jzlib.bundle.version>1.0.7_1</jzlib.bundle.version>
+        <jzlib.version>1.0.7</jzlib.version>
     </properties>
 
     <dependencyManagement>
@@ -163,6 +167,25 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.schmizz</groupId>
+                <artifactId>sshj</artifactId>
+                <version>${sshj.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jzlib</artifactId>
+                <version>${jzlib.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk16</artifactId>
+                <version>${bouncycastle.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

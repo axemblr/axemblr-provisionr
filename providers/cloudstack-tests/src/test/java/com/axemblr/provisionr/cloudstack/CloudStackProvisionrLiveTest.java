@@ -76,7 +76,7 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final Software software = Software.builder().baseOperatingSystem("ubuntu-10.04")
             .packages("nginx").createSoftware();
 
-        final AdminAccess adminAccess = collectCurrentUserCredentialsForAdminAccess();
+        final AdminAccess adminAccess = AdminAccess.builder().asCurrentUser().createAdminAccess();
 
         final Hardware hardware = Hardware.builder().type("offering").createHardware();
 

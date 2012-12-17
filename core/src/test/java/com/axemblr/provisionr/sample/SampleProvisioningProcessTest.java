@@ -27,8 +27,10 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class SampleProvisioningProcessTest {
 
     private static final String PROCESS_NAME = "sample";
