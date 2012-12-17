@@ -98,6 +98,8 @@
         <imgscalr-lib.version>3.1</imgscalr-lib.version>
         <sshj.version>0.8.1</sshj.version>
         <bouncycastle.version>1.46</bouncycastle.version>
+        <jzlib.bundle.version>1.0.7_1</jzlib.bundle.version>
+        <jzlib.version>1.0.7</jzlib.version>
     </properties>
 
     <dependencyManagement>
@@ -171,6 +173,12 @@
                 <groupId>net.schmizz</groupId>
                 <artifactId>sshj</artifactId>
                 <version>${sshj.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jzlib</artifactId>
+                <version>${jzlib.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
