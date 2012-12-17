@@ -20,6 +20,7 @@ import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Optional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.Execution;
@@ -50,7 +51,8 @@ public abstract class ProvisionrSupport implements Provisionr {
             .signalEventSubscriptionName(signalName).list();
 
         if (executions.isEmpty()) {
-            LOG.error("No executions found waiting for signal '{}' on process {}", signalName, businessKey);
+            throw new NoSuchElementException(String.format("No executions found waiting " +
+                "for signal '%s' on process %s", signalName, businessKey));
         }
         for (Execution execution : executions) {
             LOG.info("Sending '{}' signal to execution {} for process {}",

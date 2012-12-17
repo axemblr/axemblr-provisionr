@@ -18,6 +18,7 @@ package com.axemblr.provisionr.api.pool;
 
 import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Map;
 
@@ -58,14 +59,23 @@ public class Machine extends WithOptions {
      */
     private final String privateIp;
 
+    /**
+     * Port number for SSH
+     */
+    private final int sshPort;
+
     Machine(String externalId, String publicDnsName, String publicIp,
-            String privateDnsName, String privateIp, Map<String, String> options) {
+            String privateDnsName, String privateIp, int sshPort, Map<String, String> options) {
         super(options);
+
         this.externalId = checkNotNull(externalId, "externalId is null");
         this.publicDnsName = checkNotNull(publicDnsName, "publicDnsName is null");
         this.publicIp = checkNotNull(publicIp, "publicIp is null");
         this.privateDnsName = checkNotNull(privateDnsName, "privateDnsName is null");
         this.privateIp = checkNotNull(privateIp, "privateIp is null");
+
+        checkArgument(sshPort > 0 && sshPort < 65535, "invalid port number for ssh");
+        this.sshPort = sshPort;
     }
 
     /**
@@ -103,6 +113,13 @@ public class Machine extends WithOptions {
         return privateIp;
     }
 
+    /**
+     * Port number for SSH
+     */
+    public int getSshPort() {
+        return sshPort;
+    }
+
     public MachineBuilder toBuilder() {
         return builder().externalId(externalId).publicDnsName(publicDnsName).publicIp(publicIp)
             .privateDnsName(privateDnsName).privateIp(privateIp).options(getOptions());
@@ -111,7 +128,7 @@ public class Machine extends WithOptions {
     @Override
     public int hashCode() {
         return Objects.hashCode(externalId, publicDnsName, publicIp,
-            privateDnsName, privateIp, getOptions());
+            privateDnsName, privateIp, sshPort, getOptions());
     }
 
     @Override
@@ -128,6 +145,7 @@ public class Machine extends WithOptions {
             && Objects.equal(this.publicIp, other.publicIp)
             && Objects.equal(this.privateDnsName, other.privateDnsName)
             && Objects.equal(this.privateIp, other.privateIp)
+            && this.sshPort == other.sshPort
             && Objects.equal(this.getOptions(), other.getOptions());
     }
 
@@ -139,6 +157,7 @@ public class Machine extends WithOptions {
             ", publicIp='" + publicIp + '\'' +
             ", privateDnsName='" + privateDnsName + '\'' +
             ", privateIp='" + privateIp + '\'' +
+            ", sshPort=" + sshPort +
             ", options=" + getOptions() +
             '}';
     }

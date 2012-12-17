@@ -79,7 +79,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final Software software = Software.builder().baseOperatingSystem("ubuntu-10.04")
             .packages("nginx").createSoftware();
 
-        final AdminAccess adminAccess = collectCurrentUserCredentialsForAdminAccess();
+        final AdminAccess adminAccess = AdminAccess.builder().asCurrentUser().createAdminAccess();
 
         final Pool pool = Pool.builder().provider(provider).network(network).adminAccess(adminAccess)
             .software(software).hardware(hardware).minSize(1).expectedSize(1).createPool();
