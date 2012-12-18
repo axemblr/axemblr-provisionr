@@ -30,13 +30,17 @@ import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.amazon.core.SecurityGroups;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
 import java.io.IOException;
 import java.util.List;
+import net.schmizz.sshj.common.Base64;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.VariableScope;
+import org.bouncycastle.util.encoders.Base64Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +56,7 @@ public class RunOnDemandInstances extends AmazonActivity {
     }
 
     @Override
-    public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) {
+    public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws IOException {
         final String businessKey = execution.getProcessBusinessKey();
 
         final String securityGroupName = SecurityGroups.formatNameFromBusinessKey(businessKey);
@@ -62,6 +66,9 @@ public class RunOnDemandInstances extends AmazonActivity {
         final String imageId = getImageIdFromProcessVariablesOrQueryImageTable(
             execution, pool.getProvider(), instanceType);
 
+        final String userData = Resources.toString(Resources.getResource(RunOnDemandInstances.class,
+            "/com/axemblr/provisionr/amazon/userdata.sh"), Charsets.UTF_8);
+
         final RunInstancesRequest request = new RunInstancesRequest()
             .withClientToken(businessKey)
             .withSecurityGroups(securityGroupName)
@@ -69,7 +76,8 @@ public class RunOnDemandInstances extends AmazonActivity {
             .withInstanceType(instanceType)
             .withImageId(imageId)
             .withMinCount(pool.getMinSize())
-            .withMaxCount(pool.getExpectedSize());
+            .withMaxCount(pool.getExpectedSize())
+            .withUserData(Base64.encodeBytes(userData.getBytes()));
 
         // TODO allow for more options (e.g. monitoring & termination protection etc.)
 

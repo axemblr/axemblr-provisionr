@@ -105,11 +105,10 @@
           class="com.axemblr.provisionr.amazon.activities.SetupAdminAccess"/>
     <service ref="amazon_setupAdminAccess" auto-export="interfaces"/>
 
-    <bean id="amazon_checkSshPortIsOpen"
-          class="com.axemblr.provisionr.amazon.activities.IsMachinePortOpen">
-        <argument value="sshPortIsOpen"/>
-        <argument value="22"/>
+    <bean id="amazon_dumpConsoleOutput"
+          class="com.axemblr.provisionr.amazon.activities.DumpConsoleOutput">
+        <argument ref="providerClientCache"/>
     </bean>
-    <service ref="amazon_checkSshPortIsOpen" auto-export="interfaces"/>
+    <service ref="amazon_dumpConsoleOutput" auto-export="interfaces"/>
 
 </blueprint>                     

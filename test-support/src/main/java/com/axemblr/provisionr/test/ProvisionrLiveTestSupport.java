@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.io.Resources;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.inject.Inject;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -97,18 +98,21 @@ public class ProvisionrLiveTestSupport {
      * @param processKey
      * @throws InterruptedException
      */
-    public void waitForProcessDeployment(String processKey) throws InterruptedException {
+    public void waitForProcessDeployment(String processKey) throws InterruptedException, TimeoutException {
         ProcessEngine engine = getOsgiService(ProcessEngine.class, 5000);
-        ProcessDefinition definition;
-        boolean keepWaiting = true;
-        while (keepWaiting) {
-            definition = engine.getRepositoryService()
+        int iteration = 0;
+        while (iteration < 5) {
+            ProcessDefinition definition = engine.getRepositoryService()
                 .createProcessDefinitionQuery()
                 .processDefinitionKey(processKey).singleResult();
             if (definition != null) {
-                keepWaiting = false;
+                break;
             }
+            iteration++;
             TimeUnit.MILLISECONDS.sleep(500);
+        }
+        if (iteration == 5) {
+            throw new TimeoutException("No process found with key: " + processKey);
         }
     }
 
