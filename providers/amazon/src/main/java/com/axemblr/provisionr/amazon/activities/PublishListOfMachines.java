@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.axemblr.provisionr.amazon.activities;
 
 import com.amazonaws.services.ec2.AmazonEC2;
@@ -26,20 +42,21 @@ import org.slf4j.LoggerFactory;
  *
  * @see Machine
  */
-public class PublishArraysOfMachines extends AmazonActivity {
+public class PublishListOfMachines extends AmazonActivity {
 
-    public static final Logger LOG = LoggerFactory.getLogger(PublishArraysOfMachines.class);
+    public static final Logger LOG = LoggerFactory.getLogger(PublishListOfMachines.class);
 
-    public PublishArraysOfMachines(ProviderClientCache providerClientCache) {
+    public PublishListOfMachines(ProviderClientCache providerClientCache) {
         super(providerClientCache);
     }
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws Exception {
-        String[] instanceIds = (String[]) execution.getVariable(ProcessVariables.INSTANCE_IDS);
+        @SuppressWarnings("unchecked")
+        List<String> instanceIds = (List<String>) execution.getVariable(ProcessVariables.INSTANCE_IDS);
         checkNotNull(instanceIds, "%s not found as a process variable", ProcessVariables.INSTANCE_IDS);
 
-        LOG.info(">> Describing instances {}", Arrays.toString(instanceIds));
+        LOG.info(">> Describing instances {}", instanceIds);
         DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
             .withInstanceIds(instanceIds));
         checkArgument(result.getReservations().size() == 1, "found more than one reservation");
@@ -61,7 +78,7 @@ public class PublishArraysOfMachines extends AmazonActivity {
                 }
             });
 
-        execution.setVariable(CoreProcessVariables.MACHINES,
-            machines.toArray(new Machine[machines.size()]));
+        /* Create a new ArrayList to force evaluation for lazy collections */
+        execution.setVariable(CoreProcessVariables.MACHINES, Lists.newArrayList(machines));
     }
 }

@@ -102,7 +102,8 @@ public class RunOnDemandInstancesLiveTest extends AmazonActivityLiveTest<RunOnDe
         verify(execution).setVariable(eq(ProcessVariables.RESERVATION_ID), anyString());
         verify(execution).setVariable(eq(ProcessVariables.INSTANCE_IDS), any());
 
-        String[] instanceIds = (String[]) collector.getVariable(ProcessVariables.INSTANCE_IDS);
+        @SuppressWarnings("unchecked")
+        List<String> instanceIds = (List<String>) collector.getVariable(ProcessVariables.INSTANCE_IDS);
 
         /* the second call should do nothing */
         activity.execute(execution);

@@ -27,7 +27,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import java.util.Arrays;
 import java.util.List;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;
@@ -49,7 +48,8 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws Exception {
-        String[] instanceIds = (String[]) execution.getVariable(ProcessVariables.INSTANCE_IDS);
+        @SuppressWarnings("unchecked")
+        List<String> instanceIds = (List<String>) execution.getVariable(ProcessVariables.INSTANCE_IDS);
         checkNotNull(instanceIds, "process variable '{}' not found", ProcessVariables.INSTANCE_IDS);
 
         DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
@@ -57,10 +57,13 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
         checkState(result.getReservations().size() == 1, "the instance ids are part of multiple reservations");
 
         List<Instance> instances = result.getReservations().get(0).getInstances();
-        boolean allInstancesMatch = Iterables.all(instances, predicate);
-        LOG.info(">> Checking {} instances with predicate {}. Result: {}",
-            new Object[]{Arrays.toString(instanceIds), predicate, allInstancesMatch});
+        if (Iterables.all(instances, predicate)) {
+            LOG.info(">> All {} instances match predicate {} ", instanceIds, predicate);
+            execution.setVariable(resultVariable, true);
 
-        execution.setVariable(resultVariable, allInstancesMatch);
+        } else {
+            LOG.info("<< Not all instances {} match predicate {}", instanceIds, predicate);
+            execution.setVariable(resultVariable, false);
+        }
     }
 }

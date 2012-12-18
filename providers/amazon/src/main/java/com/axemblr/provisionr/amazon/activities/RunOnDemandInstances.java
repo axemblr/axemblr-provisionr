@@ -82,7 +82,7 @@ public class RunOnDemandInstances extends AmazonActivity {
         execution.setVariable(ProcessVariables.RESERVATION_ID,
             result.getReservation().getReservationId());
         execution.setVariable(ProcessVariables.INSTANCE_IDS,
-            collectInstanceIdsAsArray(result.getReservation().getInstances()));
+            collectInstanceIdsAsList(result.getReservation().getInstances()));
     }
 
     private String getImageIdFromProcessVariablesOrQueryImageTable(
@@ -118,15 +118,14 @@ public class RunOnDemandInstances extends AmazonActivity {
         return query.singleResult();
     }
 
-    private String[] collectInstanceIdsAsArray(List<Instance> instances) {
-        List<String> ids = Lists.transform(instances,
+    private List<String> collectInstanceIdsAsList(List<Instance> instances) {
+        /* Make a copy as an ArrayList to force lazy collection evaluation */
+        return Lists.newArrayList(Lists.transform(instances,
             new Function<Instance, String>() {
                 @Override
                 public String apply(Instance instance) {
                     return instance.getInstanceId();
                 }
-            });
-
-        return ids.toArray(new String[ids.size()]);
+            }));
     }
 }

@@ -23,6 +23,7 @@ import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Arrays;
+import java.util.List;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +41,11 @@ public class TerminateInstances extends AmazonActivity {
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) {
-        String[] instanceIds = (String[]) execution.getVariable(ProcessVariables.INSTANCE_IDS);
+        @SuppressWarnings("unchecked")
+        List<String> instanceIds = (List<String>) execution.getVariable(ProcessVariables.INSTANCE_IDS);
         checkNotNull(instanceIds, "process variable '{}' not found", ProcessVariables.INSTANCE_IDS);
 
-        LOG.info(">> Terminating instances: {}", Arrays.toString(instanceIds));
+        LOG.info(">> Terminating instances: {}", instanceIds);
         client.terminateInstances(new TerminateInstancesRequest().withInstanceIds(instanceIds));
     }
 }

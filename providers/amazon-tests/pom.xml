@@ -33,27 +33,22 @@
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-api</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-amazon</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-engine</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-features</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-test-support</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
