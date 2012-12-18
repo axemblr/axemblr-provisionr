@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.axemblr.provisionr.amazon.activities;
+package com.axemblr.provisionr.core.activities;
 
 import com.axemblr.provisionr.api.pool.Machine;
 import static com.google.common.base.Preconditions.checkArgument;
@@ -27,6 +27,11 @@ import org.activiti.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Check that we can connect to a specific port on a remote machine
+ * <p/>
+ * This activity expects to find an environment variable named 'machine'
+ */
 public class IsMachinePortOpen implements JavaDelegate {
 
     public static final Logger LOG = LoggerFactory.getLogger(IsMachinePortOpen.class);

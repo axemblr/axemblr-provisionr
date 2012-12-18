@@ -29,7 +29,7 @@ import org.junit.Test;
 public class SshLiveTest {
 
     @Test
-    public void testConnectToLocalhost() throws IOException {
+    public void testConnectToLocalhostAndCollectOutput() throws IOException {
         final Machine localhost = Machine.builder().externalId("localhost")
             .publicDnsName("localhost").publicIp("127.0.0.1")
             .privateDnsName("localhost").privateIp("127.0.0.1").createMachine();
@@ -40,11 +40,17 @@ public class SshLiveTest {
         try {
             Session session = client.startSession();
             try {
-                final Session.Command command = session.exec("echo 'Testing SSH execution'");
-                String output = CharStreams.toString(new InputStreamReader(command.getInputStream()));
+                final Session.Command command = session.exec("echo 'stdout' && echo 'stderr' 1>&2");
+
+                String stdout = CharStreams.toString(new InputStreamReader(command.getInputStream()));
+                String stderr = CharStreams.toString(new InputStreamReader(command.getErrorStream()));
 
                 command.join();
-                assertThat(output).contains("Testing SSH execution");
+                assertThat(command.getExitStatus()).isEqualTo(0);
+                assertThat(command.getExitErrorMessage()).isNull();
+
+                assertThat(stdout).contains("stdout");
+                assertThat(stderr).contains("stderr");
 
             } finally {
                 session.close();

@@ -1,0 +1,30 @@
+
+#
+# Make sure only a single user can access the machines over ssh
+#
+
+user { "{{user}}":
+  groups => 'admin',
+  ensure => 'present',
+  managehome => 'true',
+  shell => '/bin/bash',
+  membership => 'inclusive',
+  system => 'false'
+}
+  
+file { "/home/{{user}}/.ssh":
+	ensure => 'directory',
+	require => User['{{user}}'],
+	owner => '{{user}}',
+	mode => '700'
+}
+
+ssh_authorized_key { '{{user}}-rsa-key':
+	ensure => 'present',
+	key => '{{publicKey}}',
+	type => 'rsa',
+	user => '{{user}}',
+	require => File['/home/{{user}}/.ssh']
+}  
+  
+# TODO: reconfigure and restart ssh
