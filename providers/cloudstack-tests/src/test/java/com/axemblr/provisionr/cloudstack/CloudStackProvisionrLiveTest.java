@@ -29,6 +29,7 @@ import static com.axemblr.provisionr.test.KarafTests.installProvisionrTestSuppor
 import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
 import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
+import java.security.Security;
 import java.util.UUID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +65,13 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
     public void startProvisioningProcess() throws Exception {
         waitForProcessDeployment(CloudStackProvisionr.ID);
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
+
+        for (java.security.Provider provider : Security.getProviders()) {
+            System.out.println(provider.toString());
+            for (java.security.Provider.Service service : provider.getServices()) {
+                System.out.println("\t" + service.toString());
+            }
+        }
 
         final Provider provider = collectProviderCredentialsFromSystemProperties()
             // TODO: get more options as needed for CloudStack
