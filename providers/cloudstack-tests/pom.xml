@@ -33,12 +33,14 @@
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-api</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-cloudstack</artifactId>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
@@ -57,11 +59,6 @@
             <type>xml</type>
             <classifier>features</classifier>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-        	<groupId>org.activiti</groupId>
-        	<artifactId>activiti-engine</artifactId>
-        	<scope>provided</scope>
         </dependency>
     </dependencies>
 

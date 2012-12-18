@@ -82,7 +82,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final AdminAccess adminAccess = AdminAccess.builder().asCurrentUser().createAdminAccess();
 
         final Pool pool = Pool.builder().provider(provider).network(network).adminAccess(adminAccess)
-            .software(software).hardware(hardware).minSize(1).expectedSize(1).createPool();
+            .software(software).hardware(hardware).minSize(2).expectedSize(2).createPool();
 
         final String businessKey = "j-" + UUID.randomUUID().toString();
         provisionr.startPoolManagementProcess(businessKey, pool);
