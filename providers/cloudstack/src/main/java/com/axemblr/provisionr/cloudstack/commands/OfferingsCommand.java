@@ -20,25 +20,24 @@ import com.axemblr.provisionr.cloudstack.DefaultProviderConfig;
 import java.io.PrintStream;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.cloudstack.CloudStackClient;
-import org.jclouds.cloudstack.domain.Zone;
+import org.jclouds.cloudstack.domain.ServiceOffering;
 
-@Command(scope = CommandSupport.CLOUDSTACK_SCOPE, name = ZonesCommand.NAME,
-    description = "Commands to list CloudStack Zones")
-public class ZonesCommand extends CommandSupport {
+@Command(scope = CommandSupport.CLOUDSTACK_SCOPE, name = OfferingsCommand.NAME,
+    description = "Commands to list CloudStack Service Offerings")
+public class OfferingsCommand extends CommandSupport {
 
-    public static final String NAME = "zones";
+    public static final String NAME = "offerings";
 
-    public ZonesCommand(DefaultProviderConfig defaultProviderConfig) {
-        super(defaultProviderConfig);
+    public OfferingsCommand(DefaultProviderConfig providerConfig) {
+        super(providerConfig);
     }
 
     @Override
     public Object doExecuteWithContext(CloudStackClient client, PrintStream out) throws Exception {
-        out.printf("CloudStack zones for provider %s\n", getProvider().getId());
-        for (Zone zone : client.getZoneClient().listZones()) {
-            out.printf("---\n%s\n", zone.toString());
+        out.printf("CloudStack Service Offerings for provider %s\n", getProvider().getId());
+        for (ServiceOffering offering : client.getOfferingClient().listServiceOfferings()) {
+            out.printf("---\n%s\n", offering.toString());
         }
-        out.println();
         return null;
     }
 }

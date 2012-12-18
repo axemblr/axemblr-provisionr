@@ -16,5 +16,30 @@
 
 package com.axemblr.provisionr.cloudstack.commands;
 
-public class TemplatesCommand {
+import com.axemblr.provisionr.cloudstack.DefaultProviderConfig;
+import java.io.PrintStream;
+import org.apache.felix.gogo.commands.Command;
+import org.jclouds.cloudstack.CloudStackClient;
+import org.jclouds.cloudstack.domain.Template;
+
+@Command(scope = CommandSupport.CLOUDSTACK_SCOPE, name = TemplatesCommand.NAME,
+    description = "Commands to list CloudStack templates")
+public class TemplatesCommand extends CommandSupport {
+
+    public static final String NAME = "templates";
+
+    public TemplatesCommand(DefaultProviderConfig providerConfig) {
+        super(providerConfig);
+    }
+
+    @Override
+    public Object doExecuteWithContext(CloudStackClient client, PrintStream out) throws Exception {
+        out.printf("CloudStack templates for provider %s\n", getProvider().getId());
+
+        for (Template template : client.getTemplateClient().listTemplates()) {
+            out.printf("---\n%s\n", template.toString());
+        }
+        out.println();
+        return null;
+    }
 }

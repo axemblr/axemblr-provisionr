@@ -17,9 +17,10 @@
 package com.axemblr.provisionr.cloudstack.commands;
 
 import com.axemblr.provisionr.api.provider.Provider;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.axemblr.provisionr.cloudstack.DefaultProviderConfig;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
+import java.io.PrintStream;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.ContextBuilder;
 import org.jclouds.cloudstack.CloudStackApiMetadata;
@@ -36,19 +37,21 @@ import org.jclouds.rest.RestContext;
 public abstract class CommandSupport extends OsgiCommandSupport {
 
     private RestContext<CloudStackClient, CloudStackAsyncClient> context = null;
+    public static final String CLOUDSTACK_SCOPE = "cloudstack";
+
     private final Provider provider;
 
-    protected CommandSupport(Provider provider) {
-        this.provider = checkNotNull(provider);
+    protected CommandSupport(DefaultProviderConfig providerConfig) {
+        this.provider = providerConfig.createProvider().get();
     }
 
-    public abstract Object doExecuteWithContext() throws Exception;
+    public abstract Object doExecuteWithContext(CloudStackClient client, PrintStream out) throws Exception;
 
     @Override
     protected Object doExecute() throws Exception {
         try {
             context = newCloudStackContext(provider);
-            return doExecuteWithContext();
+            return doExecuteWithContext(context.getApi(), getOut());
         } finally {
             Closeables.closeQuietly(context);
         }
@@ -62,11 +65,14 @@ public abstract class CommandSupport extends OsgiCommandSupport {
             .build(CloudStackApiMetadata.CONTEXT_TOKEN);
     }
 
-    public CloudStackClient getClient() {
-        return context.getApi();
-    }
-
     public Provider getProvider() {
         return provider;
+    }
+
+    /**
+     * Convenience method for easy unit testing of Commands.
+     */
+    public PrintStream getOut() {
+        return System.out;
     }
 }

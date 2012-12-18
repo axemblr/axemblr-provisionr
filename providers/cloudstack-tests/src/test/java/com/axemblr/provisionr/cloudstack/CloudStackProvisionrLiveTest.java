@@ -66,12 +66,7 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         waitForProcessDeployment(CloudStackProvisionr.ID);
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
-        for (java.security.Provider provider : Security.getProviders()) {
-            System.out.println(provider.toString());
-            for (java.security.Provider.Service service : provider.getServices()) {
-                System.out.println("\t" + service.toString());
-            }
-        }
+//        listAvailableJceProviders();
 
         final Provider provider = collectProviderCredentialsFromSystemProperties()
             // TODO: get more options as needed for CloudStack
@@ -94,5 +89,17 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         String processId = provisionr.startPoolManagementProcess(UUID.randomUUID().toString(), pool);
         waitForProcessEnd(processId);
         // TODO: check that the environment is clean
+    }
+
+    /**
+     * debug utility method for https://github.com/axemblr/axemblr-provisionr/issues/80
+     */
+    private void listAvailableJceProviders() {
+        for (java.security.Provider provider : Security.getProviders()) {
+            System.out.println(provider.toString());
+            for (java.security.Provider.Service service : provider.getServices()) {
+                System.out.println("\t" + service.toString());
+            }
+        }
     }
 }

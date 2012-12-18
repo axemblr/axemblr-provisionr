@@ -22,7 +22,7 @@
     <cfg:property-placeholder persistent-id="com.axemblr.provisionr.cloudstack"
                               placeholder-prefix="$(" placeholder-suffix=")" update-strategy="reload">
         <cfg:default-properties>
-            <cfg:property name="endPoint" value=""/>
+            <cfg:property name="endpoint" value=""/>
             <cfg:property name="accessKey" value=""/>
             <cfg:property name="secretKey" value=""/>
             <cfg:property name="zoneId" value="1"/>
@@ -35,7 +35,7 @@
         WARNING: Order of arguments is important.
     -->
     <bean id="defaultProviderConfig" class="com.axemblr.provisionr.cloudstack.DefaultProviderConfig">
-        <argument value="$(endPoint)"/>
+        <argument value="$(endpoint)"/>
         <argument value="$(accessKey)"/>
         <argument value="$(secretKey)"/>
         <argument value="$(zoneId)"/>
@@ -71,10 +71,20 @@
     <service ref="cloudstack_deleteKeyPair" auto-export="interfaces">
     </service>
 
-    <!-- CloudStack Karaf shell commands -->
+    <!-- CloudStack Karaf shell commands for discovery -->
     <shell:command-bundle>
         <shell:command name="cloudstack/zones">
             <shell:action class="com.axemblr.provisionr.cloudstack.commands.ZonesCommand">
+                <shell:argument ref="defaultProviderConfig"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="cloudstack/templates">
+            <shell:action class="com.axemblr.provisionr.cloudstack.commands.TemplatesCommand">
+                <shell:argument ref="defaultProviderConfig"/>
+            </shell:action>
+        </shell:command>
+        <shell:command name="cloudstack/offerings">
+            <shell:action class="com.axemblr.provisionr.cloudstack.commands.OfferingsCommand">
                 <shell:argument ref="defaultProviderConfig"/>
             </shell:action>
         </shell:command>
