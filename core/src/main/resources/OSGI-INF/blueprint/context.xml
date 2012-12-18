@@ -72,5 +72,13 @@
     <service ref="runtimeService" interface="org.activiti.engine.RuntimeService"/>
     <service ref="repositoryService" interface="org.activiti.engine.RepositoryService"/>
 
+    <!-- Reusable Activiti activities -->
+
+    <bean id="checkSshPortIsOpen" class="com.axemblr.provisionr.core.activities.IsMachinePortOpen">
+        <argument value="sshPortIsOpen"/>
+        <argument value="22"/>
+    </bean>
+    <service ref="checkSshPortIsOpen" auto-export="interfaces"/>
+
 </blueprint>
 

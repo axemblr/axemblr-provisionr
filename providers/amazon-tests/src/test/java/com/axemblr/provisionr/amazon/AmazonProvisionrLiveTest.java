@@ -87,7 +87,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final String businessKey = "j-" + UUID.randomUUID().toString();
         provisionr.startPoolManagementProcess(businessKey, pool);
 
-        TimeUnit.SECONDS.sleep(60);  // TODO replace with wait on process to finish
+        TimeUnit.SECONDS.sleep(120);  // TODO replace with wait on process to finish
 
         provisionr.destroyPool(businessKey);
 

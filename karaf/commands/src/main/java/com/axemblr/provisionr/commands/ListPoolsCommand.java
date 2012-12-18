@@ -68,7 +68,8 @@ public class ListPoolsCommand extends OsgiCommandSupport {
                 continue; /* skip - this process is not a provisionr process */
             }
 
-            Machine[] machines = (Machine[]) processEngine.getRuntimeService()
+            @SuppressWarnings("unchecked")
+            List<Machine> machines = (List<Machine>) processEngine.getRuntimeService()
                 .getVariable(instance.getId(), CoreProcessVariables.MACHINES);
 
             out.println("****** Pool Description ******");
@@ -76,7 +77,8 @@ public class ListPoolsCommand extends OsgiCommandSupport {
 
             out.println("****** List of Machines ******");
             if (machines != null) {
-                out.println(gson.toJson(machines));
+                out.println(gson.toJson(machines, new TypeToken<List<Machine>>() {
+                }.getType()));
             }
 
             out.println("Pool Key: " + instance.getBusinessKey());
