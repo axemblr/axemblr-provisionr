@@ -44,7 +44,7 @@
     </subProcess>
     <boundaryEvent id="bootstrapTimeoutBoundaryEvent" name="" cancelActivity="true" attachedToRef="waitForAllInstancesToStart">
       <timerEventDefinition>
-        <timeDuration>PT15M</timeDuration>
+        <timeDuration>PT10M</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <intermediateThrowEvent id="throwTerminatePoolOnTimeoutEvent" name="Terminate Pool On Timeout Event">
@@ -82,7 +82,7 @@
     </subProcess>
     <boundaryEvent id="sshPortsCheckTimeout" name="" cancelActivity="false" attachedToRef="checkSshPortsAreOpen">
       <timerEventDefinition>
-        <timeDuration>PT15M</timeDuration>
+        <timeDuration>PT10M</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <parallelGateway id="parallelgateway4" name="Parallel Gateway"></parallelGateway>
@@ -93,6 +93,11 @@
     <serviceTask id="setupAdminAccess" name="Setup Admin Access" activiti:async="true" activiti:delegateExpression="${amazon_setupAdminAccess}">
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="machines" activiti:elementVariable="machine"></multiInstanceLoopCharacteristics>
     </serviceTask>
+    <boundaryEvent id="boundarytimer1" name="" cancelActivity="false" attachedToRef="setupAdminAccess">
+      <timerEventDefinition>
+        <timeDuration>PT10M</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
     <sequenceFlow id="flow3" name="" sourceRef="startevent1" targetRef="parallelGatewayPrepareNetworkContext"></sequenceFlow>
     <sequenceFlow id="flow4" name="" sourceRef="parallelGatewayPrepareNetworkContext" targetRef="ensureSecurityGroupExists"></sequenceFlow>
     <sequenceFlow id="flow5" name="" sourceRef="parallelGatewayPrepareNetworkContext" targetRef="ensureKeyPairExists"></sequenceFlow>
@@ -129,8 +134,12 @@
     <sequenceFlow id="flow82" name="" sourceRef="parallelgateway4" targetRef="dumpConsoleOutput"></sequenceFlow>
     <sequenceFlow id="flow83" name="" sourceRef="setupAdminAccess" targetRef="parallelgateway6"></sequenceFlow>
     <sequenceFlow id="flow84" name="" sourceRef="dumpConsoleOutput" targetRef="parallelgateway6"></sequenceFlow>
+    <intermediateThrowEvent id="signalintermediatethrowevent1" name="SignalThrowEvent">
+      <signalEventDefinition signalRef="terminatePoolOnTimeoutEvent"></signalEventDefinition>
+    </intermediateThrowEvent>
+    <sequenceFlow id="flow85" name="" sourceRef="boundarytimer1" targetRef="signalintermediatethrowevent1"></sequenceFlow>
     <textAnnotation id="textannotation1" textFormat="text/plain">
-      <text><![CDATA[15 minutes timeout (PT15M) static]]></text>
+      <text><![CDATA[10 minutes timeout (PT10M) static]]></text>
     </textAnnotation>
     <textAnnotation id="textannotation2" textFormat="text/plain">
       <text><![CDATA[Check all instances are running by using batch API operations]]></text>
@@ -149,6 +158,10 @@
     <association id="association3" sourceRef="textannotation3" targetRef="signalintermediatecatchevent1" associationDirection="None"></association>
     <association id="association4" sourceRef="textannotation4" targetRef="catchTerminatePoolOnTimeoutEvent" associationDirection="None"></association>
     <association id="association5" sourceRef="textannotation5" targetRef="throwTerminatePoolOnTimeoutEvent" associationDirection="None"></association>
+    <textAnnotation id="textannotation6" textFormat="text/plain">
+      <text><![CDATA[Cancel activity and terminate pool if it takes more than 10 minutes]]></text>
+    </textAnnotation>
+    <association id="association6" sourceRef="textannotation6" targetRef="boundarytimer1" associationDirection="None"></association>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_amazon">
     <bpmndi:BPMNPlane bpmnElement="amazon" id="BPMNPlane_amazon">
@@ -323,6 +336,12 @@
       <bpmndi:BPMNShape bpmnElement="setupAdminAccess" id="BPMNShape_setupAdminAccess">
         <omgdc:Bounds height="55" width="105" x="1420" y="20"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="boundarytimer1" id="BPMNShape_boundarytimer1">
+        <omgdc:Bounds height="30" width="30" x="1458" y="10"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="signalintermediatethrowevent1" id="BPMNShape_signalintermediatethrowevent1">
+        <omgdc:Bounds height="35" width="35" x="1577" y="-20"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
         <omgdi:waypoint x="65" y="97"></omgdi:waypoint>
         <omgdi:waypoint x="98" y="97"></omgdi:waypoint>
@@ -473,6 +492,11 @@
         <omgdi:waypoint x="1581" y="141"></omgdi:waypoint>
         <omgdi:waypoint x="1580" y="117"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow85" id="BPMNEdge_flow85">
+        <omgdi:waypoint x="1473" y="40"></omgdi:waypoint>
+        <omgdi:waypoint x="1472" y="-3"></omgdi:waypoint>
+        <omgdi:waypoint x="1577" y="-3"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
         <omgdc:Bounds height="50" width="100" x="795" y="-54"></omgdc:Bounds>
       </bpmndi:BPMNShape>
@@ -486,7 +510,10 @@
         <omgdc:Bounds height="50" width="178" x="118" y="451"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation5" id="BPMNShape_textannotation5">
-        <omgdc:Bounds height="50" width="181" x="961" y="-54"></omgdc:Bounds>
+        <omgdc:Bounds height="50" width="181" x="904" y="-54"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation6" id="BPMNShape_textannotation6">
+        <omgdc:Bounds height="50" width="142" x="1310" y="-54"></omgdc:Bounds>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
