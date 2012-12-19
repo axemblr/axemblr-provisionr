@@ -77,7 +77,7 @@ public class RunOnDemandInstances extends AmazonActivity {
             .withImageId(imageId)
             .withMinCount(pool.getMinSize())
             .withMaxCount(pool.getExpectedSize())
-            .withUserData(Base64.encodeBytes(userData.getBytes()));
+            .withUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));
 
         // TODO allow for more options (e.g. monitoring & termination protection etc.)
 

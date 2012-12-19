@@ -2,6 +2,7 @@ package com.axemblr.provisionr.logging;
 
 import com.axemblr.provisionr.core.Ssh;
 import com.axemblr.provisionr.core.logging.StreamLogger;
+import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -20,7 +21,9 @@ public class StreamLoggerTest {
     public void testStreamLogger() throws InterruptedException {
         final List<String> lines = Lists.newCopyOnWriteArrayList();
 
-        ByteArrayInputStream inputStream = new ByteArrayInputStream("line1\nline2\nline3".getBytes());
+        final byte[] bytes = "line1\nline2\nline3".getBytes(Charsets.UTF_8);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+
         final StreamLogger logger = new StreamLogger(inputStream, LOG, MarkerFactory.getMarker("test")) {
             @Override
             protected void log(Logger logger, Marker marker, String line) {
