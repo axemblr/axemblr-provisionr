@@ -1,7 +1,8 @@
 
 #
 # Make sure only a single user can access the machines over ssh
-#
+# Note: this script assumes a Debian / Ubuntu system 
+# 
 
 user { "{{user}}":
   groups => ['adm','dialout','cdrom', 'floppy','audio','dip','video','plugdev','netdev','admin','sudo'],
