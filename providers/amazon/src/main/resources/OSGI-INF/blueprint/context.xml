@@ -24,6 +24,7 @@
             <cfg:property name="accessKey" value=""/>
             <cfg:property name="secretKey" value=""/>
             <cfg:property name="region" value="us-east-1"/>
+            <cfg:property name="endpoint" value=""/>
         </cfg:default-properties>
     </cfg:property-placeholder>
 
@@ -31,6 +32,7 @@
         <argument value="$(accessKey)"/>
         <argument value="$(secretKey)"/>
         <argument value="$(region)"/>
+        <argument value="$(endpoint)"/>
     </bean>
 
     <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
