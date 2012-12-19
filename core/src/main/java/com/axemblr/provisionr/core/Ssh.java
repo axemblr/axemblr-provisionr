@@ -21,6 +21,7 @@ import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.core.logging.ErrorStreamLogger;
 import com.axemblr.provisionr.core.logging.InfoStreamLogger;
 import com.axemblr.provisionr.core.logging.StreamLogger;
+import com.google.common.base.Charsets;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.hash.Hashing;
 import java.io.ByteArrayInputStream;
@@ -109,7 +110,7 @@ public class Ssh {
     public static void createFile(
         SSHClient client, String content, final int permissions, String destination
     ) throws IOException {
-        final byte[] bytes = content.getBytes();
+        final byte[] bytes = content.getBytes(Charsets.UTF_8);
         client.newSCPFileTransfer().upload(new InMemorySourceFile() {
             @Override
             public String getName() {
