@@ -18,15 +18,22 @@ package com.axemblr.provisionr.core;
 
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Machine;
+import com.axemblr.provisionr.core.logging.ErrorStreamLogger;
+import com.axemblr.provisionr.core.logging.InfoStreamLogger;
+import com.axemblr.provisionr.core.logging.StreamLogger;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.hash.Hashing;
 import java.io.IOException;
 import java.security.PublicKey;
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.SecurityUtils;
+import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 import net.schmizz.sshj.userauth.keyprovider.OpenSSHKeyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 public class Ssh {
 
@@ -43,9 +50,9 @@ public class Ssh {
 
         @Override
         public boolean verify(String hostname, int port, PublicKey key) {
-            String keyHash = Hashing.md5().hashBytes(key.getEncoded()).toString();
-            LOG.info("Automatically accepting host key for {}:{} with md5 hash {}",
-                new Object[]{hostname, port, keyHash});
+            String fingerprint = SecurityUtils.getFingerprint(key);
+            LOG.info("Automatically accepting host key for {}:{} with fingerprint {}",
+                new Object[]{hostname, port, fingerprint});
             return true;
         }
     }
@@ -73,5 +80,17 @@ public class Ssh {
         client.authPublickey(adminAccess.getUsername(), key);
 
         return client;
+    }
+
+    /**
+     * Stream command output as log message for easy debugging
+     */
+    public static void logCommandOutput(Logger logger, String instanceId, Session.Command command) {
+        final Marker marker = MarkerFactory.getMarker("ssh-" + instanceId);
+
+        new InfoStreamLogger(command.getInputStream(), logger, marker)
+            .start();
+        new ErrorStreamLogger(command.getErrorStream(), logger, marker)
+            .start();
     }
 }

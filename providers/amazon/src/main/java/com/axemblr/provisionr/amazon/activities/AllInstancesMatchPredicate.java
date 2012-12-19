@@ -16,6 +16,7 @@
 
 package com.axemblr.provisionr.amazon.activities;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
@@ -56,14 +57,21 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
             .withInstanceIds(instanceIds));
         checkState(result.getReservations().size() == 1, "the instance ids are part of multiple reservations");
 
-        List<Instance> instances = result.getReservations().get(0).getInstances();
-        if (Iterables.all(instances, predicate)) {
-            LOG.info(">> All {} instances match predicate {} ", instanceIds, predicate);
-            execution.setVariable(resultVariable, true);
+        try {
+            List<Instance> instances = result.getReservations().get(0).getInstances();
+            if (Iterables.all(instances, predicate)) {
+                LOG.info(">> All {} instances match predicate {} ", instanceIds, predicate);
+                execution.setVariable(resultVariable, true);
 
-        } else {
-            LOG.info("<< Not all instances {} match predicate {}", instanceIds, predicate);
-            execution.setVariable(resultVariable, false);
+            } else {
+                LOG.info("<< Not all instances {} match predicate {}", instanceIds, predicate);
+                execution.setVariable(resultVariable, false);
+            }
+        } catch (AmazonServiceException exception) {
+            if (exception.getErrorCode().equals("InvalidInstanceID.NotFound")) {
+                LOG.warn("<< Got error InvalidInstanceID.NotFound. Assuming predicate {} is false", predicate);
+                execution.setVariable(resultVariable, false);
+            }
         }
     }
 }

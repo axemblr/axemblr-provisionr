@@ -23,16 +23,12 @@ import com.axemblr.provisionr.core.Mustache;
 import com.axemblr.provisionr.core.Ssh;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.CharStreams;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Set;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.xfer.InMemorySourceFile;
-import net.schmizz.sshj.xfer.scp.SCPFileTransfer;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -60,7 +56,7 @@ public class SetupAdminAccess implements JavaDelegate {
 
         SSHClient client = Ssh.newClient(machine,
             pool.getAdminAccess().toBuilder().username("ubuntu").createAdminAccess(),
-            2000 /* milliseconds */);
+            30000 /* milliseconds */);
         try {
             client.newSCPFileTransfer().upload(new InMemorySourceFile() {
                 @Override
@@ -83,17 +79,23 @@ public class SetupAdminAccess implements JavaDelegate {
             Session session = client.startSession();
             try {
                 session.allocateDefaultPTY();
-                Session.Command command = session.exec("sudo puppet apply /tmp/adminaccess.pp");
+                final String shellCommand = "while ! which puppet &> /dev/null ; " +
+                    "do echo 'Puppet command not found. Waiting for userdata.sh script to finish (10s)' " +
+                    "&& sleep 10; " +
+                    "done " +
+                    "&& sudo puppet apply /tmp/adminaccess.pp";
+                Session.Command command = session.exec(shellCommand);
 
-                String output = CharStreams.toString(new InputStreamReader(command.getInputStream()));
-                String error = CharStreams.toString(new InputStreamReader(command.getErrorStream()));
+                Ssh.logCommandOutput(LOG, machine.getExternalId(), command);
                 command.join();
 
-                LOG.info("<< Exit code: {}, Exit error message: {}",
-                    command.getExitStatus(), command.getExitErrorMessage());
+                if (command.getExitStatus() != 0) {
+                    throw new RuntimeException(String.format("Failed to execute '%s'. Exit code: %d. Exit message: %s",
+                        shellCommand, command.getExitStatus(), command.getExitErrorMessage()));
 
-                LOG.info("<< Standard output: {}", output);
-                LOG.info("<< Standard error: {}", error);
+                } else {
+                    LOG.info("<< Command completed successfully with exit code 0");
+                }
 
             } finally {
                 session.close();
