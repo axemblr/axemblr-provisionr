@@ -23,13 +23,16 @@ import com.axemblr.provisionr.core.logging.InfoStreamLogger;
 import com.axemblr.provisionr.core.logging.StreamLogger;
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.hash.Hashing;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.PublicKey;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.common.SecurityUtils;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 import net.schmizz.sshj.userauth.keyprovider.OpenSSHKeyFile;
+import net.schmizz.sshj.xfer.InMemorySourceFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -92,5 +95,41 @@ public class Ssh {
             .start();
         new ErrorStreamLogger(command.getErrorStream(), logger, marker)
             .start();
+    }
+
+    /**
+     * Create a remote file on SSH from a string
+     *
+     * @param client      ssh client instance
+     * @param content     content for the new file
+     * @param permissions unix permissions
+     * @param destination destination path
+     * @throws IOException
+     */
+    public static void createFile(
+        SSHClient client, String content, final int permissions, String destination
+    ) throws IOException {
+        final byte[] bytes = content.getBytes();
+        client.newSCPFileTransfer().upload(new InMemorySourceFile() {
+            @Override
+            public String getName() {
+                return "in-memory";
+            }
+
+            @Override
+            public long getLength() {
+                return bytes.length;
+            }
+
+            @Override
+            public int getPermissions() throws IOException {
+                return permissions;
+            }
+
+            @Override
+            public InputStream getInputStream() throws IOException {
+                return new ByteArrayInputStream(bytes);
+            }
+        }, destination);
     }
 }
