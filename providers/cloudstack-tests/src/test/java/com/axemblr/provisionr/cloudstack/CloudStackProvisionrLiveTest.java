@@ -29,6 +29,7 @@ import static com.axemblr.provisionr.test.KarafTests.installProvisionrTestSuppor
 import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
 import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
+import java.security.Security;
 import java.util.UUID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,6 +66,8 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         waitForProcessDeployment(CloudStackProvisionr.ID);
         Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
+//        listAvailableJceProviders();
+
         final Provider provider = collectProviderCredentialsFromSystemProperties()
             // TODO: get more options as needed for CloudStack
             .createProvider();
@@ -86,5 +89,17 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
         String processId = provisionr.startPoolManagementProcess(UUID.randomUUID().toString(), pool);
         waitForProcessEnd(processId);
         // TODO: check that the environment is clean
+    }
+
+    /**
+     * debug utility method for https://github.com/axemblr/axemblr-provisionr/issues/80
+     */
+    private void listAvailableJceProviders() {
+        for (java.security.Provider provider : Security.getProviders()) {
+            System.out.println(provider.toString());
+            for (java.security.Provider.Service service : provider.getServices()) {
+                System.out.println("\t" + service.toString());
+            }
+        }
     }
 }

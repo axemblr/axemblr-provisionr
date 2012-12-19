@@ -89,6 +89,11 @@
             <version>${jclouds.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.karaf.shell</groupId>
+            <artifactId>org.apache.karaf.shell.console</artifactId>
+            <version>${karaf.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
         </dependency>
@@ -101,8 +106,15 @@
             <artifactId>junit</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.9</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -136,6 +148,16 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            org.apache.felix.service.command,
+                            org.apache.felix.gogo.commands,
+                            org.apache.karaf.shell.console,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>
