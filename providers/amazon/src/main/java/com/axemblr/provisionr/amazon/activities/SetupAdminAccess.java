@@ -21,14 +21,13 @@ import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.core.Mustache;
 import com.axemblr.provisionr.core.Ssh;
+import com.google.common.base.Charsets;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
-import java.io.ByteArrayInputStream;
+import com.google.common.io.Resources;
 import java.io.IOException;
-import java.io.InputStream;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
-import net.schmizz.sshj.xfer.InMemorySourceFile;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -47,34 +46,15 @@ public class SetupAdminAccess implements JavaDelegate {
         Machine machine = (Machine) execution.getVariable("machine");
         LOG.info(">> Connecting to machine {}", machine);
 
-        final String recipe = Mustache.toString(getClass(),
-            "/com/axemblr/provisionr/amazon/puppet/adminaccess.pp.mustache",
-            ImmutableMap.of(
-                "user", pool.getAdminAccess().getUsername(),
-                "publicKey", pool.getAdminAccess().getPublicKey().split(" ")[1])
-        );
 
         SSHClient client = Ssh.newClient(machine,
             pool.getAdminAccess().toBuilder().username("ubuntu").createAdminAccess(),
             30000 /* milliseconds */);
         try {
-            client.newSCPFileTransfer().upload(new InMemorySourceFile() {
-                @Override
-                public String getName() {
-                    return "adminaccess.pp";
-                }
+            String puppetScript = renderAndUploadAdminAccessPuppetScript(client, pool);
 
-                @Override
-                public long getLength() {
-                    return recipe.getBytes().length;
-                }
-
-                @Override
-                public InputStream getInputStream() throws IOException {
-                    return new ByteArrayInputStream(recipe.getBytes());
-                }
-            }, "/tmp/adminaccess.pp");
-
+            renderAndUploadSshdConfig(client, pool);
+            uploadSudoersFile(client);
 
             Session session = client.startSession();
             try {
@@ -83,7 +63,7 @@ public class SetupAdminAccess implements JavaDelegate {
                     "do echo 'Puppet command not found. Waiting for userdata.sh script to finish (10s)' " +
                     "&& sleep 10; " +
                     "done " +
-                    "&& sudo puppet apply /tmp/adminaccess.pp";
+                    "&& sudo puppet apply " + puppetScript;
                 Session.Command command = session.exec(shellCommand);
 
                 Ssh.logCommandOutput(LOG, machine.getExternalId(), command);
@@ -103,5 +83,31 @@ public class SetupAdminAccess implements JavaDelegate {
         } finally {
             client.close();
         }
+    }
+
+    private String renderAndUploadAdminAccessPuppetScript(SSHClient client, Pool pool) throws IOException {
+        final String destination = "/tmp/adminaccess.pp";
+        final String recipe = Mustache.toString(getClass(),
+            "/com/axemblr/provisionr/amazon/puppet/adminaccess.pp.mustache",
+            ImmutableMap.of(
+                "user", pool.getAdminAccess().getUsername(),
+                "publicKey", pool.getAdminAccess().getPublicKey().split(" ")[1])
+        );
+        Ssh.createFile(client, recipe, 0600, destination);
+
+        return destination;
+    }
+
+    private void renderAndUploadSshdConfig(SSHClient client, Pool pool) throws IOException {
+        final String config = Mustache.toString(getClass(),
+            "/com/axemblr/provisionr/amazon/puppet/sshd_config.mustache",
+            ImmutableMap.of("user", pool.getAdminAccess().getUsername()));
+        Ssh.createFile(client, config, 0600, "/tmp/sshd_config");
+    }
+
+    private void uploadSudoersFile(SSHClient client) throws IOException {
+        final String content = Resources.toString(Resources.getResource(getClass(),
+            "/com/axemblr/provisionr/amazon/puppet/sudoers"), Charsets.UTF_8);
+        Ssh.createFile(client, content, 0600, "/tmp/sudoers");
     }
 }

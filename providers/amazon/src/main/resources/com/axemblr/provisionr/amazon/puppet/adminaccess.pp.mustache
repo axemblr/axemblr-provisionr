@@ -4,7 +4,7 @@
 #
 
 user { "{{user}}":
-  groups => 'admin',
+  groups => ['adm','dialout','cdrom', 'floppy','audio','dip','video','plugdev','netdev','admin','sudo'],
   ensure => 'present',
   managehome => 'true',
   shell => '/bin/bash',
@@ -27,4 +27,35 @@ ssh_authorized_key { '{{user}}-rsa-key':
 	require => File['/home/{{user}}/.ssh']
 }  
   
-# TODO: reconfigure and restart ssh
+file { "/etc/ssh/sshd_config":
+  owner => "root",
+  group => "root",
+  mode => 644,
+  replace => "true",
+  notify => Service["ssh"],
+  require => Package["openssh-server"],
+  source => "/tmp/sshd_config"
+}
+
+file { "/etc/sudoers":
+  owner => "root",
+  group => "root",
+  mode => 440,
+  replace => "true",
+  source => "/tmp/sudoers"
+}
+
+package { "openssh-server":
+  ensure => installed
+}
+
+service { "ssh":
+  ensure => running,
+  provider => 'upstart',
+  hasrestart => 'true',
+  hasstatus  => 'true',
+  require => [
+    File["/etc/ssh/sshd_config"],
+    Package["openssh-server"]
+  ]
+}
