@@ -5,6 +5,8 @@ Axemblr Provisionr
 
 With Provisionr we want to solve the problem of cloud portability by hiding completely the API and only focusing on building a cluster that matches the same set of assumptions on all clouds, assumptions like: running a specific operating system (e.g. Ubuntu LTS), having the same set of pre-installed packages and binaries, sane dns settings (forward & reverse ip resolution - as needed for [Hadoop](http://hadoop.apache.org/)), ntp settings, networking settings, ssh admin access, vpn access etc.
 
+![Travis Build Status](https://api.travis-ci.org/axemblr/axemblr-provisionr.png)
+
 Features
 --------
 
