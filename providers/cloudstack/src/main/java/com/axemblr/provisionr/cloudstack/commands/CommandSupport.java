@@ -51,7 +51,7 @@ public abstract class CommandSupport extends OsgiCommandSupport {
     protected Object doExecute() throws Exception {
         try {
             context = newCloudStackContext(provider);
-            return doExecuteWithContext(context.getApi(), getOut());
+            return doExecuteWithContext(context.getApi(), System.out);
         } finally {
             Closeables.closeQuietly(context);
         }
@@ -67,12 +67,5 @@ public abstract class CommandSupport extends OsgiCommandSupport {
 
     public Provider getProvider() {
         return provider;
-    }
-
-    /**
-     * Convenience method for easy unit testing of Commands.
-     */
-    public PrintStream getOut() {
-        return System.out;
     }
 }
