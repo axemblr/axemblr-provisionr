@@ -17,8 +17,10 @@
 package com.axemblr.provisionr.cloudstack;
 
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.core.ProvisionrSupport;
+import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import java.util.Map;
@@ -39,14 +41,27 @@ public class CloudStackProvisionr extends ProvisionrSupport {
     public static final String PROCESS_KEY = "cloudstack";
 
     private final ProcessEngine processEngine;
+    private final Optional<Provider> defaultProvider;
 
-    public CloudStackProvisionr(ProcessEngine processEngine) {
+    public CloudStackProvisionr(ProcessEngine processEngine, DefaultProviderConfig providerConfig) {
         this.processEngine = checkNotNull(processEngine, "processEngine is null");
+        this.defaultProvider = providerConfig.createProvider();
+
+        if (defaultProvider.isPresent()) {
+            LOG.info("Default provider for CloudStackProvisionr is {}", defaultProvider.get());
+        } else {
+            LOG.info("No default provider configured for CloudStackProvisionr");
+        }
     }
 
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public Optional<Provider> getDefaultProvider() {
+        return defaultProvider;
     }
 
     @Override

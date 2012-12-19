@@ -19,7 +19,6 @@ package com.axemblr.provisionr.cloudstack.activities;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.cloudstack.core.KeyPairs;
-import com.axemblr.provisionr.cloudstack.ProcessVariables;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
