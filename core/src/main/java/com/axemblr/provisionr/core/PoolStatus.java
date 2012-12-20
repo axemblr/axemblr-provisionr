@@ -16,30 +16,19 @@
 
 package com.axemblr.provisionr.core;
 
-public class CoreProcessVariables {
+/**
+ * A standard set of pool statuses
+ */
+public class PoolStatus {
 
-    private CoreProcessVariables() {
+    private PoolStatus() {
     }
 
-    /**
-     * Pool configuration description
-     *
-     * @see com.axemblr.provisionr.api.pool.Pool
-     */
-    public static final String POOL = "pool";
+    public static String UNDEFINED = "undefined";
 
-    /**
-     * Contains a list of machines that are running
-     *
-     * @see com.axemblr.provisionr.api.pool.Machine
-     */
-    public static final String MACHINES = "machines";
+    public static String SETUP = "setup";
 
-    /**
-     * Pool status stored as process variable
-     * <p/>
-     * This can be an arbitrary string. We will restrict the domain later on.
-     */
-    public static final String STATUS = "status";
+    public static String READY = "ready";
 
+    public static String TERMINATED = "terminated";
 }

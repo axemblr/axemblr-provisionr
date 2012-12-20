@@ -16,30 +16,14 @@
 
 package com.axemblr.provisionr.core;
 
-public class CoreProcessVariables {
+public class CoreSignals {
 
-    private CoreProcessVariables() {
+    private CoreSignals() {
     }
 
     /**
-     * Pool configuration description
-     *
-     * @see com.axemblr.provisionr.api.pool.Pool
+     * Standard event that triggers pool termination
      */
-    public static final String POOL = "pool";
-
-    /**
-     * Contains a list of machines that are running
-     *
-     * @see com.axemblr.provisionr.api.pool.Machine
-     */
-    public static final String MACHINES = "machines";
-
-    /**
-     * Pool status stored as process variable
-     * <p/>
-     * This can be an arbitrary string. We will restrict the domain later on.
-     */
-    public static final String STATUS = "status";
+    public static final String TERMINATE_POOL = "terminatePoolEvent";
 
 }

@@ -37,9 +37,16 @@ public abstract class ProvisionrSupport implements Provisionr {
         return Optional.absent();
     }
 
+    @Override
+    public String getStatus(String businessKey) {
+        return PoolStatus.UNDEFINED;
+    }
+
     /**
      * Trigger a signal event on all executions for a specific business key.
-     * See http://www.activiti.org/userguide/index.html#bpmnSignalEventDefinition
+     *
+     * @see <a href="http://www.activiti.org/userguide/index.html#bpmnSignalEventDefinition" />
+     * @see CoreSignals
      */
     protected void triggerSignalEvent(ProcessEngine processEngine, String businessKey, String signalName) {
         RuntimeService runtimeService = processEngine.getRuntimeService();
