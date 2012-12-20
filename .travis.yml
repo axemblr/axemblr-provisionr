@@ -1,8 +1,11 @@
 language: java 
-before_script: "mvn clean --quite"
+install: "mvn clean --quite"
 script: "mvn install"
 jdk:
   - oraclejdk7
 branches:
   only:
     - master
+notifications:
+    email: false
+
