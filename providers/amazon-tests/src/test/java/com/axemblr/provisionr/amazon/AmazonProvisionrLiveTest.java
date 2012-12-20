@@ -25,6 +25,7 @@ import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.software.Software;
+import com.axemblr.provisionr.core.PoolStatus;
 import static com.axemblr.provisionr.test.KarafTests.installProvisionrFeatures;
 import static com.axemblr.provisionr.test.KarafTests.installProvisionrTestSupportBundle;
 import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
@@ -39,10 +40,14 @@ import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(JUnit4TestRunner.class)
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
 public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
+
+    public static final Logger LOG = LoggerFactory.getLogger(AmazonProvisionrLiveTest.class);
 
     public AmazonProvisionrLiveTest() {
         super(AmazonProvisionr.ID);
@@ -85,15 +90,27 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
             .software(software).hardware(hardware).minSize(2).expectedSize(2).createPool();
 
         final String businessKey = "j-" + UUID.randomUUID().toString();
-        provisionr.startPoolManagementProcess(businessKey, pool);
 
-        TimeUnit.SECONDS.sleep(240);  // TODO replace with wait on process to finish
+        provisionr.startPoolManagementProcess(businessKey, pool);
+        waitForPoolStatus(provisionr, businessKey, PoolStatus.READY);
 
         provisionr.destroyPool(businessKey);
-
-        TimeUnit.SECONDS.sleep(60);
-
+        waitForPoolStatus(provisionr, businessKey, PoolStatus.TERMINATED);
 
         // TODO: get the list of machines and check that nginx is listening on port 80
+    }
+
+    private void waitForPoolStatus(Provisionr provisionr, String businessKey,
+                                   String expectedStatus) throws InterruptedException {
+        while (true) {
+            String status = provisionr.getStatus(businessKey);
+            if (status.equals(expectedStatus)) {
+                LOG.info("Pool status is '{}'. Advancing.", status);
+                break;
+            } else {
+                LOG.info("Pool status is '{}'. Waiting 10s for '{}'.", status, expectedStatus);
+                TimeUnit.SECONDS.sleep(10);
+            }
+        }
     }
 }

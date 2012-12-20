@@ -20,11 +20,14 @@ import com.axemblr.provisionr.amazon.config.DefaultProviderConfig;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.core.CoreProcessVariables;
+import com.axemblr.provisionr.core.CoreSignals;
+import com.axemblr.provisionr.core.PoolStatus;
 import com.axemblr.provisionr.core.ProvisionrSupport;
 import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -74,7 +77,21 @@ public class AmazonProvisionr extends ProvisionrSupport {
     }
 
     @Override
+    public String getStatus(String businessKey) {
+        ProcessInstance instance = processEngine.getRuntimeService().createProcessInstanceQuery()
+            .processInstanceBusinessKey(businessKey).singleResult();
+        if (instance == null) {
+            throw new NoSuchElementException("No active pool found with key: " + businessKey);
+        }
+
+        String status = (String) processEngine.getRuntimeService().getVariable(instance.getId(),
+            CoreProcessVariables.STATUS);
+
+        return Optional.fromNullable(status).or(PoolStatus.UNDEFINED);
+    }
+
+    @Override
     public void destroyPool(String businessKey) {
-        triggerSignalEvent(processEngine, businessKey, "terminatePoolEvent");
+        triggerSignalEvent(processEngine, businessKey, CoreSignals.TERMINATE_POOL);
     }
 }
