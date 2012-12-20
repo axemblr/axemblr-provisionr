@@ -38,7 +38,7 @@ public class EnsureSecurityGroupExists extends CloudStackActivity {
     public void execute(CloudStackClient cloudStackClient, Pool pool, DelegateExecution execution) {
         Network network = checkNotNull(pool.getNetwork(), "Please configure a network for the pool");
         String securityGroupName = SecurityGroups.formatNameFromBusinessKey(execution.getProcessBusinessKey());
-        SecurityGroup securityGroup = null;
+        SecurityGroup securityGroup;
         try {
             LOG.info("Creating SecurityGroup {}", securityGroupName);
             securityGroup = SecurityGroups.createSecurityGroup(cloudStackClient, securityGroupName);
