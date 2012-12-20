@@ -19,6 +19,8 @@ package com.axemblr.provisionr.cloudstack.commands;
 import com.google.common.collect.Sets;
 import java.util.Set;
 import static org.fest.assertions.api.Assertions.assertThat;
+import org.jclouds.cloudstack.domain.DiskOffering;
+import org.jclouds.cloudstack.domain.NetworkOffering;
 import org.jclouds.cloudstack.domain.ServiceOffering;
 import org.jclouds.cloudstack.features.OfferingClient;
 import org.junit.Test;
@@ -32,6 +34,24 @@ public class OfferingsCommandTest extends CommandTestSupport {
         .name("service-one")
         .build());
 
+    final Set<DiskOffering> diskOfferings = Sets.newHashSet(DiskOffering.builder()
+        .id("disk-1")
+        .name("disk-one")
+        .build());
+
+    final Set<NetworkOffering> networkOfferings = Sets.newHashSet(NetworkOffering.builder()
+        .id("network-1")
+        .name("network-one")
+        .build());
+
+    @Test
+    public void testOfferingCommandWithNoOptionSpecified() throws Exception {
+        final OfferingsCommand offeringsCommand = new OfferingsCommand(defaultProviderConfig);
+        offeringsCommand.doExecuteWithContext(client, out);
+        out.close();
+        assertThat(byteArrayOutputStream.toString()).contains("No option specified");
+    }
+
     @Test
     public void testOfferingCommandsPrintsServiceOfferings() throws Exception {
         final OfferingClient offeringClient = mock(OfferingClient.class);
@@ -39,10 +59,40 @@ public class OfferingsCommandTest extends CommandTestSupport {
         when(offeringClient.listServiceOfferings()).thenReturn(serviceOfferings);
 
         final OfferingsCommand offeringsCommand = new OfferingsCommand(defaultProviderConfig);
-
+        offeringsCommand.setServiceOffering(true);
         offeringsCommand.doExecuteWithContext(client, out);
         out.close();
 
-        assertThat(byteArrayOutputStream.toString()).contains("service-1").contains("service-one");
+        assertThat(byteArrayOutputStream.toString())
+            .contains("service-1")
+            .contains("service-one")
+            .doesNotContain("No option");
+    }
+
+    @Test
+    public void testOfferingsCommandWithAllOptions() throws Exception {
+        final OfferingClient offeringClient = mock(OfferingClient.class);
+
+        when(client.getOfferingClient()).thenReturn(offeringClient);
+        when(offeringClient.listServiceOfferings()).thenReturn(serviceOfferings);
+        when(offeringClient.listDiskOfferings()).thenReturn(diskOfferings);
+        when(offeringClient.listNetworkOfferings()).thenReturn(networkOfferings);
+
+        final OfferingsCommand offeringsCommand = new OfferingsCommand(defaultProviderConfig);
+
+        offeringsCommand.setServiceOffering(true);
+        offeringsCommand.setDiskOffering(true);
+        offeringsCommand.setNetworkOffering(true);
+
+        offeringsCommand.doExecuteWithContext(client, out);
+
+        out.close();
+
+        assertThat(byteArrayOutputStream.toString())
+            .contains("service-1")
+            .contains("service-one")
+            .contains("disk-1")
+            .contains("network-1")
+            .doesNotContain("No option");
     }
 }
