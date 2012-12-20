@@ -49,9 +49,9 @@ public class DefaultProviderConfig {
             .endpoint(endpoint)
             .accessKey(accessKey)
             .secretKey(secretKey)
-            .option(ProviderOptions.CLOUDSTACK_ZONE_ID_OPTION, zoneId)
-            .option(ProviderOptions.CLOUDSTACK_TEMPLATE_ID_OPTION, templateId)
-            .option(ProviderOptions.CLOUDSTACK_SERVICE_OFFERING_OPTION, serviceOffering)
+            .option(ProviderOptions.ZONE_ID, zoneId)
+            .option(ProviderOptions.TEMPLATE_ID, templateId)
+            .option(ProviderOptions.SERVICE_OFFERING, serviceOffering)
             .createProvider());
     }
 }

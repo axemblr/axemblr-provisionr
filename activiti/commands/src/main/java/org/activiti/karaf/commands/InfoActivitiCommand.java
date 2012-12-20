@@ -120,7 +120,7 @@ public class InfoActivitiCommand extends ActivitiCommand {
     }
 
     protected ActivitiPrintHandler findBPMPrintHandler() {
-        ActivitiPrintHandler handler = null;
+        ActivitiPrintHandler handler;
         List<ActivitiPrintHandler> hList = null;
         try {
             String filter = null; // add the filter here per process.

@@ -25,7 +25,7 @@ import java.util.Set;
 public class NetworkBuilder extends BuilderWithOptions<NetworkBuilder> {
 
     private String type = "default";
-    private ImmutableSet.Builder<Rule> ingress = ImmutableSet.<Rule>builder();
+    private ImmutableSet.Builder<Rule> ingress = ImmutableSet.builder();
 
     @Override
     protected NetworkBuilder getThis() {
