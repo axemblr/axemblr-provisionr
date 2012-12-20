@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.axemblr.provisionr.commands.functions;
+package com.axemblr.provisionr.commands.predicates;
 
 import com.axemblr.provisionr.api.Provisionr;
 import com.google.common.base.Predicate;
