@@ -31,13 +31,13 @@ public class OfferingsCommand extends CommandSupport {
 
     public static final String NAME = "offerings";
 
-    @Option(name = "s", aliases = "service", description = "List service offerings")
+    @Option(name = "-s", aliases = "--service", description = "List service offerings")
     private boolean serviceOffering;
 
-    @Option(name = "n", aliases = "network", description = "List network offerings")
+    @Option(name = "-n", aliases = "--network", description = "List network offerings")
     private boolean networkOffering;
 
-    @Option(name = "d", aliases = "disk", description = "List disk offerings")
+    @Option(name = "-d", aliases = "--disk", description = "List disk offerings")
     private boolean diskOffering;
 
     public OfferingsCommand(DefaultProviderConfig providerConfig) {
