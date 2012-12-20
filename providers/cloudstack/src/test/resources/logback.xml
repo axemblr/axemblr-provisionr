@@ -70,7 +70,7 @@
 
     <logger name="jclouds.headers">
         <level value="DEBUG" />
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </logger>
 
     <logger name="jclouds.compute">

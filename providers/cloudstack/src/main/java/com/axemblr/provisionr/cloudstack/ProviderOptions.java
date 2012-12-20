@@ -22,7 +22,7 @@ public class ProviderOptions {
         throw new RuntimeException(ProviderOptions.class.getName() + " should not be instantiated");
     }
 
-    public static final String CLOUDSTACK_ZONE_ID_OPTION = "zoneId";
-    public static final String CLOUDSTACK_TEMPLATE_ID_OPTION = "templateId";
-    public static final String CLOUDSTACK_SERVICE_OFFERING_OPTION = "serviceOffering";
+    public static final String ZONE_ID = "zoneId";
+    public static final String TEMPLATE_ID = "templateId";
+    public static final String SERVICE_OFFERING = "serviceOffering";
 }
