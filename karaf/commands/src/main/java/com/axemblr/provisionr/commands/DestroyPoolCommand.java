@@ -17,10 +17,13 @@
 package com.axemblr.provisionr.commands;
 
 import com.axemblr.provisionr.api.Provisionr;
-import com.axemblr.provisionr.commands.functions.ProvisionrPredicates;
+import com.axemblr.provisionr.commands.predicates.ProvisionrPredicates;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Iterables;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
@@ -42,9 +45,24 @@ public class DestroyPoolCommand extends OsgiCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        Provisionr service = Iterables.find(services, ProvisionrPredicates.withId(id));
-        service.destroyPool(businessKey);
+        Optional<Provisionr> service = Iterables.tryFind(services, ProvisionrPredicates.withId(id));
+
+        if (service.isPresent()) {
+            service.get().destroyPool(businessKey);
+        } else {
+            throw new NoSuchElementException("No provisioning service found with id: " + id);
+        }
 
         return null;
+    }
+
+    @VisibleForTesting
+    void setId(String id) {
+        this.id = id;
+    }
+
+    @VisibleForTesting
+    void setBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
     }
 }

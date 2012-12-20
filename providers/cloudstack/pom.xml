@@ -46,6 +46,7 @@
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-test-support</artifactId>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.karaf.tooling.exam</groupId>

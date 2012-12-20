@@ -19,6 +19,7 @@ package com.axemblr.provisionr.commands;
 import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.core.CoreProcessVariables;
+import com.google.common.annotations.VisibleForTesting;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,7 +35,7 @@ import org.apache.karaf.shell.console.OsgiCommandSupport;
 @Command(scope = "provisionr", name = "pools", description = "List active pools")
 public class ListPoolsCommand extends OsgiCommandSupport {
 
-    private static final PrintStream out = System.out;
+    private PrintStream out = System.out;
 
     @Option(name = "-k", aliases = "--key", description = "Key for filtering a specific pool",
         required = false)
@@ -56,11 +57,12 @@ public class ListPoolsCommand extends OsgiCommandSupport {
                 .processInstanceBusinessKey(key).list();
         }
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         if (processes.isEmpty()) {
             out.println("No active pools found. You can create one using provisionr:create");
+            return null;
         }
+
+        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
         for (ProcessInstance instance : processes) {
             Pool pool = (Pool) processEngine.getRuntimeService()
                 .getVariable(instance.getId(), CoreProcessVariables.POOL);
@@ -86,5 +88,15 @@ public class ListPoolsCommand extends OsgiCommandSupport {
         }
 
         return null;
+    }
+
+    @VisibleForTesting
+    void setOut(PrintStream out) {
+        this.out = checkNotNull(out, "out is null");
+    }
+
+    @VisibleForTesting
+    void setKey(String key) {
+        this.key = checkNotNull(key, "key is null");
     }
 }

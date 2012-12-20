@@ -17,6 +17,7 @@
 package com.axemblr.provisionr.commands;
 
 import com.axemblr.provisionr.api.Provisionr;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Lists;
@@ -28,7 +29,7 @@ import org.apache.karaf.shell.console.OsgiCommandSupport;
 @Command(scope = "provisionr", name = "services", description = "List provisioning services")
 public class ListServicesCommand extends OsgiCommandSupport {
 
-    private static final PrintStream out = System.out;
+    private PrintStream out = System.out;
 
     private final List<Provisionr> services;
 
@@ -44,5 +45,10 @@ public class ListServicesCommand extends OsgiCommandSupport {
         }
         out.printf("Services: %s%n", Joiner.on(", ").join(ids));
         return null;
+    }
+
+    @VisibleForTesting
+    void setOut(PrintStream out) {
+        this.out = checkNotNull(out, "out is null");
     }
 }
