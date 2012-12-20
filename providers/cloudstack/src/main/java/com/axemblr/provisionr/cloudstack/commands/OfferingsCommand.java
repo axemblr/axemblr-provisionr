@@ -19,7 +19,10 @@ package com.axemblr.provisionr.cloudstack.commands;
 import com.axemblr.provisionr.cloudstack.DefaultProviderConfig;
 import java.io.PrintStream;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
 import org.jclouds.cloudstack.CloudStackClient;
+import org.jclouds.cloudstack.domain.DiskOffering;
+import org.jclouds.cloudstack.domain.NetworkOffering;
 import org.jclouds.cloudstack.domain.ServiceOffering;
 
 @Command(scope = CommandSupport.CLOUDSTACK_SCOPE, name = OfferingsCommand.NAME,
@@ -28,16 +31,77 @@ public class OfferingsCommand extends CommandSupport {
 
     public static final String NAME = "offerings";
 
+    @Option(name = "-s", aliases = "--service", description = "List service offerings")
+    private boolean serviceOffering;
+
+    @Option(name = "-n", aliases = "--network", description = "List network offerings")
+    private boolean networkOffering;
+
+    @Option(name = "-d", aliases = "--disk", description = "List disk offerings")
+    private boolean diskOffering;
+
     public OfferingsCommand(DefaultProviderConfig providerConfig) {
         super(providerConfig);
     }
 
     @Override
     public Object doExecuteWithContext(CloudStackClient client, PrintStream out) throws Exception {
-        out.printf("CloudStack Service Offerings for provider %s\n", getProvider().getId());
-        for (ServiceOffering offering : client.getOfferingClient().listServiceOfferings()) {
-            out.printf("---\n%s\n", offering.toString());
+        if (isDiskOfferingListed() || isServiceOfferingListed() || isNetworkOfferingListed()) {
+            out.printf("CloudStack Service Offerings for provider %s\n", getProvider().getId());
+            listServiceOfferingsIfSpecified(client, out);
+            listNetworkOfferingsIfSpecified(client, out);
+            listDiskOfferingsIfSpecified(client, out);
+        } else {
+            out.printf("No option specified. See --help for details.");
         }
         return null;
+    }
+
+    private void listDiskOfferingsIfSpecified(CloudStackClient client, PrintStream out) {
+        if (isDiskOfferingListed()) {
+            for (DiskOffering offering : client.getOfferingClient().listDiskOfferings()) {
+                out.printf("---\n%s\n", offering.toString());
+            }
+        }
+    }
+
+    private void listNetworkOfferingsIfSpecified(CloudStackClient client, PrintStream out) {
+        if (isNetworkOfferingListed()) {
+            for (NetworkOffering offering : client.getOfferingClient().listNetworkOfferings()) {
+                out.printf("---\n%s\n", offering.toString());
+            }
+        }
+    }
+
+    private void listServiceOfferingsIfSpecified(CloudStackClient client, PrintStream out) {
+        if (isServiceOfferingListed()) {
+            for (ServiceOffering offering : client.getOfferingClient().listServiceOfferings()) {
+                out.printf("---\n%s\n", offering.toString());
+            }
+        }
+    }
+
+    public boolean isDiskOfferingListed() {
+        return diskOffering;
+    }
+
+    public void setDiskOffering(boolean diskOffering) {
+        this.diskOffering = diskOffering;
+    }
+
+    public boolean isNetworkOfferingListed() {
+        return networkOffering;
+    }
+
+    public void setNetworkOffering(boolean networkOffering) {
+        this.networkOffering = networkOffering;
+    }
+
+    public boolean isServiceOfferingListed() {
+        return serviceOffering;
+    }
+
+    public void setServiceOffering(boolean serviceOffering) {
+        this.serviceOffering = serviceOffering;
     }
 }
