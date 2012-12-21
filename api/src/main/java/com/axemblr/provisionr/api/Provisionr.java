@@ -47,6 +47,15 @@ public interface Provisionr {
      */
     String startPoolManagementProcess(String businessKey, Pool pool);
 
+
+    /**
+     * Get current pool status
+     *
+     * @param businessKey external process ID (e.g. job ID)
+     * @return internal status information
+     */
+    String getStatus(String businessKey);
+
     /**
      * Destroy all the machines from the pool with that id
      *
