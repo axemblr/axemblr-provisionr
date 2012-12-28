@@ -33,6 +33,7 @@ import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectW
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
@@ -101,16 +102,17 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
     }
 
     private void waitForPoolStatus(Provisionr provisionr, String businessKey,
-                                   String expectedStatus) throws InterruptedException {
-        while (true) {
+                                   String expectedStatus) throws InterruptedException, TimeoutException {
+        for (int i = 0; i < 60; i++) {
             String status = provisionr.getStatus(businessKey);
             if (status.equals(expectedStatus)) {
                 LOG.info("Pool status is '{}'. Advancing.", status);
-                break;
+                return;
             } else {
                 LOG.info("Pool status is '{}'. Waiting 10s for '{}'.", status, expectedStatus);
                 TimeUnit.SECONDS.sleep(10);
             }
         }
+        throw new TimeoutException("Status check timed out after 10 minutes");
     }
 }

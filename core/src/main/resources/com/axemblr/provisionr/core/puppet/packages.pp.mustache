@@ -1,0 +1,6 @@
+# Ensure all packages listed bellow are installed
+Package { ensure => "installed" }
+
+{{#packages}}
+package { "{{package}}": }
+{{/packages}}
