@@ -59,7 +59,7 @@
     <eventBasedGateway id="eventgateway1" name="Event Gateway"></eventBasedGateway>
     <serviceTask id="publishListOfMachines" name="Publish List of Machines" activiti:async="true" activiti:delegateExpression="${amazon_publishListOfMachines}"></serviceTask>
     <userTask id="done" name="Done"></userTask>
-    <subProcess id="checkSshPortsAreOpen" name="Check Ssh Ports Are Open" activiti:async="true" activiti:exclusive="false">
+    <subProcess id="checkSshPortsAreOpen" name="Check Ssh Ports Are Open" activiti:async="true">
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="machines" activiti:elementVariable="machine"></multiInstanceLoopCharacteristics>
       <startEvent id="startevent4" name="Start"></startEvent>
       <serviceTask id="checkSshPortIsOpen" name="Check Ssh Port (22) is Open" activiti:async="true" activiti:delegateExpression="${checkSshPortIsOpen}"></serviceTask>
@@ -101,6 +101,17 @@
     <intermediateThrowEvent id="signalintermediatethrowevent1" name="SignalThrowEvent">
       <signalEventDefinition signalRef="terminatePoolOnTimeoutEvent"></signalEventDefinition>
     </intermediateThrowEvent>
+    <scriptTask id="setStatusReady" name="Set status &quot;ready&quot;" activiti:async="true" scriptFormat="groovy">
+      <script><![CDATA[execution.setVariable("status", "ready");]]></script>
+    </scriptTask>
+    <parallelGateway id="parallelgateway7" name="Parallel Gateway"></parallelGateway>
+    <parallelGateway id="parallelgateway8" name="Parallel Gateway"></parallelGateway>
+    <scriptTask id="setStatusSetup" name="Set status &quot;setup&quot;" activiti:async="true" scriptFormat="groovy">
+      <script><![CDATA[execution.setVariable("status", "setup");]]></script>
+    </scriptTask>
+    <scriptTask id="setStatusTerminated" name="Set status &quot;terminated&quot;" activiti:async="true" scriptFormat="groovy">
+      <script><![CDATA[execution.setVariable("status", "terminated");]]></script>
+    </scriptTask>
     <sequenceFlow id="flow3" name="" sourceRef="startevent1" targetRef="parallelGatewayPrepareNetworkContext"></sequenceFlow>
     <sequenceFlow id="flow4" name="" sourceRef="parallelGatewayPrepareNetworkContext" targetRef="ensureSecurityGroupExists"></sequenceFlow>
     <sequenceFlow id="flow5" name="" sourceRef="parallelGatewayPrepareNetworkContext" targetRef="ensureKeyPairExists"></sequenceFlow>
@@ -134,27 +145,20 @@
     <sequenceFlow id="flow83" name="" sourceRef="setupAdminAccess" targetRef="parallelgateway6"></sequenceFlow>
     <sequenceFlow id="flow84" name="" sourceRef="dumpConsoleOutput" targetRef="parallelgateway6"></sequenceFlow>
     <sequenceFlow id="flow85" name="" sourceRef="boundarytimer1" targetRef="signalintermediatethrowevent1"></sequenceFlow>
-    <scriptTask id="setStatusReady" name="Set status &quot;ready&quot;" activiti:async="true" scriptFormat="groovy">
-      <script><![CDATA[execution.setVariable("status", "ready");]]></script>
-    </scriptTask>
-    <sequenceFlow id="flow86" name="" sourceRef="parallelgateway6" targetRef="setStatusReady"></sequenceFlow>
     <sequenceFlow id="flow87" name="" sourceRef="setStatusReady" targetRef="done"></sequenceFlow>
-    <parallelGateway id="parallelgateway7" name="Parallel Gateway"></parallelGateway>
-    <parallelGateway id="parallelgateway8" name="Parallel Gateway"></parallelGateway>
     <sequenceFlow id="flow88" name="" sourceRef="waitForAllInstancesToStart" targetRef="parallelgateway7"></sequenceFlow>
     <sequenceFlow id="flow89" name="" sourceRef="parallelgateway7" targetRef="publishListOfMachines"></sequenceFlow>
     <sequenceFlow id="flow90" name="" sourceRef="publishListOfMachines" targetRef="parallelgateway8"></sequenceFlow>
     <sequenceFlow id="flow91" name="" sourceRef="parallelgateway8" targetRef="checkSshPortsAreOpen"></sequenceFlow>
-    <scriptTask id="setStatusSetup" name="Set status &quot;setup&quot;" activiti:async="true" scriptFormat="groovy">
-      <script><![CDATA[execution.setVariable("status", "setup");]]></script>
-    </scriptTask>
     <sequenceFlow id="flow92" name="" sourceRef="parallelgateway7" targetRef="setStatusSetup"></sequenceFlow>
     <sequenceFlow id="flow93" name="" sourceRef="setStatusSetup" targetRef="parallelgateway8"></sequenceFlow>
-    <scriptTask id="setStatusTerminated" name="Set status &quot;terminated&quot;" activiti:async="true" scriptFormat="groovy">
-      <script><![CDATA[execution.setVariable("status", "terminated");]]></script>
-    </scriptTask>
     <sequenceFlow id="flow94" name="" sourceRef="parallelgateway3" targetRef="setStatusTerminated"></sequenceFlow>
     <sequenceFlow id="flow95" name="" sourceRef="setStatusTerminated" targetRef="endevent2"></sequenceFlow>
+    <serviceTask id="installSoftwarePackages" name="Install Software Packages" activiti:async="true" activiti:delegateExpression="${installPackages}">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="machines" activiti:elementVariable="machine"></multiInstanceLoopCharacteristics>
+    </serviceTask>
+    <sequenceFlow id="flow96" name="" sourceRef="parallelgateway6" targetRef="installSoftwarePackages"></sequenceFlow>
+    <sequenceFlow id="flow97" name="" sourceRef="installSoftwarePackages" targetRef="setStatusReady"></sequenceFlow>
     <textAnnotation id="textannotation1" textFormat="text/plain">
       <text><![CDATA[10 minutes timeout (PT10M) static]]></text>
     </textAnnotation>
@@ -291,7 +295,7 @@
         <omgdc:Bounds height="55" width="105" x="835" y="70"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="done" id="BPMNShape_done">
-        <omgdc:Bounds height="55" width="105" x="1786" y="70"></omgdc:Bounds>
+        <omgdc:Bounds height="55" width="105" x="1936" y="70"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="checkSshPortsAreOpen" id="BPMNShape_checkSshPortsAreOpen" isExpanded="true">
         <omgdc:Bounds height="205" width="281" x="1007" y="-5"></omgdc:Bounds>
@@ -360,7 +364,7 @@
         <omgdc:Bounds height="35" width="35" x="1577" y="-20"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="setStatusReady" id="BPMNShape_setStatusReady">
-        <omgdc:Bounds height="55" width="105" x="1640" y="70"></omgdc:Bounds>
+        <omgdc:Bounds height="55" width="105" x="1790" y="70"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="parallelgateway7" id="BPMNShape_parallelgateway7">
         <omgdc:Bounds height="40" width="40" x="773" y="77"></omgdc:Bounds>
@@ -373,6 +377,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="setStatusTerminated" id="BPMNShape_setStatusTerminated">
         <omgdc:Bounds height="55" width="105" x="829" y="330"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="installSoftwarePackages" id="BPMNShape_installSoftwarePackages">
+        <omgdc:Bounds height="55" width="105" x="1640" y="70"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
         <omgdi:waypoint x="65" y="97"></omgdi:waypoint>
@@ -513,13 +520,9 @@
         <omgdi:waypoint x="1472" y="-3"></omgdi:waypoint>
         <omgdi:waypoint x="1577" y="-3"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow86" id="BPMNEdge_flow86">
-        <omgdi:waypoint x="1600" y="97"></omgdi:waypoint>
-        <omgdi:waypoint x="1640" y="97"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow87" id="BPMNEdge_flow87">
-        <omgdi:waypoint x="1745" y="97"></omgdi:waypoint>
-        <omgdi:waypoint x="1786" y="97"></omgdi:waypoint>
+        <omgdi:waypoint x="1895" y="97"></omgdi:waypoint>
+        <omgdi:waypoint x="1936" y="97"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow88" id="BPMNEdge_flow88">
         <omgdi:waypoint x="757" y="97"></omgdi:waypoint>
@@ -554,6 +557,14 @@
       <bpmndi:BPMNEdge bpmnElement="flow95" id="BPMNEdge_flow95">
         <omgdi:waypoint x="934" y="357"></omgdi:waypoint>
         <omgdi:waypoint x="961" y="357"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow96" id="BPMNEdge_flow96">
+        <omgdi:waypoint x="1600" y="97"></omgdi:waypoint>
+        <omgdi:waypoint x="1640" y="97"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow97" id="BPMNEdge_flow97">
+        <omgdi:waypoint x="1745" y="97"></omgdi:waypoint>
+        <omgdi:waypoint x="1790" y="97"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
         <omgdc:Bounds height="50" width="100" x="795" y="-54"></omgdc:Bounds>
