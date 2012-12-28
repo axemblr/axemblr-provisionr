@@ -31,8 +31,10 @@ import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import java.io.File;
 import java.util.List;
@@ -58,12 +60,12 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     private String hardwareType = "t1.micro";
 
     @Option(name = "--ports", description = "Firewall ports that need to be open for TCP traffic (any source)",
-        multiValued = true, valueToShowInHelp = "22")
-    private int[] ports = new int[]{22};
+        multiValued = true)
+    private List<Integer> ports = Lists.newArrayList(22);
 
     @Option(name = "--packages", description = "Packages to install by default",
-        multiValued = true, valueToShowInHelp = "git-core,vim")
-    private String[] packages = new String[]{"git-core", "vim"};
+        multiValued = true)
+    private List<String> packages = Lists.newArrayList("git-core", "vim");
 
     @Option(name = "--cache", description = "Cache base operating system image (including files & packages)")
     private boolean cacheBaseImage = false;
@@ -160,13 +162,13 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     }
 
     @VisibleForTesting
-    void setPorts(int[] ports) {
-        this.ports = checkNotNull(ports, "ports is null");
+    void setPorts(List<Integer> ports) {
+        this.ports = ImmutableList.copyOf(ports);
     }
 
     @VisibleForTesting
-    void setPackages(String[] packages) {
-        this.packages = checkNotNull(packages, "packages is null");
+    void setPackages(List<String> packages) {
+        this.packages = ImmutableList.copyOf(packages);
     }
 
     @VisibleForTesting

@@ -44,7 +44,7 @@ public class SetupAdminAccess implements JavaDelegate {
             "variable with the name '%s'.", CoreProcessVariables.POOL);
 
         Machine machine = (Machine) execution.getVariable("machine");
-        LOG.info(">> Connecting to machine {}", machine);
+        LOG.info(">> Connecting to machine {} to setup admin access", machine);
 
 
         SSHClient client = Ssh.newClient(machine,

@@ -1,7 +1,6 @@
-package com.axemblr.provisionr.logging;
+package com.axemblr.provisionr.core.logging;
 
 import com.axemblr.provisionr.core.Ssh;
-import com.axemblr.provisionr.core.logging.StreamLogger;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import java.io.ByteArrayInputStream;
