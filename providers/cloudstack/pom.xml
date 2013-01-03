@@ -140,6 +140,8 @@
                             </test.cloudstack.provider.templateId>
                             <test.cloudstack.provider.zoneId>${test.cloudstack.provider.zoneId}
                             </test.cloudstack.provider.zoneId>
+                            <test.cloudstack.provider.networkOffering>${test.cloudstack.provider.networkOffering}
+                            </test.cloudstack.provider.networkOffering>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

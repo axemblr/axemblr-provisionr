@@ -19,22 +19,33 @@ package com.axemblr.provisionr.cloudstack.core;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import org.jclouds.cloudstack.CloudStackClient;
-import org.jclouds.cloudstack.domain.Zone;
+import org.jclouds.cloudstack.domain.Network;
 
-public class Zones {
+public class Networks {
 
-    private Zones() {
+    private Networks() {
     }
 
-    public static boolean hasSecurityGroupEnabled(final CloudStackClient cloudStackClient, final String zoneName) {
-        Set<Zone> ourZone = Sets.filter(cloudStackClient.getZoneClient().listZones(), new Predicate<Zone>() {
+    public static String formatNameFromBusinessKey(String processBusinessKey) {
+        return String.format("networks-%s", processBusinessKey);
+    }
+
+    /**
+     * Returns the first network with the given name.
+     *
+     * @throws NoSuchElementException   if no network is found
+     * @throws IllegalArgumentException if more networks with the same name are found
+     */
+    public static Network getByName(CloudStackClient client, final String networkName) {
+        Set<Network> networks = Sets.filter(client.getNetworkClient().listNetworks(), new Predicate<Network>() {
             @Override
-            public boolean apply(Zone input) {
-                return input.getName().equals(zoneName);
+            public boolean apply(Network input) {
+                return input.getName().equals(networkName);
             }
         });
-        return Iterables.getOnlyElement(ourZone).isSecurityGroupsEnabled();
+        return Iterables.getOnlyElement(networks);
     }
 }

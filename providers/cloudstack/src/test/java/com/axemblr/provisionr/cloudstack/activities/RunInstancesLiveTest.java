@@ -22,6 +22,7 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.software.Software;
+import com.axemblr.provisionr.cloudstack.ProviderOptions;
 import com.axemblr.provisionr.cloudstack.core.VirtualMachines;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.google.common.collect.ImmutableMap;
@@ -29,6 +30,7 @@ import java.util.Map;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -66,7 +68,7 @@ public class RunInstancesLiveTest extends CloudStackActivityLiveTest<RunInstance
             .baseOperatingSystem(getProviderProperty("templateId"))
             .createSoftware();
 
-        Map<String, String> options = ImmutableMap.of(RunInstances.ZONE_ID,
+        Map<String, String> options = ImmutableMap.of(ProviderOptions.ZONE_ID,
             getProviderProperty("zoneId"));
 
         when(pool.getProvider()).thenReturn(provider);
@@ -93,10 +95,12 @@ public class RunInstancesLiveTest extends CloudStackActivityLiveTest<RunInstance
         logKeyPairs();
         logVirtualMachines();
         VirtualMachines.destroyAllVirtualMachineByName(context.getApi(), BUSINESS_KEY);
+        logVirtualMachines();
         super.tearDown();
     }
 
     @Test
+    @Ignore
     public void test() throws Exception {
         activity.execute(execution);
     }

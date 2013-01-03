@@ -16,6 +16,14 @@
 
 package com.axemblr.provisionr.cloudstack;
 
+
+/**
+ * Building a pool of VM's on CloudStack requires more knowledge of the cloud's architecture,
+ * You need to know things like in what zone to build the pool, the ID's of service offerings, network offerings,
+ * and more.
+ * <p/>
+ * All the information is passed via Provider Options. This class stores some of the option names.
+ */
 public class ProviderOptions {
 
     private ProviderOptions() {
@@ -25,4 +33,5 @@ public class ProviderOptions {
     public static final String ZONE_ID = "zoneId";
     public static final String TEMPLATE_ID = "templateId";
     public static final String SERVICE_OFFERING = "serviceOffering";
+    public static final String NETWORK_OFFERING = "networkOffering";
 }

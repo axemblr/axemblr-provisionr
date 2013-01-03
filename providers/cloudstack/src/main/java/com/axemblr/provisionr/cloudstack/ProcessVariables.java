@@ -21,4 +21,6 @@ public class ProcessVariables {
     private ProcessVariables() {
         // prevent instantiation
     }
+
+    public static final String NETWORK_ID = "NETWORK_ID";
 }
