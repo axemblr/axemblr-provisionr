@@ -46,7 +46,7 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
         super(CloudStackProvisionr.ID);
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(DeleteSecurityGroupLiveTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CloudStackActivityLiveTest.class);
 
     protected final String BUSINESS_KEY = "j-" + UUID.randomUUID().toString();
     /**

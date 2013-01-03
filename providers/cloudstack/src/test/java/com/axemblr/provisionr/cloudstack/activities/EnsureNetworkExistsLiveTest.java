@@ -62,11 +62,9 @@ public class EnsureNetworkExistsLiveTest extends CloudStackActivityLiveTest<Ensu
         collector.install(execution);
 
         activity.execute(execution);
+        assertThat(collector.getVariable(ProcessVariables.NETWORK_ID)).isNot(null);
+
         Network network = Networks.getByName(context.getApi(), networkName);
-
-
-        assertThat(execution.getVariable(ProcessVariables.NETWORK_ID)).isNot(null);
-
         assertThat(network.getName()).isEqualToIgnoringCase(networkName);
         String networkId = network.getId();
         // second run should not create a new network
