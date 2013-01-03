@@ -17,6 +17,7 @@
 package com.axemblr.provisionr.cloudstack.core;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -73,6 +74,7 @@ public class VirtualMachines {
                 machine = client.getVirtualMachineClient().getVirtualMachine(id);
             } catch (InterruptedException e) {
                 LOG.info("Interrupted while waiting for VM's to start");
+                Throwables.propagateIfPossible(e);
             }
             if (timeOutExceeded(startTime)) {
                 break;

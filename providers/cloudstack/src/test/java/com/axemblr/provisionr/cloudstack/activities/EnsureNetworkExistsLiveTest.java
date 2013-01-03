@@ -17,10 +17,10 @@
 package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.pool.Pool;
-import static com.axemblr.provisionr.cloudstack.ProviderOptions.NETWORK_OFFERING;
-import static com.axemblr.provisionr.cloudstack.ProviderOptions.ZONE_ID;
+import com.axemblr.provisionr.cloudstack.ProcessVariables;
 import com.axemblr.provisionr.cloudstack.core.Networks;
 import com.axemblr.provisionr.core.CoreProcessVariables;
+import com.axemblr.provisionr.test.ProcessVariablesCollector;
 import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.jclouds.cloudstack.domain.Network;
@@ -54,21 +54,25 @@ public class EnsureNetworkExistsLiveTest extends CloudStackActivityLiveTest<Ensu
         DelegateExecution execution = mock(DelegateExecution.class);
         Pool pool = mock(Pool.class);
 
-        when(pool.getOption(ZONE_ID)).thenReturn(getProviderProperty(ZONE_ID));
-        when(pool.getOption(NETWORK_OFFERING)).thenReturn(getProviderProperty(NETWORK_OFFERING));
-
         when(pool.getProvider()).thenReturn(provider);
         when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
         when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        activity.execute(execution);
 
+        ProcessVariablesCollector collector = new ProcessVariablesCollector();
+        collector.install(execution);
+
+        activity.execute(execution);
         Network network = Networks.getByName(context.getApi(), networkName);
-        // TODO: we ignore the NETWORK_ID process variable because of mocking, we should test it's not empty:
-        // assertThat(execution.getVariable(ProcessVariables.NETWORK_ID)).isNot(null);
+
+
+        assertThat(execution.getVariable(ProcessVariables.NETWORK_ID)).isNot(null);
+
         assertThat(network.getName()).isEqualToIgnoringCase(networkName);
         String networkId = network.getId();
         // second run should not create a new network
         activity.execute(execution);
+
+        when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
         network = Networks.getByName(context.getApi(), networkName);
         assertThat(network.getId()).isEqualTo(networkId);
     }

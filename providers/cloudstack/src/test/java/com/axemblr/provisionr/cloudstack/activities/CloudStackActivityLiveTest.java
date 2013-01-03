@@ -18,6 +18,7 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.cloudstack.CloudStackProvisionr;
+import com.axemblr.provisionr.cloudstack.ProviderOptions;
 import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import com.axemblr.provisionr.test.Generics;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
@@ -78,7 +79,10 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
 
     @Before
     public void setUp() throws Exception {
-        provider = collectProviderCredentialsFromSystemProperties().createProvider();
+        provider = collectProviderCredentialsFromSystemProperties()
+            .option(ProviderOptions.ZONE_ID, getProviderProperty(ProviderOptions.ZONE_ID))
+            .option(ProviderOptions.NETWORK_OFFERING, getProviderProperty(ProviderOptions.NETWORK_OFFERING))
+            .createProvider();
         LOG.info("Using provider {}", provider);
 
         activity = createCloudStackActivitiInstance();

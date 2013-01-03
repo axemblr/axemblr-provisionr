@@ -38,8 +38,8 @@ public class EnsureNetworkExists extends CloudStackActivity {
             LOG.warn("Network process variable ({}) will be overwritten!", ProcessVariables.NETWORK_ID);
         }
         final String networkName = Networks.formatNameFromBusinessKey(execution.getProcessBusinessKey());
-        final String zoneId = pool.getOption(ProviderOptions.ZONE_ID);
-        final String networkOffering = pool.getOption(ProviderOptions.NETWORK_OFFERING);
+        final String zoneId = pool.getProvider().getOption(ProviderOptions.ZONE_ID);
+        final String networkOffering = pool.getProvider().getOption(ProviderOptions.NETWORK_OFFERING);
 
         Network network;
         try {
