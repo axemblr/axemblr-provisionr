@@ -18,6 +18,7 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.cloudstack.CloudStackProvisionr;
+import com.axemblr.provisionr.cloudstack.ProviderOptions;
 import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import com.axemblr.provisionr.test.Generics;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.jclouds.cloudstack.CloudStackAsyncClient;
 import org.jclouds.cloudstack.CloudStackClient;
+import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 import org.jclouds.cloudstack.domain.SshKeyPair;
 import org.jclouds.cloudstack.domain.VirtualMachine;
@@ -77,7 +79,10 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
 
     @Before
     public void setUp() throws Exception {
-        provider = collectProviderCredentialsFromSystemProperties().createProvider();
+        provider = collectProviderCredentialsFromSystemProperties()
+            .option(ProviderOptions.ZONE_ID, getProviderProperty(ProviderOptions.ZONE_ID))
+            .option(ProviderOptions.NETWORK_OFFERING, getProviderProperty(ProviderOptions.NETWORK_OFFERING))
+            .createProvider();
         LOG.info("Using provider {}", provider);
 
         activity = createCloudStackActivitiInstance();
@@ -111,6 +116,14 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
         LOG.info("Virtual machines count is {}", vms.size());
         for (VirtualMachine vm : vms) {
             LOG.info("\tVirtual machine {}", vm.toString());
+        }
+    }
+
+    protected void logNetworks() {
+        Set<Network> networks = context.getApi().getNetworkClient().listNetworks();
+        LOG.info("Networks count is {}", networks.size());
+        for (Network network : networks) {
+            LOG.info("{}\n", network.toString());
         }
     }
 }

@@ -38,6 +38,9 @@ public class SecurityGroups {
     public static final int DEFAULT_ICMP_CODE = 0;
     public static final int DEFAULT_ICMP_TYPE = 8;
 
+    private SecurityGroups() {
+    }
+
     public static String formatNameFromBusinessKey(String processBusinessKey) {
         return String.format("network-%s", processBusinessKey);
     }
