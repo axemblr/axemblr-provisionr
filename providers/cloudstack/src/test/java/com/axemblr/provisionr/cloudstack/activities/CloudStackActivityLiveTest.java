@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.jclouds.cloudstack.CloudStackAsyncClient;
 import org.jclouds.cloudstack.CloudStackClient;
+import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.SecurityGroup;
 import org.jclouds.cloudstack.domain.SshKeyPair;
 import org.jclouds.cloudstack.domain.VirtualMachine;
@@ -111,6 +112,14 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
         LOG.info("Virtual machines count is {}", vms.size());
         for (VirtualMachine vm : vms) {
             LOG.info("\tVirtual machine {}", vm.toString());
+        }
+    }
+
+    protected void logNetworks() {
+        Set<Network> networks = context.getApi().getNetworkClient().listNetworks();
+        LOG.info("Networks count is {}", networks.size());
+        for (Network network : networks) {
+            LOG.info("{}\n", network.toString());
         }
     }
 }

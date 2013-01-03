@@ -20,7 +20,6 @@ import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.cloudstack.core.ConvertIngressRuleToRule;
-import com.axemblr.provisionr.cloudstack.ProcessVariables;
 import com.axemblr.provisionr.cloudstack.core.SecurityGroups;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.google.common.collect.ImmutableSet;
