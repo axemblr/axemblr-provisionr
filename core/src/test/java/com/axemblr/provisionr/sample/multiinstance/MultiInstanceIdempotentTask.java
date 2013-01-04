@@ -28,8 +28,9 @@ public class MultiInstanceIdempotentTask implements JavaDelegate {
         System.err.printf("Hello dude %s!\n", aDude);
 
         if (aDude.equalsIgnoreCase("andrei")) {
-            TimeUnit.SECONDS.sleep(10);
+            System.err.println("Waiting for andrei");
+            TimeUnit.SECONDS.sleep(3);
+            System.err.println("Done Waiting for andrei");
         }
     }
-
 }
