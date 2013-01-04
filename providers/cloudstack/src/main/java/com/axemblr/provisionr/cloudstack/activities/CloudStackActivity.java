@@ -18,15 +18,16 @@ package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
-import com.axemblr.provisionr.cloudstack.ProcessVariables;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.inject.Module;
+import java.util.Properties;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
+import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
 import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackAsyncClient;
@@ -69,10 +70,13 @@ public abstract class CloudStackActivity implements JavaDelegate {
      */
     RestContext<CloudStackClient, CloudStackAsyncClient> newCloudStackClient(Provider provider) {
         checkArgument(provider.getEndpoint().isPresent(), "please specify an endpoint for this provider");
+        Properties overrides = new Properties();
+        overrides.setProperty(Constants.PROPERTY_TRUST_ALL_CERTS, "true");
         return ContextBuilder.newBuilder(new CloudStackApiMetadata())
             .endpoint(provider.getEndpoint().get())
             .modules(ImmutableSet.<Module>of(new SLF4JLoggingModule()))
             .credentials(provider.getAccessKey(), provider.getSecretKey())
+            .overrides(overrides)
             .build(CloudStackApiMetadata.CONTEXT_TOKEN);
     }
 }
