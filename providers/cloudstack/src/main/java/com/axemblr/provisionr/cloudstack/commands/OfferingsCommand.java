@@ -47,7 +47,7 @@ public class OfferingsCommand extends CommandSupport {
     @Override
     public Object doExecuteWithContext(CloudStackClient client, PrintStream out) throws Exception {
         if (isDiskOfferingListed() || isServiceOfferingListed() || isNetworkOfferingListed()) {
-            out.printf("CloudStack Service Offerings for provider %s\n", getProvider().getId());
+            out.printf("CloudStack Offerings for provider %s\n", getProvider().getId());
             listServiceOfferingsIfSpecified(client, out);
             listNetworkOfferingsIfSpecified(client, out);
             listDiskOfferingsIfSpecified(client, out);

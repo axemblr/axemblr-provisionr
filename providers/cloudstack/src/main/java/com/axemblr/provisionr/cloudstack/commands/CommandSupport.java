@@ -21,7 +21,9 @@ import com.axemblr.provisionr.cloudstack.DefaultProviderConfig;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import java.io.PrintStream;
+import java.util.Properties;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
 import org.jclouds.cloudstack.CloudStackApiMetadata;
 import org.jclouds.cloudstack.CloudStackAsyncClient;
@@ -58,10 +60,13 @@ public abstract class CommandSupport extends OsgiCommandSupport {
     }
 
     protected RestContext<CloudStackClient, CloudStackAsyncClient> newCloudStackContext(Provider provider) {
+        Properties overrides = new Properties();
+        overrides.setProperty(Constants.PROPERTY_TRUST_ALL_CERTS, "true");
         return ContextBuilder.newBuilder(new CloudStackApiMetadata())
             .endpoint(provider.getEndpoint().get())
             .modules(ImmutableSet.of(new SLF4JLoggingModule()))
             .credentials(provider.getAccessKey(), provider.getSecretKey())
+            .overrides(overrides)
             .build(CloudStackApiMetadata.CONTEXT_TOKEN);
     }
 
