@@ -54,4 +54,11 @@ public class ProcessVariablesCollector implements Answer<Void> {
     public Object getVariable(String name) {
         return variables.get(name);
     }
+
+    @Override
+    public String toString() {
+        return "ProcessVariablesCollector{" +
+            "variables=" + variables +
+            '}';
+    }
 }

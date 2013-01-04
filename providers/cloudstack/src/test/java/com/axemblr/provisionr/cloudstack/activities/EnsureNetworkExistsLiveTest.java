@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
+ * Copyright (c) 2013 S.C. Axemblr Software Solutions S.R.L
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,8 @@ public class EnsureNetworkExistsLiveTest extends CloudStackActivityLiveTest<Ensu
         collector.install(execution);
 
         activity.execute(execution);
-        assertThat(collector.getVariable(ProcessVariables.NETWORK_ID)).isNot(null);
+
+        assertThat(collector.getVariable(ProcessVariables.NETWORK_ID)).isNotNull();
 
         Network network = Networks.getByName(context.getApi(), networkName);
         assertThat(network.getName()).isEqualToIgnoringCase(networkName);
