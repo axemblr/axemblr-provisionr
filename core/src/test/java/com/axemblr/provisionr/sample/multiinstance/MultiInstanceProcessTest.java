@@ -79,6 +79,7 @@ public class MultiInstanceProcessTest {
 
         Assert.assertEquals(instance.getBusinessKey(), businessKey);
         waitForProcess(instance);
+        
         // after the process has ended we should not be able to get a
         // ProcessInstance but a HistoricProcessInstance
 

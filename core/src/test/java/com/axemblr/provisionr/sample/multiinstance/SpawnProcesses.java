@@ -33,10 +33,15 @@ public class SpawnProcesses implements JavaDelegate {
         @SuppressWarnings("unchecked")
         List<String> people = (List<String>) execution.getVariable("people");
 
-        for (String person : people) {
-            ProcessInstance instance = runtimeService.get().startProcessInstanceByKey("helloDude",
-                ImmutableMap.<String, Object>of("singlePerson", person));
-            System.out.println("Started process with ID " + instance.getId() + " for person " + person);
+        for (final String person : people) {
+            new Thread() {
+                @Override
+                public void run() {
+                    ProcessInstance instance = runtimeService.get().startProcessInstanceByKey("helloDude",
+                        ImmutableMap.<String, Object>of("singlePerson", person));
+                    System.out.println("Started process with ID " + instance.getId() + " for person " + person);
+                }
+            }.start();
         }
     }
 }
