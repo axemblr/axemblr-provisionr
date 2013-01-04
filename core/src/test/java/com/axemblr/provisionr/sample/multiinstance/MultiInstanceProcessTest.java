@@ -20,8 +20,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
@@ -36,54 +34,56 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Ignore
 public class MultiInstanceProcessTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(MultiInstanceProcessTest.class);
 
-    private final String PROCESS_NAME = "multiInstanceSample";
+    private final String PROCESS_NAME = "multiInstance";
 
     private ProcessEngine engine;
     private RuntimeService runtimeService;
-    private ExecutorService executorService;
 
     @Before
     public void setUp() {
         engine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration()
+            // use MVCC to avoid locking issues and PersistenceExceptions
+            .setJdbcUrl("jdbc:h2:mem:activiti;MVCC=TRUE;DB_CLOSE_DELAY=1000")
             .setJobExecutorActivate(true) // needed for async jobs
+            .setHistory(ProcessEngineConfiguration.HISTORY_FULL)
             .buildProcessEngine();
 
         engine.getRepositoryService()
             .createDeployment()
-            .addClasspathResource(
-                "diagrams/multi-instance-sample.bpmn20.xml").deploy();
+            .addClasspathResource("diagrams/multiInstance.bpmn20.xml")
+            .addClasspathResource("diagrams/helloDude.bpmn20.xml")
+            .deploy();
 
         runtimeService = engine.getRuntimeService();
-        executorService = Executors.newSingleThreadExecutor();
-
     }
 
     @After
     public void tearDown() {
-        executorService.shutdown();
         engine.close();
     }
 
     @Test
+    @Ignore
     public void testBuildAndRunMultiInstanceProcess() throws Exception {
-
         final String businessKey = "j-1234";
 
         final List<String> people = Lists.newArrayList("Andrei", "Ioan",
             "Eugen", "Alina", "Mihai", "Ciociolina");
+
         final Map<String, Object> variables = Maps.newHashMap();
         variables.put("people", people);
 
+        SpawnProcesses.runtimeService.set(runtimeService);
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
             PROCESS_NAME, businessKey, variables);
 
         Assert.assertEquals(instance.getBusinessKey(), businessKey);
         waitForProcess(instance);
+
         // after the process has ended we should not be able to get a
         // ProcessInstance but a HistoricProcessInstance
 
@@ -91,8 +91,7 @@ public class MultiInstanceProcessTest {
             .getHistoryService().createHistoricProcessInstanceQuery()
             .processInstanceBusinessKey(businessKey).singleResult();
 
-        LOG.info("Process took {} ms",
-            historicProcessInstance.getDurationInMillis());
+        LOG.info("Process took {} ms", historicProcessInstance.getDurationInMillis());
     }
 
     private void waitForProcess(final ProcessInstance instance) throws InterruptedException {

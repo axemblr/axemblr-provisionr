@@ -16,21 +16,27 @@
 
 package com.axemblr.provisionr.sample.multiinstance;
 
-import java.util.concurrent.TimeUnit;
+import com.google.common.collect.ImmutableMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
+import org.activiti.engine.runtime.ProcessInstance;
 
-public class MultiInstanceIdempotentTask implements JavaDelegate {
+public class SpawnProcesses implements JavaDelegate {
+
+    public static AtomicReference<RuntimeService> runtimeService = new AtomicReference<RuntimeService>();
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        final String aDude = String.class.cast(execution.getVariable("singlePerson"));
-        System.err.printf("Hello dude %s!\n", aDude);
+        @SuppressWarnings("unchecked")
+        List<String> people = (List<String>) execution.getVariable("people");
 
-        if (aDude.equalsIgnoreCase("andrei")) {
-            System.err.println("Waiting for andrei");
-            TimeUnit.SECONDS.sleep(3);
-            System.err.println("Done Waiting for andrei");
+        for (final String person : people) {
+            ProcessInstance instance = runtimeService.get().startProcessInstanceByKey("helloDude",
+                ImmutableMap.<String, Object>of("singlePerson", person));
+            System.out.println("Started process with ID " + instance.getId() + " for person " + person);
         }
     }
 }
