@@ -47,7 +47,7 @@ public class InstallPackages implements JavaDelegate {
         Machine machine = (Machine) execution.getVariable("machine");
         LOG.info(">> Connecting to machine {} to install packages", machine);
 
-        SSHClient client = Ssh.newClient(machine, pool.getAdminAccess(), 30000 /* milliseconds */);
+        SSHClient client = Ssh.newClient(machine, pool.getAdminAccess(), 5 * 60000 /* milliseconds */);
         try {
             String puppetScript = Mustache.toString(InstallPackages.class,
                 "/com/axemblr/provisionr/core/puppet/packages.pp.mustache",

@@ -38,7 +38,7 @@ public class AmazonProvisionr extends ProvisionrSupport {
     public static final Logger LOG = LoggerFactory.getLogger(AmazonProvisionr.class);
 
     public static final String ID = "amazon";
-    public static final String PROCESS_KEY = "amazon";
+    public static final String MANAGEMENT_PROCESS_KEY = "amazonPoolManagement";
 
     private final ProcessEngine processEngine;
     private final Optional<Provider> defaultProvider;
@@ -69,9 +69,11 @@ public class AmazonProvisionr extends ProvisionrSupport {
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put(CoreProcessVariables.POOL, pool);
 
+        /* Authenticate as kermit to make the process visible in the Explorer UI */
         processEngine.getIdentityService().setAuthenticatedUserId("kermit");
+
         ProcessInstance instance = processEngine.getRuntimeService()
-            .startProcessInstanceByKey(PROCESS_KEY, businessKey, arguments);
+            .startProcessInstanceByKey(MANAGEMENT_PROCESS_KEY, businessKey, arguments);
 
         return instance.getProcessInstanceId();
     }

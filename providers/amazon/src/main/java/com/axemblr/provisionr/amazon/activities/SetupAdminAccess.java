@@ -49,7 +49,7 @@ public class SetupAdminAccess implements JavaDelegate {
 
         SSHClient client = Ssh.newClient(machine,
             pool.getAdminAccess().toBuilder().username("ubuntu").createAdminAccess(),
-            30000 /* milliseconds */);
+            5 * 60000 /* milliseconds */);
         try {
             String puppetScript = renderAndUploadAdminAccessPuppetScript(client, pool);
 
