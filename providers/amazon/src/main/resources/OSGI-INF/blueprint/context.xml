@@ -36,6 +36,8 @@
     </bean>
 
     <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
+    <reference id="runtimeService" interface="org.activiti.engine.RuntimeService"/>
+
     <bean id="amazonService" class="com.axemblr.provisionr.amazon.AmazonProvisionr">
         <argument ref="processEngine"/>
         <argument ref="defaultProviderConfig"/>
@@ -102,6 +104,23 @@
         <argument ref="providerClientCache"/>
     </bean>
     <service ref="amazon_publishListOfMachines" auto-export="interfaces"/>
+
+    <bean id="amazon_spawnMachineSetupProcesses"
+          class="com.axemblr.provisionr.core.activities.SpawnProcessForEachMachine">
+        <argument ref="processEngine"/>
+        <argument value="amazonMachineSetup"/>
+        <argument value="setup"/>
+        <argument value="amazonMachineSetupProcessIds"/>
+    </bean>
+    <service ref="amazon_spawnMachineSetupProcesses" auto-export="interfaces"/>
+
+    <bean id="amazon_checkSetupProcessesEnded"
+          class="com.axemblr.provisionr.core.activities.CheckProcessesEnded">
+        <argument ref="runtimeService"/>
+        <argument value="amazonMachineSetupProcessIds"/>
+        <argument value="setupProcessesEnded"/>
+    </bean>
+    <service ref="amazon_checkSetupProcessesEnded" auto-export="interfaces"/>
 
     <bean id="amazon_setupAdminAccess"
           class="com.axemblr.provisionr.amazon.activities.SetupAdminAccess"/>

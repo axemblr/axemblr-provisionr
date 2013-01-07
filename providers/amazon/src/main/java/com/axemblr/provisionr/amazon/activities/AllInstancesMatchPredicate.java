@@ -27,6 +27,7 @@ import com.axemblr.provisionr.api.pool.Pool;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import com.google.common.base.Predicate;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
 import java.util.List;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -53,11 +54,11 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
         List<String> instanceIds = (List<String>) execution.getVariable(ProcessVariables.INSTANCE_IDS);
         checkNotNull(instanceIds, "process variable '{}' not found", ProcessVariables.INSTANCE_IDS);
 
-        DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
-            .withInstanceIds(instanceIds));
-        checkState(result.getReservations().size() == 1, "the instance ids are part of multiple reservations");
-
         try {
+            DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
+                .withInstanceIds(instanceIds));
+            checkState(result.getReservations().size() == 1, "the instance ids are part of multiple reservations");
+
             List<Instance> instances = result.getReservations().get(0).getInstances();
             if (Iterables.all(instances, predicate)) {
                 LOG.info(">> All {} instances match predicate {} ", instanceIds, predicate);
@@ -68,9 +69,11 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
                 execution.setVariable(resultVariable, false);
             }
         } catch (AmazonServiceException exception) {
-            if (exception.getErrorCode().equals("InvalidInstanceID.NotFound")) {
+            if (exception.getErrorCode().equalsIgnoreCase("InvalidInstanceID.NotFound")) {
                 LOG.warn("<< Got error InvalidInstanceID.NotFound. Assuming predicate {} is false", predicate);
                 execution.setVariable(resultVariable, false);
+            } else {
+                throw Throwables.propagate(exception);
             }
         }
     }

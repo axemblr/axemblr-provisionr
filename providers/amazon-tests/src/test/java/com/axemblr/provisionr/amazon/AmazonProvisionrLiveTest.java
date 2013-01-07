@@ -66,7 +66,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
     @Test
     public void startProvisioningProcess() throws Exception {
-        waitForProcessDeployment(AmazonProvisionr.PROCESS_KEY);
+        waitForProcessDeployment(AmazonProvisionr.MANAGEMENT_PROCESS_KEY);
 
         final Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
@@ -95,10 +95,10 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
         provisionr.startPoolManagementProcess(businessKey, pool);
         waitForPoolStatus(provisionr, businessKey, PoolStatus.READY);
 
+        // TODO: get the list of machines and check that nginx is listening on port 80
+
         provisionr.destroyPool(businessKey);
         waitForPoolStatus(provisionr, businessKey, PoolStatus.TERMINATED);
-
-        // TODO: get the list of machines and check that nginx is listening on port 80
     }
 
     private void waitForPoolStatus(Provisionr provisionr, String businessKey,
