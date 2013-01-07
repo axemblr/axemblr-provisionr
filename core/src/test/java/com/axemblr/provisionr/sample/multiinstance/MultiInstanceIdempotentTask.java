@@ -25,12 +25,16 @@ public class MultiInstanceIdempotentTask implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         final String aDude = String.class.cast(execution.getVariable("singlePerson"));
-        System.err.printf("Hello dude %s!\n", aDude);
 
         if (aDude.equalsIgnoreCase("andrei")) {
-            System.err.println("Waiting for andrei");
+            System.err.println("Long wait start: " + aDude);
+            TimeUnit.SECONDS.sleep(5);
+            System.err.println("Long wait done: " + aDude);
+
+        } else {
+            System.err.println("Short wait start: " + aDude);
             TimeUnit.SECONDS.sleep(3);
-            System.err.println("Done Waiting for andrei");
+            System.err.println("Short wait done: " + aDude);
         }
     }
 }

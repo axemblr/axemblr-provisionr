@@ -43,6 +43,8 @@ public class Ssh {
 
     private static final Logger LOG = LoggerFactory.getLogger(Ssh.class);
 
+    public static final int DEFAULT_TIMEOUT = 5 * 60 * 1000; /* 5 minutes in milliseconds */
+
     private Ssh() {
     }
 
@@ -59,6 +61,10 @@ public class Ssh {
                 new Object[]{hostname, port, fingerprint});
             return true;
         }
+    }
+
+    public static SSHClient newClient(Machine machine, AdminAccess adminAccess) throws IOException {
+        return newClient(machine, adminAccess, DEFAULT_TIMEOUT);
     }
 
     /**

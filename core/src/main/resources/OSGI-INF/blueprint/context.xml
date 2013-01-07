@@ -23,7 +23,7 @@
     <cfg:property-placeholder persistent-id="com.axemblr.provisionr"
                               placeholder-prefix="$(" placeholder-suffix=")" update-strategy="reload">
         <cfg:default-properties>
-            <cfg:property name="activiti.db.url" value="jdbc:h2:mem:axemblr;DB_CLOSE_DELAY=-1"/>
+            <cfg:property name="activiti.db.url" value="jdbc:h2:mem:axemblr;MVCC=TRUE;DB_CLOSE_DELAY=-1"/>
             <cfg:property name="activiti.db.user" value="sa"/>
             <cfg:property name="activiti.db.password" value=""/>
             <cfg:property name="activiti.db.schemaUpdate" value="true"/>
@@ -36,10 +36,20 @@
         <property name="password" value="$(activiti.db.password)"/>
     </bean>
 
-    <bean id="configurationFactory" class="org.activiti.osgi.blueprint.ConfigurationFactory">
+    <bean id="jobExecutor" class="org.activiti.engine.impl.jobexecutor.DefaultJobExecutor">
+        <property name="queueSize" value="30"/>
+        <property name="corePoolSize" value="15"/>
+        <property name="maxPoolSize" value="100"/>
+        <property name="maxJobsPerAcquisition" value="30"/>
+        <property name="waitTimeInMillis" value="1000"/>
+        <property name="lockTimeInMillis" value="180000"/>
+    </bean>
+
+    <bean id="configurationFactory" class="com.axemblr.provisionr.core.blueprint.ConfigurationFactory">
         <property name="dataSource" ref="dataSource"/>
         <property name="databaseSchemaUpdate" value="$(activiti.db.schemaUpdate)"/>
         <property name="jobExecutorActivate" value="true"/>
+        <property name="jobExecutor" ref="jobExecutor"/>
     </bean>
 
     <bean id="configuration" factory-ref="configurationFactory" factory-method="getConfiguration"/>
