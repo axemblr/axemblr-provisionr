@@ -18,6 +18,7 @@ package com.axemblr.provisionr.cloudstack;
 
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.axemblr.provisionr.core.CoreConstants;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.core.ProvisionrSupport;
 import com.google.common.base.Optional;
@@ -71,7 +72,8 @@ public class CloudStackProvisionr extends ProvisionrSupport {
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put(CoreProcessVariables.POOL, pool);
 
-        processEngine.getIdentityService().setAuthenticatedUserId("kermit");
+        processEngine.getIdentityService().setAuthenticatedUserId(CoreConstants.ACTIVITI_EXPLORER_DEFAULT_USER);
+
         RuntimeService runtimeService = processEngine.getRuntimeService();
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, businessKey, arguments);
 

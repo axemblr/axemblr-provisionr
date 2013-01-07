@@ -19,6 +19,7 @@ package com.axemblr.provisionr.amazon;
 import com.axemblr.provisionr.amazon.config.DefaultProviderConfig;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.axemblr.provisionr.core.CoreConstants;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.core.CoreSignals;
 import com.axemblr.provisionr.core.PoolStatus;
@@ -70,7 +71,7 @@ public class AmazonProvisionr extends ProvisionrSupport {
         arguments.put(CoreProcessVariables.POOL, pool);
 
         /* Authenticate as kermit to make the process visible in the Explorer UI */
-        processEngine.getIdentityService().setAuthenticatedUserId("kermit");
+        processEngine.getIdentityService().setAuthenticatedUserId(CoreConstants.ACTIVITI_EXPLORER_DEFAULT_USER);
 
         ProcessInstance instance = processEngine.getRuntimeService()
             .startProcessInstanceByKey(MANAGEMENT_PROCESS_KEY, businessKey, arguments);

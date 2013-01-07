@@ -45,9 +45,9 @@ public class InstallPackages implements JavaDelegate {
             "variable with the name '%s'.", CoreProcessVariables.POOL);
 
         Machine machine = (Machine) execution.getVariable("machine");
-        LOG.info(">> Connecting to machine {} to install packages", machine);
+        LOG.info(">> Connecting to machine {} to install packages", machine);           
 
-        SSHClient client = Ssh.newClient(machine, pool.getAdminAccess(), 5 * 60000 /* milliseconds */);
+        SSHClient client = Ssh.newClient(machine, pool.getAdminAccess());
         try {
             String puppetScript = Mustache.toString(InstallPackages.class,
                 "/com/axemblr/provisionr/core/puppet/packages.pp.mustache",

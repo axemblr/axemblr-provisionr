@@ -18,6 +18,7 @@ package com.axemblr.provisionr.core.activities;
 
 import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.core.CoreConstants;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableMap;
@@ -61,7 +62,7 @@ public class SpawnProcessForEachMachine implements JavaDelegate {
         checkNotNull(machines, "expecting to find the list of machines as process variable");
 
         /* Authenticate as kermit to make the process visible in the Explorer UI */
-        processEngine.getIdentityService().setAuthenticatedUserId("kermit");
+        processEngine.getIdentityService().setAuthenticatedUserId(CoreConstants.ACTIVITI_EXPLORER_DEFAULT_USER);
 
         List<String> processIds = Lists.newArrayList();
         for (Machine machine : machines) {
