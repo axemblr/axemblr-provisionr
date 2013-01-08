@@ -29,7 +29,7 @@
     <name>Axemblr Provisionr :: Parent</name>
     <description>Pool management service for 10s or 100s of virtual machines</description>
 
-    <url>https://github.com/andreisavu/axemblr-provisionr</url>
+    <url>https://github.com/axemblr/axemblr-provisionr</url>
     <inceptionYear>2012</inceptionYear>
 
     <prerequisites>
@@ -53,15 +53,15 @@
     </organization>
 
     <scm>
-        <connection>scm:git:git@github.com:andreisavu/axemblr-provisionr.git</connection>
-        <developerConnection>scm:git:git@github.com:andreisavu/axemblr-provisionr.git</developerConnection>
-        <url>https://github.com/andreisavu/axemblr-provisionr</url>
+        <connection>scm:git:git@github.com:axemblr/axemblr-provisionr.git</connection>
+        <developerConnection>scm:git:git@github.com:axemblr/axemblr-provisionr.git</developerConnection>
+        <url>https://github.com/axemblr/axemblr-provisionr</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>github</system>
-        <url>https://github.com/andreisavu/axemblr-provisionr/issues</url>
+        <url>https://github.com/axemblr/axemblr-provisionr/issues</url>
     </issueManagement>
 
     <properties>
