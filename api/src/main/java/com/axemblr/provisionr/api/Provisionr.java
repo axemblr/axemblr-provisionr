@@ -16,9 +16,11 @@
 
 package com.axemblr.provisionr.api;
 
+import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Optional;
+import java.util.List;
 
 public interface Provisionr {
 
@@ -47,6 +49,14 @@ public interface Provisionr {
      */
     String startPoolManagementProcess(String businessKey, Pool pool);
 
+
+    /**
+     * Retrieve the list of machines for a pool or an empty list
+     *
+     * @param businessKey external pool ID (e.g. job ID)
+     * @return list of running machines or empty
+     */
+    List<Machine> getMachines(String businessKey);
 
     /**
      * Get current pool status

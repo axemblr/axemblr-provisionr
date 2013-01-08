@@ -93,6 +93,9 @@
     <bean id="installPackages" class="com.axemblr.provisionr.core.activities.InstallPackages"/>
     <service ref="installPackages" auto-export="interfaces"/>
 
+    <bean id="downloadFiles" class="com.axemblr.provisionr.core.activities.DownloadFiles"/>
+    <service ref="downloadFiles" auto-export="interfaces"/>
+
     <!-- force registration of Bouncy Castle as JCE provider - needed for jclouds -->
     <bean id="bouncyCastleAsJceProviderRegistration" class="net.schmizz.sshj.common.SecurityUtils"
           factory-method="getSecurityProvider"/>
