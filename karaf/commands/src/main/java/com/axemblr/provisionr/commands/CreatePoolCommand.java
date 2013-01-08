@@ -47,8 +47,8 @@ import org.apache.karaf.shell.console.OsgiCommandSupport;
 /**
  * A typical call looks like this:
  * <p/>
- * $ provisionr:create --id amazon -k web-1 -s 5 -h m1.small \
- * --port 80 --port 443 --package nginx --package gunicorn
+ * $ provisionr:create --id amazon --key web-1 --size 5 --hardware-type m1.small \
+ * --port 80 --port 443 --package nginx --package gunicorn --package python-pip
  */
 @Command(scope = "provisionr", name = "create", description = "Create pool of virtual machines")
 public class CreatePoolCommand extends OsgiCommandSupport {
