@@ -81,7 +81,7 @@ public class CloudStackActivityLiveTest<T extends CloudStackActivity> extends Pr
     public void setUp() throws Exception {
         provider = collectProviderCredentialsFromSystemProperties()
             .option(ProviderOptions.ZONE_ID, getProviderProperty(ProviderOptions.ZONE_ID))
-            .option(ProviderOptions.NETWORK_OFFERING, getProviderProperty(ProviderOptions.NETWORK_OFFERING))
+            .option(ProviderOptions.NETWORK_OFFERING_ID, getProviderProperty(ProviderOptions.NETWORK_OFFERING_ID))
             .createProvider();
         LOG.info("Using provider {}", provider);
 

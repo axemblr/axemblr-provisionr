@@ -47,13 +47,14 @@ public class EnsureNetworkExists extends CloudStackActivity {
         } else {
             final String networkName = Networks.formatNameFromBusinessKey(execution.getProcessBusinessKey());
             final String zoneId = pool.getProvider().getOption(ProviderOptions.ZONE_ID);
-            final String networkOffering = pool.getProvider().getOption(ProviderOptions.NETWORK_OFFERING);
+            final String networkOfferingId = pool.getProvider().getOption(ProviderOptions.NETWORK_OFFERING_ID);
             try {
                 network = Networks.getByName(cloudStackClient, networkName);
                 LOG.info("Network with name {} exists.", networkName);
             } catch (NoSuchElementException e) {
-                LOG.info(String.format("Creating network %s in zone %s with offering %s", networkName, zoneId, networkOffering));
-                network = cloudStackClient.getNetworkClient().createNetworkInZone(zoneId, networkOffering, networkName,
+                LOG.info(String.format("Creating network %s in zone %s with offering %s",
+                    networkName, zoneId, networkOfferingId));
+                network = cloudStackClient.getNetworkClient().createNetworkInZone(zoneId, networkOfferingId, networkName,
                     networkName, CreateNetworkOptions.NONE);
             }
         }

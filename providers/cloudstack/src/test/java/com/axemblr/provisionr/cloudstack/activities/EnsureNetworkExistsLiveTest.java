@@ -118,6 +118,7 @@ public class EnsureNetworkExistsLiveTest extends CloudStackActivityLiveTest<Ensu
         when(mockNetwork.getId()).thenReturn(networkId);
 
         activity.execute(mockClient, pool, execution);
-        assertThat(collector.getVariable(ProcessVariables.NETWORK_ID)).isEqualTo(networkId);
+        assertThat(collector.getVariable(ProcessVariables.NETWORK_ID)).isEqual
+        To(networkId);
     }
 }

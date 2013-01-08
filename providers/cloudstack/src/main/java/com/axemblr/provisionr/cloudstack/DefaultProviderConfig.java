@@ -51,7 +51,7 @@ public class DefaultProviderConfig {
             .secretKey(secretKey)
             .option(ProviderOptions.ZONE_ID, zoneId)
             .option(ProviderOptions.TEMPLATE_ID, templateId)
-            .option(ProviderOptions.SERVICE_OFFERING, serviceOffering)
+            .option(ProviderOptions.SERVICE_OFFERING_ID, serviceOffering)
             .createProvider());
     }
 }
