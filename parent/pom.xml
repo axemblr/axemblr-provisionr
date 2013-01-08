@@ -15,13 +15,11 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <groupId>com.axemblr.provisionr</groupId>
     <artifactId>provisionr-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -56,7 +54,7 @@
         <connection>scm:git:git@github.com:axemblr/axemblr-provisionr.git</connection>
         <developerConnection>scm:git:git@github.com:axemblr/axemblr-provisionr.git</developerConnection>
         <url>https://github.com/axemblr/axemblr-provisionr</url>
-        <tag>HEAD</tag>
+        <tag>provisionr-0.1.0</tag>
     </scm>
 
     <issueManagement>
