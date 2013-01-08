@@ -44,6 +44,12 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
+/**
+ * A typical call looks like this:
+ * <p/>
+ * $ provisionr:create --id amazon -k web-1 -s 5 -h m1.small \
+ * --port 80 --port 443 --package nginx --package gunicorn
+ */
 @Command(scope = "provisionr", name = "create", description = "Create pool of virtual machines")
 public class CreatePoolCommand extends OsgiCommandSupport {
 
@@ -59,13 +65,13 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     @Option(name = "-h", aliases = "--hardware-type", description = "Virtual machine hardware type")
     private String hardwareType = "t1.micro";
 
-    @Option(name = "--ports", description = "Firewall ports that need to be open for TCP traffic (any source)",
-        multiValued = true)
-    private List<Integer> ports = Lists.newArrayList(22);
+    @Option(name = "--port", description = "Firewall port that need to be open for any TCP traffic " +
+        "(multi-valued). SSH (22) is always open by default.", multiValued = true)
+    private List<Integer> ports = Lists.newArrayList();
 
-    @Option(name = "--packages", description = "Packages to install by default",
+    @Option(name = "--package", description = "Package to install by default (multi-valued)",
         multiValued = true)
-    private List<String> packages = Lists.newArrayList("git-core", "vim");
+    private List<String> packages = Lists.newArrayList();
 
     @Option(name = "--cache", description = "Cache base operating system image (including files & packages)")
     private boolean cacheBaseImage = false;
@@ -96,8 +102,10 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         checkArgument(defaultProvider.isPresent(), String.format("please configure a default provider " +
             "by editing etc/com.axemblr.provisionr.%s.cfg", id));
 
+        /* Always allow ICMP and ssh traffic by default */
         final Network network = Network.builder().addRules(
-            Rule.builder().anySource().icmp().createRule()
+            Rule.builder().anySource().icmp().createRule(),
+            Rule.builder().anySource().tcp().port(22).createRule()
         ).addRules(
             formatPortsAsIngressRules()
         ).createNetwork();
