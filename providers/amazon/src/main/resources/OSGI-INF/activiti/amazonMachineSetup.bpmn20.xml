@@ -6,10 +6,12 @@
     <serviceTask id="setupAdminAccess" name="Setup Admin Access" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${amazon_setupAdminAccess}"></serviceTask>
     <serviceTask id="dumpConsoleOutput" name="Dump Console Output" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${amazon_dumpConsoleOutput}"></serviceTask>
     <serviceTask id="installSoftwarePackages" name="Install Software Packages" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${installPackages}"></serviceTask>
+    <serviceTask id="downloadFiles" name="Download Files" activiti:async="true" activiti:exclusive="false" activiti:delegateExpression="${downloadFiles}"></serviceTask>
     <sequenceFlow id="flow7" name="" sourceRef="installSoftwarePackages" targetRef="endevent1"></sequenceFlow>
     <sequenceFlow id="flow8" name="" sourceRef="startevent1" targetRef="dumpConsoleOutput"></sequenceFlow>
     <sequenceFlow id="flow9" name="" sourceRef="dumpConsoleOutput" targetRef="setupAdminAccess"></sequenceFlow>
-    <sequenceFlow id="flow10" name="" sourceRef="setupAdminAccess" targetRef="installSoftwarePackages"></sequenceFlow>
+    <sequenceFlow id="flow10" name="" sourceRef="setupAdminAccess" targetRef="downloadFiles"></sequenceFlow>
+    <sequenceFlow id="flow11" name="" sourceRef="downloadFiles" targetRef="installSoftwarePackages"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_amazonMachineSetup">
     <bpmndi:BPMNPlane bpmnElement="amazonMachineSetup" id="BPMNPlane_amazonMachineSetup">
@@ -17,20 +19,23 @@
         <omgdc:Bounds height="35" width="35" x="110" y="200"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
-        <omgdc:Bounds height="35" width="35" x="660" y="200"></omgdc:Bounds>
+        <omgdc:Bounds height="35" width="35" x="780" y="200"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="setupAdminAccess" id="BPMNShape_setupAdminAccess">
-        <omgdc:Bounds height="55" width="105" x="350" y="190"></omgdc:Bounds>
+        <omgdc:Bounds height="55" width="105" x="340" y="190"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="dumpConsoleOutput" id="BPMNShape_dumpConsoleOutput">
         <omgdc:Bounds height="55" width="105" x="200" y="190"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="installSoftwarePackages" id="BPMNShape_installSoftwarePackages">
-        <omgdc:Bounds height="55" width="105" x="500" y="190"></omgdc:Bounds>
+        <omgdc:Bounds height="55" width="105" x="620" y="190"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="downloadFiles" id="BPMNShape_downloadFiles">
+        <omgdc:Bounds height="55" width="105" x="480" y="190"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
-        <omgdi:waypoint x="605" y="217"></omgdi:waypoint>
-        <omgdi:waypoint x="660" y="217"></omgdi:waypoint>
+        <omgdi:waypoint x="725" y="217"></omgdi:waypoint>
+        <omgdi:waypoint x="780" y="217"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
         <omgdi:waypoint x="145" y="217"></omgdi:waypoint>
@@ -38,11 +43,15 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
         <omgdi:waypoint x="305" y="217"></omgdi:waypoint>
-        <omgdi:waypoint x="350" y="217"></omgdi:waypoint>
+        <omgdi:waypoint x="340" y="217"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
-        <omgdi:waypoint x="455" y="217"></omgdi:waypoint>
-        <omgdi:waypoint x="500" y="217"></omgdi:waypoint>
+        <omgdi:waypoint x="445" y="217"></omgdi:waypoint>
+        <omgdi:waypoint x="480" y="217"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="585" y="217"></omgdi:waypoint>
+        <omgdi:waypoint x="620" y="217"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

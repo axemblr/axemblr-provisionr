@@ -17,6 +17,7 @@
 package com.axemblr.provisionr.amazon;
 
 import com.axemblr.provisionr.amazon.config.DefaultProviderConfig;
+import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.core.CoreConstants;
@@ -27,6 +28,8 @@ import com.axemblr.provisionr.core.ProvisionrSupport;
 import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.Maps;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import org.activiti.engine.ProcessEngine;
@@ -77,6 +80,20 @@ public class AmazonProvisionr extends ProvisionrSupport {
             .startProcessInstanceByKey(MANAGEMENT_PROCESS_KEY, businessKey, arguments);
 
         return instance.getProcessInstanceId();
+    }
+
+    @Override
+    public List<Machine> getMachines(String businessKey) {
+        ProcessInstance instance = processEngine.getRuntimeService().createProcessInstanceQuery()
+            .processInstanceBusinessKey(businessKey).singleResult();
+        if (instance == null) {
+            throw new NoSuchElementException("No active pool found with key: " + businessKey);
+        }
+
+        @SuppressWarnings("unchecked") List<Machine> machines = (List<Machine>) processEngine.getRuntimeService()
+            .getVariable(instance.getId(), CoreProcessVariables.MACHINES);
+
+        return Optional.fromNullable(machines).or(Collections.<Machine>emptyList());
     }
 
     @Override

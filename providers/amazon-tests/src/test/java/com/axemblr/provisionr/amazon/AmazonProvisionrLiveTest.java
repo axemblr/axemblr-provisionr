@@ -22,18 +22,25 @@ import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Protocol;
 import com.axemblr.provisionr.api.network.Rule;
+import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.core.PoolStatus;
+import com.axemblr.provisionr.core.Ssh;
 import static com.axemblr.provisionr.test.KarafTests.installProvisionrFeatures;
 import static com.axemblr.provisionr.test.KarafTests.installProvisionrTestSupportBundle;
 import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
 import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
+import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
@@ -49,6 +56,8 @@ import org.slf4j.LoggerFactory;
 public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
     public static final Logger LOG = LoggerFactory.getLogger(AmazonProvisionrLiveTest.class);
+
+    public static final int TEST_POOL_SIZE = 2;
 
     public AmazonProvisionrLiveTest() {
         super(AmazonProvisionr.ID);
@@ -76,29 +85,60 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
         final Network network = Network.builder().addRules(
             Rule.builder().anySource().icmp().createRule(),
-            Rule.builder().anySource().port(22).protocol(Protocol.TCP).createRule(),
-            Rule.builder().anySource().port(80).protocol(Protocol.TCP).createRule()
+            Rule.builder().anySource().port(22).protocol(Protocol.TCP).createRule()
         ).createNetwork();
 
         final Hardware hardware = Hardware.builder().type("t1.micro").createHardware();
 
-        final Software software = Software.builder().baseOperatingSystem("ubuntu-10.04")
-            .packages("nginx").createSoftware();
-
         final AdminAccess adminAccess = AdminAccess.builder().asCurrentUser().createAdminAccess();
 
+        final String destinationPath = "/home/" + adminAccess.getUsername() + "/axemblr.html";
+        final Software software = Software.builder().baseOperatingSystem("ubuntu-12.04")
+            .packages("git-core")
+            .file("http://axemblr.com", destinationPath)
+            .createSoftware();
+
         final Pool pool = Pool.builder().provider(provider).network(network).adminAccess(adminAccess)
-            .software(software).hardware(hardware).minSize(2).expectedSize(2).createPool();
+            .software(software).hardware(hardware).minSize(TEST_POOL_SIZE).expectedSize(TEST_POOL_SIZE)
+            .createPool();
 
         final String businessKey = "j-" + UUID.randomUUID().toString();
 
         provisionr.startPoolManagementProcess(businessKey, pool);
         waitForPoolStatus(provisionr, businessKey, PoolStatus.READY);
 
-        // TODO: get the list of machines and check that nginx is listening on port 80
+        List<Machine> machines = provisionr.getMachines(businessKey);
+        assertTrue(machines.size() >= TEST_POOL_SIZE && machines.size() <= TEST_POOL_SIZE);
 
-        provisionr.destroyPool(businessKey);
-        waitForPoolStatus(provisionr, businessKey, PoolStatus.TERMINATED);
+        try {
+            for (Machine machine : machines) {
+                assertSshCommand(machine, adminAccess, "test -f " + destinationPath);
+                assertSshCommand(machine, adminAccess, "hash git >/dev/null 2>&1");
+            }
+        } finally {
+            provisionr.destroyPool(businessKey);
+            waitForPoolStatus(provisionr, businessKey, PoolStatus.TERMINATED);
+        }
+    }
+
+    private void assertSshCommand(Machine machine, AdminAccess adminAccess, String bashCommand) throws IOException {
+        LOG.info("Checking return code for command '{}' on machine {}", bashCommand, machine.getExternalId());
+        SSHClient client = Ssh.newClient(machine, adminAccess);
+        try {
+            Session session = client.startSession();
+            try {
+                session.allocateDefaultPTY();
+                Session.Command command = session.exec(bashCommand);
+
+                command.join();
+                assertTrue("Exit code was " + command.getExitStatus() + " for command " + bashCommand,
+                    command.getExitStatus() == 0);
+            } finally {
+                session.close();
+            }
+        } finally {
+            client.close();
+        }
     }
 
     private void waitForPoolStatus(Provisionr provisionr, String businessKey,
@@ -109,7 +149,8 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
                 LOG.info("Pool status is '{}'. Advancing.", status);
                 return;
             } else {
-                LOG.info("Pool status is '{}'. Waiting 10s for '{}'.", status, expectedStatus);
+                LOG.info("Pool status is '{}'. Waiting 10s for '{}'. Try {}/60",
+                    new Object[]{status, expectedStatus, i});
                 TimeUnit.SECONDS.sleep(10);
             }
         }
