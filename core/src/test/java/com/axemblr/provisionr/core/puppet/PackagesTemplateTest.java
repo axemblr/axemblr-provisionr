@@ -34,7 +34,7 @@ public class PackagesTemplateTest {
             ImmutableMap.of("packages", packages("git-core", "vim")));
 
         assertThat(content).isEqualTo(
-            "# Ensure all packages listed bellow are installed\n" +
+            "\n# Ensure all packages listed bellow are installed\n" +
                 "Package { ensure => \"installed\" }\n" +
                 "\n" +
                 "package { \"git-core\": }\n" +

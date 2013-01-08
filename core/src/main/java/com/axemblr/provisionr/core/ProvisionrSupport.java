@@ -17,8 +17,10 @@
 package com.axemblr.provisionr.core;
 
 import com.axemblr.provisionr.api.Provisionr;
+import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.activiti.engine.ProcessEngine;
@@ -40,6 +42,11 @@ public abstract class ProvisionrSupport implements Provisionr {
     @Override
     public String getStatus(String businessKey) {
         return PoolStatus.UNDEFINED;
+    }
+
+    @Override
+    public List<Machine> getMachines(String businessKey) {
+        return ImmutableList.of();
     }
 
     /**

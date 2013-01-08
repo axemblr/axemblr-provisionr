@@ -1,0 +1,25 @@
+
+package { "wget":
+  ensure => "installed"
+}
+
+define download_file(
+  $uri,
+  $timeout = 300,
+  $user_agent = "Axemblr Provisionr (https://github.com/axemblr/axemblr-provisionr)"
+) {
+  exec { $name:
+    command => "/usr/bin/wget --no-check-certificate -nv -U '${user_agent}' ${uri} -O ${name}",
+    timeout => $timeout, # seconds
+    logoutput => true,
+    tries => 3,
+    try_sleep => 5, # seconds
+    require => Package["wget"]
+  }
+}
+
+{{#files}}
+download_file {"{{destination}}":
+  uri => "{{source}}"
+}
+{{/files}}
