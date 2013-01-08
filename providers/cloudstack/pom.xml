@@ -134,14 +134,14 @@
                             </test.cloudstack.provider.accessKey>
                             <test.cloudstack.provider.secretKey>${test.cloudstack.provider.secretKey}
                             </test.cloudstack.provider.secretKey>
-                            <test.cloudstack.provider.serviceOffering>${test.cloudstack.provider.serviceOffering}
-                            </test.cloudstack.provider.serviceOffering>
+                            <test.cloudstack.provider.serviceOfferingId>${test.cloudstack.provider.serviceOfferingId}
+                            </test.cloudstack.provider.serviceOfferingId>
                             <test.cloudstack.provider.templateId>${test.cloudstack.provider.templateId}
                             </test.cloudstack.provider.templateId>
                             <test.cloudstack.provider.zoneId>${test.cloudstack.provider.zoneId}
                             </test.cloudstack.provider.zoneId>
-                            <test.cloudstack.provider.networkOffering>${test.cloudstack.provider.networkOffering}
-                            </test.cloudstack.provider.networkOffering>
+                            <test.cloudstack.provider.networkOfferingId>${test.cloudstack.provider.networkOfferingId}
+                            </test.cloudstack.provider.networkOfferingId>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

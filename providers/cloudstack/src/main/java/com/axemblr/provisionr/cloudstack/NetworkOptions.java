@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
+ * Copyright (c) 2013 S.C. Axemblr Software Solutions S.R.L
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,18 @@
 
 package com.axemblr.provisionr.cloudstack;
 
-public class ProcessVariables {
+/**
+ * {@link com.axemblr.provisionr.api.network.Network Network} configuration is passed via the
+ * {@link com.axemblr.provisionr.api.pool.Pool Pool} object. This class stores names for those options.
+ */
+public class NetworkOptions {
 
-    private ProcessVariables() {
-        // prevent instantiation
+    private NetworkOptions() {
+        throw new RuntimeException("Do not instantiate");
     }
 
-    public static final String NETWORK_ID = "networkId";
+    /**
+     * Pass this option if you wish to use an existing CloudStack network.
+     */
+    public static final String EXISTING_NETWORK_ID = "existingNetworkId";
 }
