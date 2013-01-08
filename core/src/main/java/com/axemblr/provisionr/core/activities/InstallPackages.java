@@ -45,7 +45,7 @@ public class InstallPackages implements JavaDelegate {
             "variable with the name '%s'.", CoreProcessVariables.POOL);
 
         Machine machine = (Machine) execution.getVariable("machine");
-        LOG.info(">> Connecting to machine {} to install packages", machine);           
+        LOG.info(">> Connecting to machine {} to install packages", machine);
 
         SSHClient client = Ssh.newClient(machine, pool.getAdminAccess());
         try {
@@ -57,14 +57,13 @@ public class InstallPackages implements JavaDelegate {
             Session session = client.startSession();
             try {
                 session.allocateDefaultPTY();
-                Session.Command command = session.exec("sudo puppet apply /tmp/packages.pp");
+                Session.Command command = session.exec("sudo puppet apply --verbose /tmp/packages.pp");
 
                 Ssh.logCommandOutput(LOG, machine.getExternalId(), command);
                 command.join();
 
                 if (command.getExitStatus() != 0) {
-                    throw new RuntimeException(String.format("Failed to execute " +
-                        "'sudo puppet apply /tmp/packages.pp'. Exit code: %d. Exit message: %s",
+                    throw new RuntimeException(String.format("Failed to execute puppet. Exit code: %d. Exit message: %s",
                         command.getExitStatus(), command.getExitErrorMessage()));
 
                 } else {

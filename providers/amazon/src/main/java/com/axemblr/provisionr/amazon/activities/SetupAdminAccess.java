@@ -62,7 +62,7 @@ public class SetupAdminAccess implements JavaDelegate {
                     "do echo 'Puppet command not found. Waiting for userdata.sh script to finish (10s)' " +
                     "&& sleep 10; " +
                     "done " +
-                    "&& sudo puppet apply " + puppetScript;
+                    "&& sudo puppet apply --verbose " + puppetScript;
                 Session.Command command = session.exec(shellCommand);
 
                 Ssh.logCommandOutput(LOG, machine.getExternalId(), command);
