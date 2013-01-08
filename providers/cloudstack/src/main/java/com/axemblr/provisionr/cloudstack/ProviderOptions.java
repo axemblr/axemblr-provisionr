@@ -32,6 +32,6 @@ public class ProviderOptions {
 
     public static final String ZONE_ID = "zoneId";
     public static final String TEMPLATE_ID = "templateId";
-    public static final String SERVICE_OFFERING = "serviceOffering";
-    public static final String NETWORK_OFFERING = "networkOffering";
+    public static final String SERVICE_OFFERING_ID = "serviceOfferingId";
+    public static final String NETWORK_OFFERING_ID = "networkOfferingId";
 }

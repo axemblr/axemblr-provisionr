@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
+ * Copyright (c) 2013 S.C. Axemblr Software Solutions S.R.L
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@
 package com.axemblr.provisionr.cloudstack.activities;
 
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.cloudstack.NetworkOptions;
 import com.axemblr.provisionr.cloudstack.ProcessVariables;
 import com.axemblr.provisionr.cloudstack.ProviderOptions;
 import com.axemblr.provisionr.cloudstack.core.Networks;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.NoSuchElementException;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.jclouds.cloudstack.CloudStackClient;
@@ -37,18 +39,24 @@ public class EnsureNetworkExists extends CloudStackActivity {
         if (execution.getVariable(ProcessVariables.NETWORK_ID) != null) {
             LOG.warn("Network process variable ({}) will be overwritten!", ProcessVariables.NETWORK_ID);
         }
-        final String networkName = Networks.formatNameFromBusinessKey(execution.getProcessBusinessKey());
-        final String zoneId = pool.getProvider().getOption(ProviderOptions.ZONE_ID);
-        final String networkOffering = pool.getProvider().getOption(ProviderOptions.NETWORK_OFFERING);
-
         Network network;
-        try {
-            network = Networks.getByName(cloudStackClient, networkName);
-            LOG.info("Network with name {} exists.", networkName);
-        } catch (NoSuchElementException e) {
-            LOG.info(String.format("Creating network %s in zone %s with offering %s", networkName, zoneId, networkOffering));
-            network = cloudStackClient.getNetworkClient().createNetworkInZone(zoneId, networkOffering, networkName,
-                networkName, CreateNetworkOptions.NONE);
+        final String existingNetwork = pool.getNetwork().getOption(NetworkOptions.EXISTING_NETWORK_ID);
+        if (existingNetwork != null) {
+            network = checkNotNull(cloudStackClient.getNetworkClient().getNetwork(existingNetwork),
+                "Network with id " + existingNetwork + " does not exist");
+        } else {
+            final String networkName = Networks.formatNameFromBusinessKey(execution.getProcessBusinessKey());
+            final String zoneId = pool.getProvider().getOption(ProviderOptions.ZONE_ID);
+            final String networkOfferingId = pool.getProvider().getOption(ProviderOptions.NETWORK_OFFERING_ID);
+            try {
+                network = Networks.getByName(cloudStackClient, networkName);
+                LOG.info("Network with name {} exists.", networkName);
+            } catch (NoSuchElementException e) {
+                LOG.info(String.format("Creating network %s in zone %s with offering %s",
+                    networkName, zoneId, networkOfferingId));
+                network = cloudStackClient.getNetworkClient().createNetworkInZone(zoneId, networkOfferingId, networkName,
+                    networkName, CreateNetworkOptions.NONE);
+            }
         }
         LOG.info("Storing network id {} in process variable {}", network.getId(), ProcessVariables.NETWORK_ID);
         execution.setVariable(ProcessVariables.NETWORK_ID, network.getId());
