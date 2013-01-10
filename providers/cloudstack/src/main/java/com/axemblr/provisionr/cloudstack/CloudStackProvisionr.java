@@ -71,6 +71,7 @@ public class CloudStackProvisionr extends ProvisionrSupport {
         //TODO: make sure the all information in the pool is valid - i.e. it will not make the cloud scream at us !!
         Map<String, Object> arguments = Maps.newHashMap();
         arguments.put(CoreProcessVariables.POOL, pool);
+        arguments.put(CoreProcessVariables.POOL_BUSINESS_KEY, businessKey);
 
         processEngine.getIdentityService().setAuthenticatedUserId(CoreConstants.ACTIVITI_EXPLORER_DEFAULT_USER);
 

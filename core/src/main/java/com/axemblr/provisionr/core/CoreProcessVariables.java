@@ -19,6 +19,7 @@ package com.axemblr.provisionr.core;
 public class CoreProcessVariables {
 
     private CoreProcessVariables() {
+        throw new RuntimeException("Should not instantiate");
     }
 
     /**
@@ -41,5 +42,11 @@ public class CoreProcessVariables {
      * This can be an arbitrary string. We will restrict the domain later on.
      */
     public static final String STATUS = "status";
+
+    /**
+     * Variable to store the pool business key. The key is passed as a process variable to all processes that take
+     * part in setting up the pool.
+     */
+    public static final String POOL_BUSINESS_KEY = "poolBusinessKey";
 
 }
