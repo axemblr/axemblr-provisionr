@@ -42,14 +42,23 @@
         <property name="maxPoolSize" value="100"/>
         <property name="maxJobsPerAcquisition" value="30"/>
         <property name="waitTimeInMillis" value="1000"/>
-        <property name="lockTimeInMillis" value="180000"/>
+        <property name="lockTimeInMillis" value="600000"/>
     </bean>
 
-    <bean id="configurationFactory" class="com.axemblr.provisionr.core.blueprint.ConfigurationFactory">
+    <bean id="configurableFailedJobCommandFactory"
+          class="com.axemblr.provisionr.core.activiti.ConfigurableFailedJobCommandFactory">
+        <!-- Max number of job retries. Use -1 for infinity -->
+        <argument value="13"/>
+        <!-- Wait time between retries in seconds -->
+        <argument value="5"/>
+    </bean>
+
+    <bean id="configurationFactory" class="com.axemblr.provisionr.core.activiti.ConfigurationFactory">
         <property name="dataSource" ref="dataSource"/>
         <property name="databaseSchemaUpdate" value="$(activiti.db.schemaUpdate)"/>
         <property name="jobExecutorActivate" value="true"/>
         <property name="jobExecutor" ref="jobExecutor"/>
+        <property name="failedJobCommandFactory" ref="configurableFailedJobCommandFactory"/>
     </bean>
 
     <bean id="configuration" factory-ref="configurationFactory" factory-method="getConfiguration"/>

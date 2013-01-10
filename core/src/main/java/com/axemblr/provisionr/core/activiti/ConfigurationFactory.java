@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.axemblr.provisionr.core.blueprint;
+package com.axemblr.provisionr.core.activiti;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import javax.sql.DataSource;
 import org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration;
+import org.activiti.engine.impl.jobexecutor.FailedJobCommandFactory;
 import org.activiti.engine.impl.jobexecutor.JobExecutor;
 
 public class ConfigurationFactory {
@@ -26,7 +28,9 @@ public class ConfigurationFactory {
     private String databaseSchemaUpdate;
 
     private boolean jobExecutorActivate = true;
-    private JobExecutor jobExecutor = null;
+    private JobExecutor jobExecutor;
+
+    private FailedJobCommandFactory failedJobCommandFactory;
 
     public StandaloneProcessEngineConfiguration getConfiguration() {
         StandaloneProcessEngineConfiguration conf = new StandaloneProcessEngineConfiguration();
@@ -37,15 +41,17 @@ public class ConfigurationFactory {
         conf.setJobExecutorActivate(jobExecutorActivate);
         conf.setJobExecutor(jobExecutor);
 
+        conf.setFailedJobCommandFactory(failedJobCommandFactory);
+
         return conf;
     }
 
     public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+        this.dataSource = checkNotNull(dataSource, "dataSource is null");
     }
 
     public void setDatabaseSchemaUpdate(String databaseSchemaUpdate) {
-        this.databaseSchemaUpdate = databaseSchemaUpdate;
+        this.databaseSchemaUpdate = checkNotNull(databaseSchemaUpdate, "databaseSchemaUpdate is null");
     }
 
     public void setJobExecutorActivate(boolean jobExecutorActivate) {
@@ -53,6 +59,10 @@ public class ConfigurationFactory {
     }
 
     public void setJobExecutor(JobExecutor jobExecutor) {
-        this.jobExecutor = jobExecutor;
+        this.jobExecutor = checkNotNull(jobExecutor, "jobExecutor is null");
+    }
+
+    public void setFailedJobCommandFactory(FailedJobCommandFactory failedJobCommandFactory) {
+        this.failedJobCommandFactory = checkNotNull(failedJobCommandFactory, "failedJobCommandFactory is null");
     }
 }
