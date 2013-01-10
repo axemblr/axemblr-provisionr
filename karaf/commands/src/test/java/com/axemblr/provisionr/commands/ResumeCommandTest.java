@@ -16,6 +16,7 @@
 
 package com.axemblr.provisionr.commands;
 
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.google.common.collect.ImmutableList;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 public class ResumeCommandTest {
 
-    private static final String BUSINES_KEY = "k1";
+    private static final String BUSINESS_KEY = "k1";
     private ByteArrayOutputStream outputStream;
     private PrintStream out;
 
@@ -52,7 +53,7 @@ public class ResumeCommandTest {
 
     @Test
     public void testResumeCommandNeedsBusinessKey() throws Exception {
-        final ResumeCommand command = new ResumeCommand(newMockProcessEngine());
+        final ResetRetriesCommand command = new ResetRetriesCommand(newMockProcessEngine());
         command.setOut(out);
 
         CommandSession commandSession = mock(CommandSession.class);
@@ -63,9 +64,9 @@ public class ResumeCommandTest {
 
     @Test
     public void testResumeCommandCallsActivateMethodForSuspendedProcesses() throws Exception {
-        final ResumeCommand command = new ResumeCommand(newMockProcessEngine());
+        final ResetRetriesCommand command = new ResetRetriesCommand(newMockProcessEngine());
         command.setOut(out);
-        command.setBusinessKey(BUSINES_KEY);
+        command.setBusinessKey(BUSINESS_KEY);
 
         CommandSession commandSession = mock(CommandSession.class);
         command.execute(commandSession);
@@ -81,9 +82,9 @@ public class ResumeCommandTest {
     private ProcessEngine newMockProcessEngine() {
         final ProcessEngine engine = mock(ProcessEngine.class);
         final List<ProcessInstance> processes = ImmutableList.of(
-            newProcessInstanceMock("p1", BUSINES_KEY, true),
-            newProcessInstanceMock("p2", BUSINES_KEY, false),
-            newProcessInstanceMock("p3", BUSINES_KEY, true)
+            newProcessInstanceMock("p1", BUSINESS_KEY, true),
+            newProcessInstanceMock("p2", BUSINESS_KEY, false),
+            newProcessInstanceMock("p3", BUSINESS_KEY, true)
         );
 
         final RuntimeService runtimeService = mock(RuntimeService.class);
@@ -91,8 +92,10 @@ public class ResumeCommandTest {
 
         when(engine.getRuntimeService()).thenReturn(runtimeService);
         when(runtimeService.createProcessInstanceQuery()).thenReturn(processInstanceQuery);
-        when(processInstanceQuery.processInstanceBusinessKey(BUSINES_KEY)).thenReturn(processInstanceQuery);
+        when(processInstanceQuery.variableValueEquals(CoreProcessVariables.POOL_BUSINESS_KEY, BUSINESS_KEY))
+            .thenReturn(processInstanceQuery);
         when(processInstanceQuery.orderByProcessInstanceId()).thenReturn(processInstanceQuery);
+        when(processInstanceQuery.desc()).thenReturn(processInstanceQuery);
         when(processInstanceQuery.list()).thenReturn(processes);
 
         return engine;

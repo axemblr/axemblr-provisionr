@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
+ * Copyright (c) 2013 S.C. Axemblr Software Solutions S.R.L
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -61,21 +60,26 @@ public class SpawnProcessForEachMachine implements JavaDelegate {
         List<Machine> machines = (List<Machine>) execution.getVariable(CoreProcessVariables.MACHINES);
         checkNotNull(machines, "expecting to find the list of machines as process variable");
 
+        final String poolBusinessKey = String.class.cast(execution.getVariable(CoreProcessVariables.POOL_BUSINESS_KEY));
+        checkNotNull(poolBusinessKey, "No way to link sub-processes to master process, poolBusinessKey is null");
+
         /* Authenticate as kermit to make the process visible in the Explorer UI */
         processEngine.getIdentityService().setAuthenticatedUserId(CoreConstants.ACTIVITI_EXPLORER_DEFAULT_USER);
 
         List<String> processIds = Lists.newArrayList();
         for (Machine machine : machines) {
-            final String businessKey = String.format("%s-%s-%s",
+            final String perMachineProcessBusinessKey = String.format("%s-%s-%s",
                 execution.getProcessBusinessKey(), type, machine.getExternalId());
 
-            ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByKey(
-                processKey, businessKey,
-                ImmutableMap.<String, Object>of(CoreProcessVariables.POOL, pool, "machine", machine));
+            ProcessInstance perMachineProcess = processEngine.getRuntimeService().startProcessInstanceByKey(
+                processKey, perMachineProcessBusinessKey,
+                ImmutableMap.<String, Object>of(CoreProcessVariables.POOL, pool,
+                    CoreProcessVariables.MACHINE, machine,
+                    CoreProcessVariables.POOL_BUSINESS_KEY, poolBusinessKey));
 
             LOG.info("Started background '" + type + "' process {} ({}) for machine {}",
-                new Object[]{businessKey, instance.getId(), machine.getExternalId()});
-            processIds.add(instance.getId());
+                new Object[]{perMachineProcessBusinessKey, perMachineProcess.getId(), machine.getExternalId()});
+            processIds.add(perMachineProcess.getId());
         }
 
         LOG.info("Saving process IDs {} as {}", processIds, resultVariable);

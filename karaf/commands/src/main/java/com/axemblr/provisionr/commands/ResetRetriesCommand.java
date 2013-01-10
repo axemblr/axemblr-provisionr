@@ -17,29 +17,30 @@
 package com.axemblr.provisionr.commands;
 
 
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.google.common.annotations.VisibleForTesting;
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.collect.Lists;
 import java.io.PrintStream;
 import java.util.List;
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RuntimeService;
+import org.activiti.engine.impl.persistence.entity.JobEntity;
+import org.activiti.engine.runtime.Job;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
-@Command(scope = "provisionr", name = "resume",
-    description = "Resume all suspended Activiti processes identified by the (business) key and associated with a pool")
-public class ResumeCommand extends OsgiCommandSupport {
+@Command(scope = "provisionr", name = "reset-retries",
+    description = "Reset to default (3) the number of retires of all jobs without retries left.")
+public class ResetRetriesCommand extends OsgiCommandSupport {
 
     private final ProcessEngine processEngine;
     private PrintStream out = System.out;
 
-    @Option(name = "-k", aliases = "--key", description = "Key to resume processes", required = true)
+    @Option(name = "-k", aliases = "--key", description = "Reset number of retries for jobs associated with pool", required = true)
     private String businessKey = "";
 
-    public ResumeCommand(ProcessEngine processEngine) {
+    public ResetRetriesCommand(ProcessEngine processEngine) {
         this.processEngine = checkNotNull(processEngine, "processEngine is null");
     }
 
@@ -48,18 +49,22 @@ public class ResumeCommand extends OsgiCommandSupport {
         if (businessKey.isEmpty()) {
             out.println("Please supply a business key");
         } else {
-            RuntimeService runtimeService = processEngine.getRuntimeService();
-            List<ProcessInstance> processInstanceList = processEngine.getRuntimeService()
-                .createProcessInstanceQuery().processInstanceBusinessKey(businessKey)
-                .orderByProcessInstanceId().list();
             // reverse the list to start the sub-processes first (they have bigger id's)
-            out.println("Found " + processInstanceList.size() + " processes with key " + businessKey);
-            for (ProcessInstance instance : Lists.reverse(processInstanceList)) {
-                if (instance.isSuspended()) {
-                    out.println("Activating process with id " + instance.getId());
-                    runtimeService.activateProcessInstanceById(instance.getId());
+            List<ProcessInstance> processInstanceList = processEngine.getRuntimeService()
+                .createProcessInstanceQuery().variableValueEquals(CoreProcessVariables.POOL_BUSINESS_KEY, businessKey)
+                .orderByProcessInstanceId().desc().list();
+
+            out.printf("Found %d processes with pool business key %s%n", processInstanceList.size(), businessKey);
+            int count = 0;
+            for (ProcessInstance instance : processInstanceList) {
+                List<Job> jobs = processEngine.getManagementService().createJobQuery().processInstanceId(instance.getProcessInstanceId())
+                    .withException().list();
+                for (Job job : jobs) {
+                    count++;
+                    processEngine.getManagementService().setJobRetries(job.getId(), JobEntity.DEFAULT_RETRIES);
                 }
             }
+            out.printf("Number of retries reset for %s jobs", count);
         }
         return null;
     }
