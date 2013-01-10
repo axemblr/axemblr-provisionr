@@ -57,8 +57,8 @@ public class ResetRetriesCommand extends OsgiCommandSupport {
             out.printf("Found %d processes with pool business key %s%n", processInstanceList.size(), businessKey);
             int count = 0;
             for (ProcessInstance instance : processInstanceList) {
-                List<Job> jobs = processEngine.getManagementService().createJobQuery().processInstanceId(instance.getProcessInstanceId())
-                    .withException().list();
+                List<Job> jobs = processEngine.getManagementService().createJobQuery()
+                    .processInstanceId(instance.getProcessInstanceId()).withException().list();
                 for (Job job : jobs) {
                     count++;
                     processEngine.getManagementService().setJobRetries(job.getId(), JobEntity.DEFAULT_RETRIES);

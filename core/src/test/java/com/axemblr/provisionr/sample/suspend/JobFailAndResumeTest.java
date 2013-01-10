@@ -31,13 +31,10 @@ import static org.fest.assertions.api.Assertions.fail;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class ProcessSuspendAndResumeTest {
+public class JobFailAndResumeTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProcessSuspendAndResumeTest.class);
-    private static String PROCESS_NAME = "suspendAndResumeProcess";
+    private static String PROCESS_NAME = "failAndResume";
 
     private ProcessEngine engine;
     private RuntimeService runtimeService;
@@ -49,7 +46,7 @@ public class ProcessSuspendAndResumeTest {
             .buildProcessEngine();
 
         engine.getRepositoryService().createDeployment()
-            .addClasspathResource("diagrams/suspendAndResume.bpmn20.xml").deploy();
+            .addClasspathResource("diagrams/failAndResume.bpmn20.xml").deploy();
 
         runtimeService = engine.getRuntimeService();
     }
@@ -69,19 +66,19 @@ public class ProcessSuspendAndResumeTest {
 
         TimeUnit.SECONDS.sleep(1);
 
-        assertThat(FailingTask.failCount.get()).isEqualTo(3);
+        assertThat(FailingTask.FAIL_COUNT.get()).isEqualTo(3);
         Job job = engine.getManagementService().createJobQuery().withException().singleResult();
         engine.getManagementService().setJobRetries(job.getId(), JobEntity.DEFAULT_RETRIES);
 
-        assertThatJobGetsExecutedBeforeTimeout(5);
-        assertThat(FailingTask.failCount.get()).isEqualTo(4);
+        assertThatJobGetsExecutedBeforeTimeout(10);
+        assertThat(FailingTask.FAIL_COUNT.get()).isEqualTo(4);
     }
 
     private void assertThatJobGetsExecutedBeforeTimeout(int timeoutInSeconds) throws InterruptedException {
         checkArgument(timeoutInSeconds > 0, "supply positive");
         int i = 0;
         while (i < timeoutInSeconds) {
-            if (FailingTask.failCount.get() == 4) return;
+            if (FailingTask.FAIL_COUNT.get() == 4) return;
             TimeUnit.SECONDS.sleep(1);
             i++;
         }

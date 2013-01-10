@@ -33,7 +33,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ResumeCommandTest {
+public class ResetRetriesCommandTest {
 
     private static final String BUSINESS_KEY = "k1";
     private ByteArrayOutputStream outputStream;
@@ -60,23 +60,6 @@ public class ResumeCommandTest {
         command.execute(commandSession);
         out.flush();
         assertThat(outputStream.toString()).containsIgnoringCase("please supply a business key");
-    }
-
-    @Test
-    public void testResumeCommandCallsActivateMethodForSuspendedProcesses() throws Exception {
-        final ResetRetriesCommand command = new ResetRetriesCommand(newMockProcessEngine());
-        command.setOut(out);
-        command.setBusinessKey(BUSINESS_KEY);
-
-        CommandSession commandSession = mock(CommandSession.class);
-        command.execute(commandSession);
-
-        out.flush();
-        assertThat(outputStream.toString())
-            .containsIgnoringCase("found 3")
-            .containsIgnoringCase("id p3")
-            .containsIgnoringCase("id p1")
-            .doesNotContain("id p2");
     }
 
     private ProcessEngine newMockProcessEngine() {

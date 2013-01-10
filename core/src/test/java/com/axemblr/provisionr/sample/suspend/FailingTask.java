@@ -25,17 +25,17 @@ import org.slf4j.LoggerFactory;
 
 public class FailingTask implements JavaDelegate, Serializable {
 
-    public static final AtomicInteger failCount = new AtomicInteger(0);
+    public static final AtomicInteger FAIL_COUNT = new AtomicInteger(0);
 
     private static final Logger LOG = LoggerFactory.getLogger(FailingTask.class);
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        if (failCount.get() > 3) {
-            LOG.info("Task failed {} times, not failing again", failCount.get());
+        if (FAIL_COUNT.get() > 3) {
+            LOG.info("Task failed {} times, not failing again", FAIL_COUNT.get());
         } else {
-            LOG.info("Failing the task one more time for a total of " + failCount.get());
-            throw new RuntimeException("FailingTask failed " + failCount.incrementAndGet() + " times");
+            LOG.info("Failing the task one more time for a total of " + FAIL_COUNT.get());
+            throw new RuntimeException("FailingTask failed " + FAIL_COUNT.incrementAndGet() + " times");
         }
     }
 }

@@ -38,6 +38,13 @@ public class SpawnProcessForEachMachine implements JavaDelegate {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpawnProcessForEachMachine.class);
 
+    /**
+     * Name of the process variable that stores a {@link com.axemblr.provisionr.api.pool.Machine Machine} object.
+     * Used inside the process to connect to that machine.
+     */
+    private static final String MACHINE = "machine";
+
+
     private final ProcessEngine processEngine;
     private final String processKey;
     private final String type;
@@ -74,8 +81,8 @@ public class SpawnProcessForEachMachine implements JavaDelegate {
             ProcessInstance perMachineProcess = processEngine.getRuntimeService().startProcessInstanceByKey(
                 processKey, perMachineProcessBusinessKey,
                 ImmutableMap.<String, Object>of(CoreProcessVariables.POOL, pool,
-                    CoreProcessVariables.MACHINE, machine,
-                    CoreProcessVariables.POOL_BUSINESS_KEY, poolBusinessKey));
+                    CoreProcessVariables.POOL_BUSINESS_KEY, poolBusinessKey,
+                    MACHINE, machine));
 
             LOG.info("Started background '" + type + "' process {} ({}) for machine {}",
                 new Object[]{perMachineProcessBusinessKey, perMachineProcess.getId(), machine.getExternalId()});

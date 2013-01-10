@@ -37,12 +37,6 @@ public class CoreProcessVariables {
     public static final String MACHINES = "machines";
 
     /**
-     * Name of the process variable that stores a {@link com.axemblr.provisionr.api.pool.Machine Machine} object.
-     * Used inside the process to connect to that machine.
-     */
-    public static final String MACHINE = "machine";
-
-    /**
      * Pool status stored as process variable
      * <p/>
      * This can be an arbitrary string. We will restrict the domain later on.
