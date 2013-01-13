@@ -49,4 +49,10 @@ public class CoreProcessVariables {
      */
     public static final String POOL_BUSINESS_KEY = "poolBusinessKey";
 
+    /**
+     * Variable to store the id of the machine to act as a gateway - i.e. SSH proxy to configure machines that are not
+     * accessible from internet.
+     */
+    public static final String GATEWAY = "gateway";
+
 }

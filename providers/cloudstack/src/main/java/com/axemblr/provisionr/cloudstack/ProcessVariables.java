@@ -23,4 +23,5 @@ public class ProcessVariables {
     }
 
     public static final String NETWORK_ID = "networkId";
+    public static final String GENERATED_MACHINE_IDS = "machineIds";
 }
