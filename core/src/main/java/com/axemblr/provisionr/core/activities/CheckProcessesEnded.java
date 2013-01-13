@@ -18,7 +18,10 @@ package com.axemblr.provisionr.core.activities;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.util.List;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -47,17 +50,26 @@ public class CheckProcessesEnded implements JavaDelegate {
         @SuppressWarnings("unchecked")
         List<String> processIds = (List<String>) execution.getVariable(variableWithProcessIds);
 
-        final boolean allDone = Iterables.all(processIds, new Predicate<String>() {
+        List<String> ended = Lists.newArrayList(Iterables.filter(processIds, new Predicate<String>() {
             @Override
-            public boolean apply(String instanceId) {
+            public boolean apply(String processInstanceId) {
                 ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-                    .processInstanceId(instanceId).singleResult();
+                    .processInstanceId(processInstanceId).singleResult();
 
                 return instance == null || instance.isEnded();
             }
-        });
+        }));
 
-        LOG.info("CheckProcessesEnded {}: {}", processIds, allDone);
-        execution.setVariable(resultVariable, allDone);
+        boolean done = (processIds.size() == ended.size());
+        execution.setVariable(resultVariable, done);
+
+        if (done) {
+            LOG.info("All background processes ENDED: {}", processIds);
+        } else {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Still waiting for: {}", Sets.difference(ImmutableSet.copyOf(processIds),
+                    ImmutableSet.copyOf(ended)));
+            }
+        }
     }
 }
