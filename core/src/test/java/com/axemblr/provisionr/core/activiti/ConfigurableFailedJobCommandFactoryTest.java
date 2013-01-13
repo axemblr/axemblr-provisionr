@@ -49,7 +49,7 @@ public class ConfigurableFailedJobCommandFactoryTest {
         processEngine.getRuntimeService().startProcessInstanceByKey("alwaysFail");
 
         while (AlwaysFailTask.COUNTER.get() != 3 /* = 1 normal execution + 2 retries */) {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(100);
         }
 
         stopwatch.stop();
