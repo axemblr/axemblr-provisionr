@@ -1,0 +1,41 @@
+# Register repositories and refresh index
+
+exec { "apt-update":
+  command     => "/usr/bin/apt-get update",
+  refreshonly => true;
+}
+
+define apt::repository (
+  $content,
+  $key,
+  $apt_sources_dir = "/etc/apt/sources.list.d"
+) {
+  file { "apt::repository ${name}":
+    path => "${apt_sources_dir}/${name}.list",
+    content => "${content}\n",
+    owner => root,
+    group => root,
+    mode => 0644,
+    ensure => present
+  }
+  file { "/tmp/${name}.key":
+    content => "${key}"
+  }
+  exec { "apt-key add ${name}":
+    command => "/usr/bin/apt-key add /tmp/${name}.key",
+    unless  => "/usr/bin/apt-key list | /bin/grep -c ${name}",
+    subscribe   => File["/tmp/${name}.key"],
+    refreshonly => true,
+    notify => Exec["apt-update"]
+  }
+}
+
+{{#repositories}}
+apt::repository { "{{name}}":
+  content => "{{content}}\n",
+  key => "{{key}}"
+}
+{{/repositories}}
+
+
+

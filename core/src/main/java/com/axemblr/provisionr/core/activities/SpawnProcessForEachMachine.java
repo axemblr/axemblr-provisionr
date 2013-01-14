@@ -44,7 +44,6 @@ public class SpawnProcessForEachMachine implements JavaDelegate {
      */
     private static final String MACHINE = "machine";
 
-
     private final ProcessEngine processEngine;
     private final String processKey;
     private final String type;

@@ -19,64 +19,25 @@ package com.axemblr.provisionr.core.activities;
 import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.software.Software;
-import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.core.Mustache;
-import com.axemblr.provisionr.core.Ssh;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.connection.channel.direct.Session;
-import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.delegate.JavaDelegate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class InstallPackages implements JavaDelegate {
+public class InstallPackages extends PuppetActivity {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InstallPackages.class);
+    public static final String PACKAGES_TEMPLATE = "/com/axemblr/provisionr/core/puppet/packages.pp.mustache";
+
+    public InstallPackages() {
+        super("packages");
+    }
 
     @Override
-    public void execute(DelegateExecution execution) throws Exception {
-        Pool pool = (Pool) execution.getVariable(CoreProcessVariables.POOL);
-        checkNotNull(pool, "Please add the pool description as a process " +
-            "variable with the name '%s'.", CoreProcessVariables.POOL);
-
-        Machine machine = (Machine) execution.getVariable("machine");
-        LOG.info(">> Connecting to machine {} to install packages", machine);
-
-        SSHClient client = Ssh.newClient(machine, pool.getAdminAccess());
-        try {
-            String puppetScript = Mustache.toString(InstallPackages.class,
-                "/com/axemblr/provisionr/core/puppet/packages.pp.mustache",
-                ImmutableMap.of("packages", packagesAsListOfMaps(pool.getSoftware())));
-
-            Ssh.createFile(client, puppetScript, 0600, "/tmp/packages.pp");
-            Session session = client.startSession();
-            try {
-                session.allocateDefaultPTY();
-                Session.Command command = session.exec("sudo puppet apply --verbose /tmp/packages.pp");
-
-                Ssh.logCommandOutput(LOG, machine.getExternalId(), command);
-                command.join();
-
-                if (command.getExitStatus() != 0) {
-                    throw new RuntimeException(String.format("Failed to execute puppet. Exit code: %d. Exit message: %s",
-                        command.getExitStatus(), command.getExitErrorMessage()));
-
-                } else {
-                    LOG.info("<< Command completed successfully with exit code 0");
-                }
-
-
-            } finally {
-                session.close();
-            }
-        } finally {
-            client.close();
-        }
+    public String createPuppetScript(Pool pool, Machine machine) throws IOException {
+        return Mustache.toString(InstallPackages.class, PACKAGES_TEMPLATE,
+            ImmutableMap.of("packages", packagesAsListOfMaps(pool.getSoftware())));
     }
 
     private List<Map<String, String>> packagesAsListOfMaps(Software software) {

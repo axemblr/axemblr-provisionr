@@ -41,8 +41,6 @@
         <conditionExpression xsi:type="tFormalExpression"><![CDATA[${allInstancesRunning == true}]]></conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="flow41" name="" sourceRef="startevent2" targetRef="checkAllInstancesAreRunning"></sequenceFlow>
-      <endEvent id="endevent8" name="End"></endEvent>
-      <sequenceFlow id="flow107" name="" sourceRef="startevent2" targetRef="endevent8"></sequenceFlow>
     </subProcess>
     <boundaryEvent id="bootstrapTimeoutBoundaryEvent" cancelActivity="true" attachedToRef="waitForAllInstancesToStart">
       <timerEventDefinition>
@@ -99,6 +97,34 @@
       <script><![CDATA[execution.setVariable("status", "terminated");]]></script>
     </scriptTask>
     <serviceTask id="spawnMachineSetupProcesses" name="Spawn Machine Setup Processes" activiti:async="true" activiti:delegateExpression="${amazon_spawnMachineSetupProcesses}"></serviceTask>
+    <subProcess id="subprocess1" name="Check Setup Processes Ended" activiti:async="true">
+      <exclusiveGateway id="exclusivegateway6" name="Exclusive Gateway"></exclusiveGateway>
+      <serviceTask id="checkSetupProcessesEnded" name="Check Setup Processes Ended" activiti:async="true" activiti:delegateExpression="${amazon_checkSetupProcessesEnded}"></serviceTask>
+      <intermediateCatchEvent id="timerintermediatecatchevent4" name="TimerCatchEvent">
+        <timerEventDefinition>
+          <timeDuration>PT15S</timeDuration>
+        </timerEventDefinition>
+      </intermediateCatchEvent>
+      <startEvent id="startevent5" name="Start"></startEvent>
+      <endEvent id="endevent7" name="End"></endEvent>
+      <sequenceFlow id="flow100" name="False" sourceRef="exclusivegateway6" targetRef="timerintermediatecatchevent4">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[${setupProcessesEnded == false}]]></conditionExpression>
+      </sequenceFlow>
+      <sequenceFlow id="flow98" name="" sourceRef="checkSetupProcessesEnded" targetRef="exclusivegateway6"></sequenceFlow>
+      <sequenceFlow id="flow101" name="" sourceRef="timerintermediatecatchevent4" targetRef="checkSetupProcessesEnded"></sequenceFlow>
+      <sequenceFlow id="flow102" name="" sourceRef="startevent5" targetRef="checkSetupProcessesEnded"></sequenceFlow>
+      <sequenceFlow id="flow103" name="True" sourceRef="exclusivegateway6" targetRef="endevent7">
+        <conditionExpression xsi:type="tFormalExpression"><![CDATA[${setupProcessesEnded == true}]]></conditionExpression>
+      </sequenceFlow>
+    </subProcess>
+    <boundaryEvent id="boundarytimer1" name="" cancelActivity="true" attachedToRef="subprocess1">
+      <timerEventDefinition>
+        <timeDuration>PT15M</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <intermediateThrowEvent id="signalintermediatethrowevent1" name="SignalThrowEvent">
+      <signalEventDefinition signalRef="terminatePoolOnTimeoutEvent"></signalEventDefinition>
+    </intermediateThrowEvent>
     <sequenceFlow id="flow3" name="" sourceRef="startevent1" targetRef="parallelGatewayPrepareNetworkContext"></sequenceFlow>
     <sequenceFlow id="flow4" name="" sourceRef="parallelGatewayPrepareNetworkContext" targetRef="ensureSecurityGroupExists"></sequenceFlow>
     <sequenceFlow id="flow5" name="" sourceRef="parallelGatewayPrepareNetworkContext" targetRef="ensureKeyPairExists"></sequenceFlow>
@@ -136,36 +162,8 @@
     <sequenceFlow id="flow94" name="" sourceRef="parallelgateway3" targetRef="setStatusTerminated"></sequenceFlow>
     <sequenceFlow id="flow95" name="" sourceRef="setStatusTerminated" targetRef="endevent2"></sequenceFlow>
     <sequenceFlow id="flow96" name="" sourceRef="checkSshPortsAreOpen" targetRef="spawnMachineSetupProcesses"></sequenceFlow>
-    <subProcess id="subprocess1" name="Check Setup Processes Ended" activiti:async="true">
-      <exclusiveGateway id="exclusivegateway6" name="Exclusive Gateway"></exclusiveGateway>
-      <sequenceFlow id="flow100" name="False" sourceRef="exclusivegateway6" targetRef="timerintermediatecatchevent4">
-        <conditionExpression xsi:type="tFormalExpression"><![CDATA[${setupProcessesEnded == false}]]></conditionExpression>
-      </sequenceFlow>
-      <serviceTask id="checkSetupProcessesEnded" name="Check Setup Processes Ended" activiti:async="true" activiti:delegateExpression="${amazon_checkSetupProcessesEnded}"></serviceTask>
-      <sequenceFlow id="flow98" name="" sourceRef="checkSetupProcessesEnded" targetRef="exclusivegateway6"></sequenceFlow>
-      <intermediateCatchEvent id="timerintermediatecatchevent4" name="TimerCatchEvent">
-        <timerEventDefinition>
-          <timeDuration>PT15S</timeDuration>
-        </timerEventDefinition>
-      </intermediateCatchEvent>
-      <sequenceFlow id="flow101" name="" sourceRef="timerintermediatecatchevent4" targetRef="checkSetupProcessesEnded"></sequenceFlow>
-      <startEvent id="startevent5" name="Start"></startEvent>
-      <sequenceFlow id="flow102" name="" sourceRef="startevent5" targetRef="checkSetupProcessesEnded"></sequenceFlow>
-      <endEvent id="endevent7" name="End"></endEvent>
-      <sequenceFlow id="flow103" name="True" sourceRef="exclusivegateway6" targetRef="endevent7">
-        <conditionExpression xsi:type="tFormalExpression"><![CDATA[${setupProcessesEnded == true}]]></conditionExpression>
-      </sequenceFlow>
-    </subProcess>
-    <boundaryEvent id="boundarytimer1" name="" cancelActivity="true" attachedToRef="subprocess1">
-      <timerEventDefinition>
-        <timeDuration>PT15M</timeDuration>
-      </timerEventDefinition>
-    </boundaryEvent>
     <sequenceFlow id="flow104" name="" sourceRef="spawnMachineSetupProcesses" targetRef="subprocess1"></sequenceFlow>
     <sequenceFlow id="flow105" name="" sourceRef="subprocess1" targetRef="setStatusReady"></sequenceFlow>
-    <intermediateThrowEvent id="signalintermediatethrowevent1" name="SignalThrowEvent">
-      <signalEventDefinition signalRef="terminatePoolOnTimeoutEvent"></signalEventDefinition>
-    </intermediateThrowEvent>
     <sequenceFlow id="flow106" name="" sourceRef="boundarytimer1" targetRef="signalintermediatethrowevent1"></sequenceFlow>
     <textAnnotation id="textannotation1" textFormat="text/plain">
       <text><![CDATA[10 minutes timeout (PT10M) static]]></text>
@@ -182,14 +180,14 @@
     <textAnnotation id="textannotation5" textFormat="text/plain">
       <text><![CDATA[Throws terminatePoolOnTimeoutEvent signal]]></text>
     </textAnnotation>
+    <textAnnotation id="textannotation6" textFormat="text/plain">
+      <text><![CDATA[Throws terminatePoolOnTimeoutEvent signal]]></text>
+    </textAnnotation>
     <association id="association1" sourceRef="textannotation1" targetRef="bootstrapTimeoutBoundaryEvent" associationDirection="None"></association>
     <association id="association2" sourceRef="textannotation2" targetRef="waitForAllInstancesToStart" associationDirection="None"></association>
     <association id="association3" sourceRef="textannotation3" targetRef="signalintermediatecatchevent1" associationDirection="None"></association>
     <association id="association4" sourceRef="textannotation4" targetRef="catchTerminatePoolOnTimeoutEvent" associationDirection="None"></association>
     <association id="association5" sourceRef="textannotation5" targetRef="throwTerminatePoolOnTimeoutEvent" associationDirection="None"></association>
-    <textAnnotation id="textannotation6" textFormat="text/plain">
-      <text><![CDATA[Throws terminatePoolOnTimeoutEvent signal]]></text>
-    </textAnnotation>
     <association id="association6" sourceRef="textannotation6" targetRef="signalintermediatethrowevent1" associationDirection="None"></association>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_amazonPoolManagement">
