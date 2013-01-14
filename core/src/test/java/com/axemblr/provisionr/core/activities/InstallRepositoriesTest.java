@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package com.axemblr.provisionr.api.software;
+package com.axemblr.provisionr.core.activities;
 
-import static com.axemblr.provisionr.api.AssertSerializable.assertSerializable;
+import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.software.Repository;
+import com.axemblr.provisionr.api.software.Software;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-public class SoftwareTest {
+public class InstallRepositoriesTest {
 
     @Test
-    public void testSerialization() {
-        final Repository repository = Repository.builder()
+    public void testCreatePuppetScript() throws Exception {
+        Repository repository = Repository.builder()
             .name("bigtop")
             .addEntry("deb http://bigtop.s3.amazonaws.com/releases/0.5.0/ubuntu/lucid/x86_64  bigtop contrib")
             .key("-----BEGIN PGP PUBLIC KEY BLOCK-----\n" +
@@ -33,17 +37,16 @@ public class SoftwareTest {
                 "[....]")
             .createRepository();
 
-        Software software = Software.builder()
-            .baseOperatingSystem("ubuntu-10.04")
-            .repository(repository)
-            .packages("vim", "git-core", "bigtop-utils")
-            .file("http://bin.axemblr.com/something.tar.gz", "/root/something.tar.gz")
-            .option("provider", "specific")
-            .createSoftware();
+        Pool pool = mock(Pool.class);
+        when(pool.getSoftware()).thenReturn(Software.builder().repository(repository).createSoftware());
 
-        assertThat(software.getBaseOperatingSystem()).isEqualTo("ubuntu-10.04");
-        assertThat(software.toBuilder().createSoftware()).isEqualTo(software);
+        PuppetActivity activity = new InstallRepositories();
+        String content = activity.createPuppetScript(pool, null);
 
-        assertSerializable(software, Software.class);
+        assertThat(content).contains("apt::repository { \"bigtop\":\n" +
+            "  content => \"deb http://bigtop.s3.amazonaws.com/releases/0.5.0/ubuntu/lucid/x86_64  bigtop contrib\\n\",\n" +
+            "  key => \"-----BEGIN PGP PUBLIC KEY BLOCK-----\\nVersion: GnuPG v1.4.10 (GNU/Linux)\\n\\n[....]\"\n" +
+            "}");
     }
+
 }

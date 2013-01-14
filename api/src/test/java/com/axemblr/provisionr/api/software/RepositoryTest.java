@@ -20,11 +20,11 @@ import static com.axemblr.provisionr.api.AssertSerializable.assertSerializable;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
 
-public class SoftwareTest {
+public class RepositoryTest {
 
     @Test
     public void testSerialization() {
-        final Repository repository = Repository.builder()
+        Repository repository = Repository.builder()
             .name("bigtop")
             .addEntry("deb http://bigtop.s3.amazonaws.com/releases/0.5.0/ubuntu/lucid/x86_64  bigtop contrib")
             .key("-----BEGIN PGP PUBLIC KEY BLOCK-----\n" +
@@ -33,17 +33,7 @@ public class SoftwareTest {
                 "[....]")
             .createRepository();
 
-        Software software = Software.builder()
-            .baseOperatingSystem("ubuntu-10.04")
-            .repository(repository)
-            .packages("vim", "git-core", "bigtop-utils")
-            .file("http://bin.axemblr.com/something.tar.gz", "/root/something.tar.gz")
-            .option("provider", "specific")
-            .createSoftware();
-
-        assertThat(software.getBaseOperatingSystem()).isEqualTo("ubuntu-10.04");
-        assertThat(software.toBuilder().createSoftware()).isEqualTo(software);
-
-        assertSerializable(software, Software.class);
+        assertThat(repository.toBuilder().createRepository()).isEqualTo(repository);
+        assertSerializable(repository, Repository.class);
     }
 }

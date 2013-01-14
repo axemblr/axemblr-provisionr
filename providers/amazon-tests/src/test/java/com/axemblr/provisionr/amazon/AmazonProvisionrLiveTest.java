@@ -16,6 +16,7 @@
 
 package com.axemblr.provisionr.amazon;
 
+import com.axemblr.provisionr.amazon.options.ProviderOptions;
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.hardware.Hardware;
@@ -25,6 +26,7 @@ import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.axemblr.provisionr.api.software.Repository;
 import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.core.PoolStatus;
 import com.axemblr.provisionr.core.Ssh;
@@ -33,6 +35,8 @@ import static com.axemblr.provisionr.test.KarafTests.installProvisionrTestSuppor
 import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
 import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +47,7 @@ import net.schmizz.sshj.connection.channel.direct.Session;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -58,6 +63,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
     public static final Logger LOG = LoggerFactory.getLogger(AmazonProvisionrLiveTest.class);
 
     public static final int TEST_POOL_SIZE = 2;
+    public static final String JENKINS_KEY = "jenkins-ci.org.key";
 
     public AmazonProvisionrLiveTest() {
         super(AmazonProvisionr.ID);
@@ -69,7 +75,9 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
             useDefaultKarafAsInProjectWithJunitBundles(),
             passThroughAllSystemPropertiesWithPrefix("test.amazon."),
             installProvisionrFeatures("axemblr-provisionr-amazon"),
-            installProvisionrTestSupportBundle()
+            installProvisionrTestSupportBundle(),
+            systemProperty(JENKINS_KEY).value(Resources.toString(
+                Resources.getResource("jenkins-ci.org.key"), Charsets.UTF_8))
         };
     }
 
@@ -80,7 +88,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
         final Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
         final Provider provider = collectProviderCredentialsFromSystemProperties()
-            .option("region", getProviderProperty("region", "us-east-1"))
+            .option(ProviderOptions.REGION, getProviderProperty(ProviderOptions.REGION, ProviderOptions.DEFAULT_REGION))
             .createProvider();
 
         final Network network = Network.builder().addRules(
@@ -92,9 +100,17 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
         final AdminAccess adminAccess = AdminAccess.builder().asCurrentUser().createAdminAccess();
 
+        final Repository repository = Repository.builder()
+            .name("jenkins")
+            .addEntry("deb http://pkg.jenkins-ci.org/debian binary/")
+            .key(System.getProperty(JENKINS_KEY))
+            .createRepository();
+
         final String destinationPath = "/home/" + adminAccess.getUsername() + "/axemblr.html";
-        final Software software = Software.builder().baseOperatingSystem("ubuntu-12.04")
-            .packages("git-core")
+        final Software software = Software.builder()
+            .baseOperatingSystem("ubuntu-12.04")
+            .repository(repository)
+            .packages("git-core", "jenkins")
             .file("http://axemblr.com", destinationPath)
             .createSoftware();
 
@@ -114,6 +130,8 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
             for (Machine machine : machines) {
                 assertSshCommand(machine, adminAccess, "test -f " + destinationPath);
                 assertSshCommand(machine, adminAccess, "hash git >/dev/null 2>&1");
+                assertSshCommand(machine, adminAccess, "hash java >/dev/null 2>&1");
+                assertSshCommand(machine, adminAccess, "test -f /etc/apt/sources.list.d/jenkins.list");
             }
         } finally {
             provisionr.destroyPool(businessKey);
