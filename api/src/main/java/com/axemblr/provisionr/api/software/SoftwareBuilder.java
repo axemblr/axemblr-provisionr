@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import java.util.List;
 import java.util.Map;
 
 public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
@@ -30,6 +29,7 @@ public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
 
     private ImmutableMap.Builder<String, String> files = ImmutableMap.builder();
     private ImmutableList.Builder<String> packages = ImmutableList.builder();
+    private ImmutableList.Builder<Repository> repositories = ImmutableList.builder();
 
     @Override
     protected SoftwareBuilder getThis() {
@@ -51,7 +51,7 @@ public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
         return this;
     }
 
-    public SoftwareBuilder packages(List<String> packages) {
+    public SoftwareBuilder packages(Iterable<String> packages) {
         this.packages = ImmutableList.<String>builder().addAll(packages);
         return this;
     }
@@ -61,7 +61,18 @@ public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
         return this;
     }
 
+    public SoftwareBuilder repositories(Iterable<Repository> repositories) {
+        this.repositories = ImmutableList.<Repository>builder().addAll(repositories);
+        return this;
+    }
+
+    public SoftwareBuilder repository(Repository repository) {
+        this.repositories.add(repository);
+        return this;
+    }
+
     public Software createSoftware() {
-        return new Software(baseOperatingSystem, files.build(), packages.build(), buildOptions());
+        return new Software(baseOperatingSystem, files.build(), packages.build(),
+            repositories.build(), buildOptions());
     }
 }

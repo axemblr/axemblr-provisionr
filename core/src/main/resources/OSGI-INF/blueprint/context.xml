@@ -99,6 +99,9 @@
     </bean>
     <service ref="checkSshPortIsOpen" auto-export="interfaces"/>
 
+    <bean id="installRepositories" class="com.axemblr.provisionr.core.activities.InstallRepositories"/>
+    <service ref="installRepositories" auto-export="interfaces"/>
+
     <bean id="installPackages" class="com.axemblr.provisionr.core.activities.InstallPackages"/>
     <service ref="installPackages" auto-export="interfaces"/>
 

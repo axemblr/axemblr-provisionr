@@ -21,7 +21,6 @@ import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,13 +37,15 @@ public class Software extends WithOptions {
 
     private final Map<String, String> files;
     private final List<String> packages;
+    private final List<Repository> repositories;
 
     Software(String baseOperatingSystem, Map<String, String> files, List<String> packages,
-             Map<String, String> options) {
+             List<Repository> repositories, Map<String, String> options) {
         super(options);
         this.baseOperatingSystem = checkNotNull(baseOperatingSystem, "baseOperatingSystem is null");
         this.files = ImmutableMap.copyOf(files);
         this.packages = ImmutableList.copyOf(packages);
+        this.repositories = ImmutableList.copyOf(repositories);
     }
 
     public String getBaseOperatingSystem() {
@@ -67,15 +68,22 @@ public class Software extends WithOptions {
         return packages;
     }
 
+    /**
+     * List of custom repositories to add to the system before
+     * installing any packages
+     */
+    public List<Repository> getRepositories() {
+        return repositories;
+    }
 
     public SoftwareBuilder toBuilder() {
         return builder().baseOperatingSystem(baseOperatingSystem).files(files)
-            .packages(packages).options(getOptions());
+            .packages(packages).repositories(repositories).options(getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(baseOperatingSystem, files, packages, getOptions());
+        return Objects.hashCode(baseOperatingSystem, files, packages, repositories, getOptions());
     }
 
     @Override
@@ -91,6 +99,7 @@ public class Software extends WithOptions {
         return Objects.equal(this.baseOperatingSystem, other.baseOperatingSystem)
             && Objects.equal(this.files, other.files)
             && Objects.equal(this.packages, other.packages)
+            && Objects.equal(this.repositories, other.repositories)
             && Objects.equal(this.getOptions(), other.getOptions());
     }
 
@@ -100,6 +109,7 @@ public class Software extends WithOptions {
             "baseOperatingSystem='" + baseOperatingSystem + '\'' +
             ", files=" + files +
             ", packages=" + packages +
+            ", repositories=" + repositories +
             ", options=" + getOptions() +
             '}';
     }
