@@ -41,7 +41,7 @@ public class Ssh {
 
     private static final Logger LOG = LoggerFactory.getLogger(Ssh.class);
 
-    public static final int DEFAULT_TIMEOUT = 5 * 60 * 1000; /* 5 minutes in milliseconds */
+    public static final int DEFAULT_TIMEOUT = 2 * 60 * 1000; /* 2 minutes in milliseconds */
 
     private Ssh() {
     }

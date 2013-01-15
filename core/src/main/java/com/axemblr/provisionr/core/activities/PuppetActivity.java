@@ -93,7 +93,7 @@ public abstract class PuppetActivity implements JavaDelegate {
                     "do echo 'Puppet command not found. Waiting for userdata.sh script to finish (10s)' " +
                     "&& sleep 10; " +
                     "done " +
-                    "&& sudo puppet apply --verbose " + destination;
+                    "&& sudo puppet apply --debug --verbose " + destination;
                 Session.Command command = session.exec(runScriptWithWaitCommand);
 
                 Ssh.logCommandOutput(LOG, machine.getExternalId(), command);
