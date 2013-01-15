@@ -16,7 +16,6 @@
 package org.activiti.karaf.commands;
 
 import java.util.List;
-
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
@@ -47,7 +46,7 @@ public class UndeployActivitiCommand extends ActivitiCommand {
     protected Object doExecute() throws Exception {
         ProcessEngine engine = this.getProcessEngine();
         if (engine == null) {
-            System.out.println("Process Engine NOT Found!");
+            out().println("Process Engine NOT Found!");
             return null;
         }
 
@@ -56,22 +55,22 @@ public class UndeployActivitiCommand extends ActivitiCommand {
         if (this.deploymentIDs != null && this.deploymentIDs.length > 0) {
             for (String deploymentID : this.deploymentIDs) {
                 repo.deleteDeployment(deploymentID, this.cascade);
-                System.out.printf("Undeployed %s \n", deploymentID);
+                out().printf("Undeployed %s \n", deploymentID);
             }
             return null;
         }
 
         if (!undeployAll) {
-            System.out.println("Activiti Deployment IDs required or use the command with -a or --all " +
+            out().println("Activiti Deployment IDs required or use the command with -a or --all " +
                 "option for all undeployments");
             return null;
         } else {
-            System.out.println("Undeploying all Activiti deployments...");
+            out().println("Undeploying all Activiti deployments...");
             List<Deployment> depList = repo.createDeploymentQuery().orderByDeploymenTime().asc().list();
             for (Deployment dep : depList) {
                 String deploymentID = dep.getId();
                 repo.deleteDeployment(deploymentID, this.cascade);
-                System.out.printf("Undeployed %s \n", deploymentID);
+                out().printf("Undeployed %s \n", deploymentID);
             }
         }
 

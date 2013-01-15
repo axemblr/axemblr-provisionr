@@ -29,10 +29,10 @@ public class ListGroupsCommand extends ActivitiCommand {
             .createGroupQuery().orderByGroupId().asc().list();
 
         if (groups.isEmpty()) {
-            System.err.println("No groups found.");
+            err().println("No groups found.");
         }
         for (Group group : groups) {
-            System.out.printf("%s\t%s\t%s\n", group.getId(), group.getName(), group.getType());
+            out().printf("%s\t%s\t%s\n", group.getId(), group.getName(), group.getType());
         }
         return null;
     }

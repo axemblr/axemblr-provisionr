@@ -17,6 +17,7 @@
 package org.activiti.karaf.commands;
 
 import org.activiti.engine.test.Deployment;
+import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
 
 /**
@@ -27,11 +28,19 @@ public class ListActivitiCommandTest extends ActivitiTestCase {
     @Test
     @Deployment(resources = {"diagrams/test-bpm-1.bpmn20.xml", "diagrams/test-bpm-2.bpmn20.xml",
         "diagrams/test-bpm-3.bpmn20.xml"})
-    public void testListBPMCommand1() throws Exception {
-        ListActivitiCommand listCmd = new ListActivitiCommand();
-        listCmd.setProcessEngine(this.getProcessEngine());
-        listCmd.doExecute();
+    public void testListCommand() throws Exception {
+        ListActivitiCommand command = new ListActivitiCommand();
+
+        command.setProcessEngine(getProcessEngine());
+        command.setOut(getOut());
+        command.setErr(getErr());
+
+        command.doExecute();
+
+        assertThat(collectStdOutput())
+            .contains("[diagrams/test-bpm-2.bpmn20.xml]")
+            .contains("[diagrams/test-bpm-3.bpmn20.xml]")
+            .contains("[diagrams/test-bpm-1.bpmn20.xml]")
+            .contains("[ListActivitiCommandTest.testListCommand]");
     }
-
-
 }
