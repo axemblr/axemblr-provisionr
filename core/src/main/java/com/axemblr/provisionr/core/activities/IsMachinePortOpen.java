@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IsMachinePortOpen implements JavaDelegate {
 
-    public static final Logger LOG = LoggerFactory.getLogger(IsMachinePortOpen.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IsMachinePortOpen.class);
 
     public static final String MACHINE = "machine";
     public static final int TIMEOUT_IN_MILLISECONDS = 1000;
@@ -53,7 +53,7 @@ public class IsMachinePortOpen implements JavaDelegate {
         Machine machine = (Machine) execution.getVariable(MACHINE);
         checkNotNull(machine, "expecting a process variable named machine (multi-instance?)");
 
-        if (isPortOpen(machine)) {
+        if (isPortOpen(machine, port)) {
             LOG.info("<< Port {} is OPEN on {}", port, machine.getPublicDnsName());
             execution.setVariable(resultVariable, true);
 
@@ -63,7 +63,7 @@ public class IsMachinePortOpen implements JavaDelegate {
         }
     }
 
-    private boolean isPortOpen(Machine machine) {
+    private boolean isPortOpen(Machine machine, int port) {
         InetSocketAddress socketAddress = new InetSocketAddress(machine.getPublicDnsName(), port);
 
         Socket socket = null;
