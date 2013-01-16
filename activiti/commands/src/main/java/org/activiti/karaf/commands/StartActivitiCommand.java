@@ -36,14 +36,14 @@ public class StartActivitiCommand extends ActivitiCommand {
     protected Object doExecute() throws Exception {
         ProcessEngine pe = this.getProcessEngine();
         if (pe == null) {
-            System.out.println("Process Engine NOT Found!");
+            out().println("Process Engine NOT Found!");
             return null;
         }
 
         RuntimeService rt = pe.getRuntimeService();
         if (definitionID != null) {
             ProcessInstance pi = rt.startProcessInstanceById(definitionID);
-            System.out.printf("Process instance %s Started\n", pi.getProcessInstanceId());
+            out().printf("Process instance %s Started\n", pi.getProcessInstanceId());
         }
 
         return null;

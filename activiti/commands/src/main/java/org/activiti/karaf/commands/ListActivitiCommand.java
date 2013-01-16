@@ -56,10 +56,9 @@ public class ListActivitiCommand extends ActivitiCommand {
     @Override
     protected Object doExecute() throws Exception {
         ProcessEngine pe = this.getProcessEngine();
-        PrintWriter out = new PrintWriter(System.out, true);
 
         if (pe == null) {
-            out.println("Process Engine NOT Found!");
+            out().println("Process Engine NOT Found!");
             return null;
         }
 
@@ -71,23 +70,23 @@ public class ListActivitiCommand extends ActivitiCommand {
 
         if (this.deployments) {
             RepositoryService repo = pe.getRepositoryService();
-            printDeployments(out, repo);
+            printDeployments(out(), repo);
         }
 
         if (this.definitions) {
             RepositoryService repo = pe.getRepositoryService();
-            printProcessDefinitions(out, repo);
+            printProcessDefinitions(out(), repo);
         }
 
         if (this.history) {
             HistoryService his = pe.getHistoryService();
             boolean printActive = !this.active; // if we show active process, dont print then in history 
-            printHistoricProcessInstances(out, his, printActive);
+            printHistoricProcessInstances(out(), his, printActive);
         }
 
         if (this.active) {
             RuntimeService rt = pe.getRuntimeService();
-            printActiveProcessInstances(out, rt);
+            printActiveProcessInstances(out(), rt);
         }
 
 

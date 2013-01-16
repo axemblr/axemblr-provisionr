@@ -61,10 +61,11 @@ public class SpawnProcessForEachMachine implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         final Pool pool = (Pool) execution.getVariable(CoreProcessVariables.POOL);
+        checkNotNull(pool, "Expecting to find a pool description as process variable");
 
         @SuppressWarnings("unchecked")
         List<Machine> machines = (List<Machine>) execution.getVariable(CoreProcessVariables.MACHINES);
-        checkNotNull(machines, "expecting to find the list of machines as process variable");
+        checkNotNull(machines, "Expecting to find the list of machines as process variable");
 
         final String poolBusinessKey = String.class.cast(execution.getVariable(CoreProcessVariables.POOL_BUSINESS_KEY));
         checkNotNull(poolBusinessKey, "No way to link sub-processes to master process, poolBusinessKey is null");

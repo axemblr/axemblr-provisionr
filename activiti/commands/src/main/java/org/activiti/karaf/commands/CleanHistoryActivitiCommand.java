@@ -16,7 +16,6 @@
 package org.activiti.karaf.commands;
 
 import java.util.List;
-
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -45,7 +44,7 @@ public class CleanHistoryActivitiCommand extends ActivitiCommand {
     protected Object doExecute() throws Exception {
         ProcessEngine engine = this.getProcessEngine();
         if (engine == null) {
-            System.out.println("Process Engine NOT Found!");
+            out().println("Process Engine NOT Found!");
             return null;
         }
         HistoryService historyService = engine.getHistoryService();
@@ -66,7 +65,7 @@ public class CleanHistoryActivitiCommand extends ActivitiCommand {
 
         // clean all history
         if (!cleanAll) {
-            System.out.println("Process instance IDs required or use the command with -a " +
+            out().println("Process instance IDs required or use the command with -a " +
                 "or --all option to clean all history");
             return null;
         } else {
@@ -77,17 +76,17 @@ public class CleanHistoryActivitiCommand extends ActivitiCommand {
     }
 
     private void cleanAllHistory(HistoryService hs) {
-        System.out.println("Cleaning History of All Process Instances...");
+        out().println("Cleaning History of All Process Instances...");
         List<HistoricProcessInstance> hpiList = hs.createHistoricProcessInstanceQuery()
             .orderByProcessDefinitionId().asc().list();
         if (hpiList == null || hpiList.size() == 0) {
-            System.out.println("No Process History found! ");
+            out().println("No Process History found! ");
             return;
         }
         for (HistoricProcessInstance hpi : hpiList) {
             String processId = hpi.getId();
             hs.deleteHistoricProcessInstance(hpi.getId());
-            System.out.printf("History removed for process instance %s \n", processId);
+            out().printf("History removed for process instance %s \n", processId);
         }
     }
 
@@ -98,9 +97,9 @@ public class CleanHistoryActivitiCommand extends ActivitiCommand {
                 .processInstanceId(instanceId).singleResult();
             if (hpi != null) {
                 hs.deleteHistoricProcessInstance(hpi.getId());
-                System.out.printf("History removed for process instance %s \n", hpi.getId());
+                out().printf("History removed for process instance %s \n", hpi.getId());
             } else {
-                System.out.printf("No History found for process instance %s \n", instanceId);
+                out().printf("No History found for process instance %s \n", instanceId);
             }
         }
     }
@@ -112,13 +111,13 @@ public class CleanHistoryActivitiCommand extends ActivitiCommand {
                 .processDefinitionId(definitionId)
                 .orderByProcessDefinitionId().asc().list();
             if (hpiList == null || hpiList.size() == 0) {
-                System.out.printf("No History found for process definition %s \n", definitionId);
+                out().printf("No History found for process definition %s \n", definitionId);
                 break;
             }
             for (HistoricProcessInstance hpi : hpiList) {
                 String processId = hpi.getId();
                 hs.deleteHistoricProcessInstance(hpi.getId());
-                System.out.printf("History removed for process instance %s with definition %s\n", processId,
+                out().printf("History removed for process instance %s with definition %s\n", processId,
                     definitionId);
             }
         }

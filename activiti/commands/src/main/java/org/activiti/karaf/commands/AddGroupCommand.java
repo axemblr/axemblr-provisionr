@@ -16,6 +16,8 @@
 
 package org.activiti.karaf.commands;
 
+import com.google.common.annotations.VisibleForTesting;
+import static com.google.common.base.Preconditions.checkNotNull;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
 import org.apache.felix.gogo.commands.Command;
@@ -43,5 +45,20 @@ public class AddGroupCommand extends ActivitiCommand {
         identityService.saveGroup(group);
 
         return null;
+    }
+
+    @VisibleForTesting
+    void setId(String id) {
+        this.id = checkNotNull(id, "id is null");
+    }
+
+    @VisibleForTesting
+    void setName(String name) {
+        this.name = checkNotNull(name, "name is null");
+    }
+
+    @VisibleForTesting
+    void setType(String type) {
+        this.type = checkNotNull(type, "type is null");
     }
 }

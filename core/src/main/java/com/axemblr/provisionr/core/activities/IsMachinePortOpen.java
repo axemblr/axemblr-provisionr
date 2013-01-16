@@ -34,9 +34,11 @@ import org.slf4j.LoggerFactory;
  */
 public class IsMachinePortOpen implements JavaDelegate {
 
-    public static final Logger LOG = LoggerFactory.getLogger(IsMachinePortOpen.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IsMachinePortOpen.class);
 
-    private final int timeoutInMilliseconds = 2000;
+    public static final String MACHINE = "machine";
+    public static final int TIMEOUT_IN_MILLISECONDS = 1000;
+
     private final String resultVariable;
     private final int port;
 
@@ -48,10 +50,10 @@ public class IsMachinePortOpen implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Machine machine = (Machine) execution.getVariable("machine");
+        Machine machine = (Machine) execution.getVariable(MACHINE);
         checkNotNull(machine, "expecting a process variable named machine (multi-instance?)");
 
-        if (isPortOpen(machine)) {
+        if (isPortOpen(machine, port)) {
             LOG.info("<< Port {} is OPEN on {}", port, machine.getPublicDnsName());
             execution.setVariable(resultVariable, true);
 
@@ -61,7 +63,7 @@ public class IsMachinePortOpen implements JavaDelegate {
         }
     }
 
-    private boolean isPortOpen(Machine machine) {
+    private boolean isPortOpen(Machine machine, int port) {
         InetSocketAddress socketAddress = new InetSocketAddress(machine.getPublicDnsName(), port);
 
         Socket socket = null;
@@ -69,8 +71,8 @@ public class IsMachinePortOpen implements JavaDelegate {
             socket = new Socket();
             socket.setReuseAddress(false);
             socket.setSoLinger(false, 1);
-            socket.setSoTimeout(timeoutInMilliseconds);
-            socket.connect(socketAddress, timeoutInMilliseconds);
+            socket.setSoTimeout(TIMEOUT_IN_MILLISECONDS);
+            socket.connect(socketAddress, TIMEOUT_IN_MILLISECONDS);
 
         } catch (IOException e) {
             return false;

@@ -33,6 +33,11 @@ public class MachineBuilder extends BuilderWithOptions<MachineBuilder> {
         return this;
     }
 
+    public MachineBuilder localhost() {
+        return externalId("local-1").publicDnsName("localhost").publicIp("127.0.0.1")
+            .privateDnsName("localhost").privateIp("127.0.0.1").sshPort(22);
+    }
+
     public MachineBuilder externalId(String externalId) {
         this.externalId = externalId;
         return this;

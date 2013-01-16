@@ -43,8 +43,11 @@ public class DefaultProviderConfig {
         final ProviderBuilder builder = Provider.builder()
             .id(AmazonProvisionr.ID)
             .accessKey(accessKey)
-            .secretKey(secretKey)
-            .option("region", region);
+            .secretKey(secretKey);
+
+        if (!region.isEmpty()) {
+            builder.option("region", region);
+        }
 
         if (endpoint.isEmpty()) {
             builder.endpoint(Optional.<String>absent());

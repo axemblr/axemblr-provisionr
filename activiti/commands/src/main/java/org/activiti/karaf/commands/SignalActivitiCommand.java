@@ -46,7 +46,7 @@ public class SignalActivitiCommand extends ActivitiCommand {
     protected Object doExecute() throws Exception {
         ProcessEngine engine = this.getProcessEngine();
         if (engine == null) {
-            System.out.println("Process Engine NOT Found!");
+            out().println("Process Engine NOT Found!");
             return null;
         }
         RuntimeService runtimeService = engine.getRuntimeService();
@@ -59,10 +59,10 @@ public class SignalActivitiCommand extends ActivitiCommand {
         }
 
         if (!signalAll) {
-            System.out.println("Process instance IDs required or use the command with -a or --all option");
+            out().println("Process instance IDs required or use the command with -a or --all option");
             return null;
         } else {
-            System.out.println("Signalling all executions in all active process instances...");
+            out().println("Signalling all executions in all active process instances...");
             List<ProcessInstance> piList = runtimeService.createProcessInstanceQuery().orderByProcessInstanceId().asc().list();
             for (ProcessInstance pi : piList) {
                 signal(runtimeService, pi.getProcessInstanceId(), this.activities);
@@ -77,17 +77,17 @@ public class SignalActivitiCommand extends ActivitiCommand {
             if (!exec.isEnded()) {
                 rt.signal(exec.getId());
             } else {
-                System.out.printf("Execution %s already ended \n" + exec.getId());
+                out().printf("Execution %s already ended \n" + exec.getId());
             }
         } catch (Exception ex) {
-            System.out.printf("Exception:%s in signaling the execution %s \n", ex.getMessage(), exec.getId());
+            out().printf("Exception:%s in signaling the execution %s \n", ex.getMessage(), exec.getId());
         }
     }
 
     private void signal(RuntimeService rt, String pi, String... activities) {
         if (activities == null || activities.length == 0) {
             // signal all executions in the instance 
-            System.out.println("Signaling all active executions in the process instance " + pi);
+            out().println("Signaling all active executions in the process instance " + pi);
             List<Execution> executions = rt.createExecutionQuery()
                 .processInstanceId(pi)
                 .orderByProcessInstanceId().asc().list();
@@ -96,7 +96,7 @@ public class SignalActivitiCommand extends ActivitiCommand {
             }
         } else {
             for (String activity : activities) {
-                System.out.printf("Signaling activity %s in process instance %s \n", activity, pi);
+                out().printf("Signaling activity %s in process instance %s \n", activity, pi);
                 List<Execution> executions = rt.createExecutionQuery()
                     .processInstanceId(pi)
                     .activityId(activity)
