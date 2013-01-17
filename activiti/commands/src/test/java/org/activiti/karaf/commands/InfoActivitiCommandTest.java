@@ -51,7 +51,7 @@ public class InfoActivitiCommandTest extends ActivitiTestCase {
         command.doExecute();
 
         assertThat(collectStdOutput())
-            .contains("Instance ID:     11")
+            .contains("Instance ID:")
             .contains("Start Activity:  startevent1")
             .contains("End Activity:    endevent1")
             .contains("Variable Name:   my.array")
