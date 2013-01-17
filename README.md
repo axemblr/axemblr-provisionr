@@ -1,11 +1,10 @@
-Axemblr Provisionr
+Axemblr Provisionr [![Build Status](https://buildhive.cloudbees.com/job/axemblr/job/axemblr-provisionr/badge/icon)](https://buildhive.cloudbees.com/job/axemblr/job/axemblr-provisionr/)
 ==================
 
 *Simple Service for Managing Pools of 10s or 100s of Virtual Machines*
 
 With Provisionr we want to solve the problem of cloud portability by hiding completely the API and only focusing on building a cluster that matches the same set of assumptions on all clouds, assumptions like: running a specific operating system (e.g. Ubuntu LTS), having the same set of pre-installed packages and binaries, sane dns settings (forward & reverse ip resolution - as needed for [Hadoop](http://hadoop.apache.org/)), ntp settings, networking settings, ssh admin access, vpn access etc.
 
-[![Build Status](https://buildhive.cloudbees.com/job/axemblr/job/axemblr-provisionr/badge/icon)](https://buildhive.cloudbees.com/job/axemblr/job/axemblr-provisionr/)
 Features
 --------
 
