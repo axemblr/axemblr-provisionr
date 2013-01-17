@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
+ * Copyright (c) 2013 S.C. Axemblr Software Solutions S.R.L
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.axemblr.provisionr.amazon.activities;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.core.activities.PuppetActivity;
+import com.axemblr.provisionr.test.Constants;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
@@ -30,7 +31,12 @@ public class SetupAdminAccessTest {
     public void testCreatePuppetScript() throws Exception {
         Pool pool = mock(Pool.class);
 
-        final AdminAccess adminAccess = AdminAccess.builder().asCurrentUser().createAdminAccess();
+        final AdminAccess adminAccess = AdminAccess.builder()
+            .privateKey(Constants.PRIVATE_KEY)
+            .publicKey(Constants.PUBLIC_KEY)
+            .username(System.getProperty("user.name"))
+            .createAdminAccess();
+
         when(pool.getAdminAccess()).thenReturn(adminAccess);
 
         PuppetActivity activity = new SetupAdminAccess();
