@@ -33,8 +33,7 @@ public class TestConstants {
         try {
             return Resources.toString(Resources.getResource(TestConstants.class, fileName), Charsets.UTF_8);
         } catch (IOException e) {
-            Throwables.propagate(e);
+            throw Throwables.propagate(e);
         }
-        throw new RuntimeException("Resource not available " + fileName);
     }
 }
