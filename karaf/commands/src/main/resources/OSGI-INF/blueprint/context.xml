@@ -17,9 +17,12 @@
 
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
            xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
-           xmlns:cfg="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+    >
 
     <reference-list id="provisionrServices" interface="com.axemblr.provisionr.api.Provisionr"
+                    availability="optional" activation="eager"/>
+
+    <reference-list id="templates" interface="com.axemblr.provisionr.core.templates.PoolTemplate"
                     availability="optional" activation="eager"/>
 
     <reference id="processEngine" interface="org.activiti.engine.ProcessEngine"/>
@@ -35,9 +38,15 @@
                 <shell:argument ref="processEngine"/>
             </shell:action>
         </shell:command>
+        <shell:command name="provisionr/templates">
+            <shell:action class="com.axemblr.provisionr.commands.ListTemplatesCommand">
+                <shell:argument ref="templates"/>
+            </shell:action>
+        </shell:command>
         <shell:command name="provisionr/create">
             <shell:action class="com.axemblr.provisionr.commands.CreatePoolCommand">
                 <shell:argument ref="provisionrServices"/>
+                <shell:argument ref="templates"/>
             </shell:action>
         </shell:command>
         <shell:command name="provisionr/destroy">
