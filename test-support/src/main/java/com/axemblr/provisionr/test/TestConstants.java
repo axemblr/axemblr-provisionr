@@ -21,20 +21,20 @@ import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 import java.io.IOException;
 
-public class Constants {
+public class TestConstants {
 
     static final String PUBLIC_KEY_FILE_NAME = "id_rsa_test.pub";
     static final String PRIVATE_KEY_FILE_NAME = "id_rsa_test";
 
-    public static String PUBLIC_KEY;
-    public static String PRIVATE_KEY;
+    public static final String PUBLIC_KEY = loadResource(PUBLIC_KEY_FILE_NAME);
+    public static final String PRIVATE_KEY = loadResource(PRIVATE_KEY_FILE_NAME);
 
-    static {
+    private static String loadResource(String fileName) {
         try {
-            PUBLIC_KEY = Resources.toString(Resources.getResource(PUBLIC_KEY_FILE_NAME), Charsets.UTF_8);
-            PRIVATE_KEY = Resources.toString(Resources.getResource(PRIVATE_KEY_FILE_NAME), Charsets.UTF_8);
+            return Resources.toString(Resources.getResource(TestConstants.class, fileName), Charsets.UTF_8);
         } catch (IOException e) {
             Throwables.propagate(e);
         }
+        throw new RuntimeException("Resource not available " + fileName);
     }
 }

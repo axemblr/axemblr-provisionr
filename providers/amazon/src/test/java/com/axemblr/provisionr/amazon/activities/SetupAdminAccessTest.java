@@ -19,7 +19,7 @@ package com.axemblr.provisionr.amazon.activities;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.core.activities.PuppetActivity;
-import com.axemblr.provisionr.test.Constants;
+import com.axemblr.provisionr.test.TestConstants;
 import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
@@ -32,8 +32,8 @@ public class SetupAdminAccessTest {
         Pool pool = mock(Pool.class);
 
         final AdminAccess adminAccess = AdminAccess.builder()
-            .privateKey(Constants.PRIVATE_KEY)
-            .publicKey(Constants.PUBLIC_KEY)
+            .privateKey(TestConstants.PRIVATE_KEY)
+            .publicKey(TestConstants.PUBLIC_KEY)
             .username(System.getProperty("user.name"))
             .createAdminAccess();
 
