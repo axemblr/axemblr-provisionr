@@ -19,11 +19,9 @@ package org.activiti.karaf.commands;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.test.Deployment;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
 
 /**
@@ -35,22 +33,31 @@ public class InfoActivitiCommandTest extends ActivitiTestCase {
     @Deployment(resources = {"diagrams/test-bpm-1.bpmn20.xml", "diagrams/test-bpm-2.bpmn20.xml",
         "diagrams/test-bpm-3.bpmn20.xml"})
     public void testListBPMCommand1() throws Exception {
-        // fail("The test case is a prototype.");
         String processKey = "Test-bpm-1";
-        Map<String, Object> vars = new TreeMap<String, Object>();
-        vars.put("myfoo", new Foo());
-        vars.put("mybar", new Bar());
-        vars.put("my.array", new Object[]{new Foo(), new Bar()});
-        ProcessInstance pi = this.startProcess(processKey, vars);
-        InfoActivitiCommand infoCmd = new InfoActivitiCommand();
-        infoCmd.setProcessEngine(this.getProcessEngine());
-        infoCmd.setInstanceID(pi.getId());
-        infoCmd.doExecute();
 
-        // DefaultActivitiPrintHandler printHandler = (DefaultActivitiPrintHandler)infoCmd.findBPMPrintHandler();
-        // System.out.println("##### BPM PROCESS VARS JSON ####");
-        // printHandler.printVariables(new PrintWriter(System.out, true), vars);
+        Map<String, Object> variables = new TreeMap<String, Object>();
+        variables.put("myfoo", new Foo());
+        variables.put("mybar", new Bar());
+        variables.put("my.array", new Object[]{new Foo(), new Bar()});
 
+        ProcessInstance processInstance = this.startProcess(processKey, variables);
+
+        InfoActivitiCommand command = new InfoActivitiCommand();
+        command.setProcessEngine(this.getProcessEngine());
+        command.setInstanceID(processInstance.getId());
+        command.setOut(getOut());
+        command.setErr(getErr());
+
+        command.doExecute();
+
+        assertThat(collectStdOutput())
+            .contains("Instance ID:     11")
+            .contains("Start Activity:  startevent1")
+            .contains("End Activity:    endevent1")
+            .contains("Variable Name:   my.array")
+            .contains("\"mybar\": \"bar3\"")
+            .contains("Variable Name:   mybar")
+            .contains(" Variable Name:   myfoo");
     }
 
     public static class Foo implements Serializable {

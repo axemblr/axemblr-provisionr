@@ -44,6 +44,7 @@ import org.apache.felix.gogo.commands.Option;
  */
 @Command(scope = "activiti", name = "info", description = "Provides details about the Activiti process instance")
 public class InfoActivitiCommand extends ActivitiCommand {
+
     private static final Logger LOG = Logger.getLogger(InfoActivitiCommand.class.getName());
 
     @Argument(index = 0, name = "instanceID", description = "Instance ID for which the details should " +
@@ -96,7 +97,7 @@ public class InfoActivitiCommand extends ActivitiCommand {
         try {
             obj = executeCommand();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            out().println(ex.getMessage());
             LOG.log(Level.INFO, ex.getMessage(), ex);
         }
         return obj;
@@ -105,11 +106,11 @@ public class InfoActivitiCommand extends ActivitiCommand {
     protected Object executeCommand() throws Exception {
         ProcessEngine pe = this.getProcessEngine();
         if (pe == null) {
-            System.out.println("Process Engine NOT Found!");
+            out().println("Process Engine NOT Found!");
             return null;
         }
         if (this.instanceID == null || this.instanceID.trim().length() == 0) {
-            System.out.println("Instance ID required to show the information about the instance");
+            out().println("Instance ID required to show the information about the instance");
             return null;
         }
 
@@ -143,7 +144,7 @@ public class InfoActivitiCommand extends ActivitiCommand {
         nvMap.put("Deployment ID", depInfo.getId());
         nvMap.put("Deployment Name", depInfo.getName());
         nvMap.put("Deployment Time", Commands.UTIL.formatDate(depInfo.getDeploymentTime()));
-        Commands.UTIL.printNameValues(new PrintWriter(System.out, true), nvMap);
+        Commands.UTIL.printNameValues(new PrintWriter(out(), true), nvMap);
     }
 
     protected void printProcessDefinitionInfo(ProcessDefinition pd) {
@@ -152,7 +153,7 @@ public class InfoActivitiCommand extends ActivitiCommand {
         nvMap.put("Definition Name", pd.getName());
         nvMap.put("Version", Integer.toString(pd.getVersion()));
         nvMap.put("Resource Name", pd.getResourceName());
-        Commands.UTIL.printNameValues(new PrintWriter(System.out, true), nvMap);
+        Commands.UTIL.printNameValues(new PrintWriter(out(), true), nvMap);
 
     }
 
@@ -167,7 +168,7 @@ public class InfoActivitiCommand extends ActivitiCommand {
             nvMap.put("Duration", Commands.UTIL.formatDuration(hpi.getDurationInMillis()));
         }
 
-        PrintWriter out = new PrintWriter(System.out, true);
+        PrintWriter out = new PrintWriter(out(), true);
         Commands.UTIL.printNameValues(out, nvMap);
         // print instance data
         this.getPrintHandler().printInstanceData(out, this.isVerbose(), this.isQuiet(), hpi);
@@ -190,11 +191,11 @@ public class InfoActivitiCommand extends ActivitiCommand {
             nvMap.put("Duration", Commands.UTIL.formatDuration(actInst.getDurationInMillis()));
         }
 
-        PrintWriter out = new PrintWriter(System.out, true);
+        PrintWriter out = new PrintWriter(out(), true);
         Commands.UTIL.printNameValues(out, nvMap);
         // print activity vars
         this.getPrintHandler().printActivityData(out, this.isVerbose(), this.isQuiet(), actInst);
-        System.out.println("-------------");
+        out().println("-------------");
     }
 
     protected void printDetails(String pid) {
@@ -208,7 +209,7 @@ public class InfoActivitiCommand extends ActivitiCommand {
             .singleResult();
         if (pi == null && hpi == null) {
             // both null means. no process with that id.
-            System.out.printf("No process details found with process id %s \n", pid);
+            out().printf("No process details found with process id %s \n", pid);
             return;
         }
 
@@ -222,20 +223,21 @@ public class InfoActivitiCommand extends ActivitiCommand {
         ProcessDefinition pd = repo.createProcessDefinitionQuery().processDefinitionId(pdId).singleResult();
         Deployment depInfo = repo.createDeploymentQuery().deploymentId(pd.getDeploymentId()).singleResult();
         // print
-        if (this.isVerbose()) {
-            System.out.println("======== Deployment Details");
+        if (isVerbose()) {
+            out().println("======== Deployment Details");
             printDeploymentInfo(depInfo);
-            System.out.println("======== Process Definition Details");
+
+            out().println("======== Process Definition Details");
             printProcessDefinitionInfo(pd);
         }
 
-        System.out.println("======== Process Instance Details");
+        out().println("======== Process Instance Details");
         printProcessInstanceInfo(hpi);
 
         List<HistoricActivityInstance> actInstList = hs.createHistoricActivityInstanceQuery()
             .processInstanceId(hpi.getId()).orderByHistoricActivityInstanceStartTime().asc().list();
         if (actInstList != null && actInstList.size() > 0) {
-            System.out.println("======== Activity Execution Details");
+            out().println("======== Activity Execution Details");
             for (HistoricActivityInstance actInst : actInstList) {
                 printActivityInstanceInfo(actInst);
             }

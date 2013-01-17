@@ -24,6 +24,7 @@ import com.google.common.io.CharStreams;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.UUID;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -37,15 +38,10 @@ public class SshLiveTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(SshLiveTest.class);
 
-    private final Machine localhost = Machine.builder()
-        .externalId("localhost")
-        .publicDnsName("localhost").publicIp("127.0.0.1")
-        .privateDnsName("localhost").privateIp("127.0.0.1")
-        .createMachine();
+    private final Machine localhost = Machine.builder().localhost().createMachine();
 
     private final AdminAccess adminAccess = AdminAccess.builder()
         .asCurrentUser().createAdminAccess();
-
 
     @Test
     public void testConnectToLocalhostAndCollectOutput() throws IOException {
@@ -102,5 +98,34 @@ public class SshLiveTest {
         } finally {
             client.close();
         }
+    }
+
+    @Test
+    public void testCreateFileOverSsh() throws IOException {
+        SSHClient client = Ssh.newClient(localhost, adminAccess, 1000);
+        try {
+            String destination = "/tmp/" + UUID.randomUUID().toString();
+            String content = UUID.randomUUID().toString();
+
+            Ssh.createFile(client, content, 0600, destination);
+
+            /* Check the file exists and has the expected content */
+            Session session = client.startSession();
+            try {
+                final Session.Command command = session.exec("set +x +e && cat " + destination);
+
+                String output = CharStreams.toString(new InputStreamReader(command.getInputStream()));
+                command.join();
+
+                assertThat(command.getExitStatus()).isEqualTo(0);
+                assertThat(output).contains(content);
+
+            } finally {
+                session.close();
+            }
+        } finally {
+            client.close();
+        }
+
     }
 }

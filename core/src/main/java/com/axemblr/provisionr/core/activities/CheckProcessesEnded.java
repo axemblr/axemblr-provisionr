@@ -35,6 +35,7 @@ public class CheckProcessesEnded implements JavaDelegate {
     private static final Logger LOG = LoggerFactory.getLogger(CheckProcessesEnded.class);
 
     private final RuntimeService runtimeService;
+
     private final String variableWithProcessIds;
     private final String resultVariable;
 

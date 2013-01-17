@@ -29,10 +29,10 @@ public class ListUsersCommand extends ActivitiCommand {
             .createUserQuery().orderByUserId().asc().list();
 
         if (users.isEmpty()) {
-            System.err.println("No users found.");
+            err().println("No users found.");
         }
         for (User user : users) {
-            System.out.printf("%s\t%s\t%s\n", user.getId(), user.getEmail(), user.getPassword());
+            out().printf("%s\t%s\t%s\n", user.getId(), user.getEmail(), user.getPassword());
         }
 
         return null;

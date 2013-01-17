@@ -40,7 +40,7 @@ public class KillActivitiCommand extends ActivitiCommand {
     protected Object doExecute() throws Exception {
         ProcessEngine processEngine = this.getProcessEngine();
         if (processEngine == null) {
-            System.out.println("Process Engine NOT Found!");
+            out().println("Process Engine NOT Found!");
             return null;
         }
 
@@ -49,21 +49,21 @@ public class KillActivitiCommand extends ActivitiCommand {
         if (this.instanceIDs != null && this.instanceIDs.length > 0) {
             for (String instanceID : instanceIDs) {
                 runtimeService.deleteProcessInstance(instanceID, "Forcefully terminating the instance");
-                System.out.printf("Process instance %s terminated\n", instanceID);
+                out().printf("Process instance %s terminated\n", instanceID);
             }
             return null;
         }
 
         if (!killAll) {
-            System.out.println("Process instance IDs required or use the command with -a or --all option");
+            out().println("Process instance IDs required or use the command with -a or --all option");
             return null;
         } else {
-            System.out.println("Signalling all executions in all active process instances...");
+            out().println("Signalling all executions in all active process instances...");
             List<ProcessInstance> piList = runtimeService.createProcessInstanceQuery().orderByProcessInstanceId().asc().list();
             for (ProcessInstance pi : piList) {
                 String instanceID = pi.getProcessInstanceId();
                 runtimeService.deleteProcessInstance(instanceID, "Forcefully terminating the instance");
-                System.out.printf("Process instance %s terminated\n", instanceID);
+                out().printf("Process instance %s terminated\n", instanceID);
             }
         }
 

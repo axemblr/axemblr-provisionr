@@ -15,13 +15,26 @@
  */
 package org.activiti.karaf.commands;
 
+import java.io.PrintWriter;
 import org.activiti.engine.ProcessEngine;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
 /**
+ * Base class for implementing Activiti Karaf commands
+ *
  * @author Srinivasan Chikkala
  */
 public abstract class ActivitiCommand extends OsgiCommandSupport {
+
+    /**
+     * By default write normal messages to stdout
+     */
+    private PrintWriter out = new PrintWriter(System.out, true);
+
+    /**
+     * By default write error messages to stderr
+     */
+    private PrintWriter err = new PrintWriter(System.err, true);
 
     private ProcessEngine processEngine;
 
@@ -33,4 +46,19 @@ public abstract class ActivitiCommand extends OsgiCommandSupport {
         this.processEngine = processEngine;
     }
 
+    public PrintWriter out() {
+        return out;
+    }
+
+    public void setOut(PrintWriter out) {
+        this.out = out;
+    }
+
+    public PrintWriter err() {
+        return err;
+    }
+
+    public void setErr(PrintWriter err) {
+        this.err = err;
+    }
 }

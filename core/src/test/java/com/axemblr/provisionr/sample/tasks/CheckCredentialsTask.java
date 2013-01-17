@@ -26,7 +26,5 @@ public class CheckCredentialsTask implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         System.err.println("** Check cloud provider credentials");
-        TimeUnit.SECONDS.sleep(10);
-        System.err.println("** Exit Check cloud provider credentials");
     }
 }
