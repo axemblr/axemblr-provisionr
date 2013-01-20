@@ -85,6 +85,7 @@ public class ListPoolsCommandTest {
 
         Pool pool = mock(Pool.class);
         setVariable(processEngine, "p1", CoreProcessVariables.POOL, pool);
+        setVariable(processEngine, "p1", CoreProcessVariables.POOL_BUSINESS_KEY, "k1");
 
         ListPoolsCommand command = new ListPoolsCommand(processEngine);
         command.setOut(out);
