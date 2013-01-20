@@ -20,6 +20,7 @@ import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -68,6 +69,12 @@ public class ListPoolsCommand extends OsgiCommandSupport {
                 .getVariable(instance.getId(), CoreProcessVariables.POOL);
             if (pool == null) {
                 continue; /* skip - this process is not a provisionr process */
+            }
+
+            String businessKey = (String) processEngine.getRuntimeService()
+                .getVariable(instance.getId(), CoreProcessVariables.POOL_BUSINESS_KEY);
+            if (!Objects.equal(instance.getBusinessKey(), businessKey)) {
+                continue; /* ignore - this is a process started by the main pool management process */
             }
 
             @SuppressWarnings("unchecked")
