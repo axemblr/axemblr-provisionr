@@ -25,6 +25,7 @@ import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.commands.predicates.ProvisionrPredicates;
+import com.axemblr.provisionr.core.templates.PoolTemplate;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
@@ -62,6 +63,9 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     @Option(name = "-s", aliases = "--size", description = "Expected pool size")
     private int size = 1;
 
+    @Option(name = "-t", aliases = "--template", description = "Pool pre-configured template")
+    private String template;
+
     @Option(name = "-h", aliases = "--hardware-type", description = "Virtual machine hardware type")
     private String hardwareType = "t1.micro";
 
@@ -78,8 +82,11 @@ public class CreatePoolCommand extends OsgiCommandSupport {
 
     private final List<Provisionr> services;
 
-    public CreatePoolCommand(List<Provisionr> services) {
+    private final List<PoolTemplate> templates;
+
+    public CreatePoolCommand(List<Provisionr> services, List<PoolTemplate> templates) {
         this.services = checkNotNull(services, "services is null");
+        this.templates = checkNotNull(templates, "templates is null");
     }
 
     @Override
@@ -97,7 +104,8 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         }
     }
 
-    protected Pool createPoolFromArgumentsAndServiceDefaults(Provisionr service) {
+    @VisibleForTesting
+    Pool createPoolFromArgumentsAndServiceDefaults(Provisionr service) {
         final Optional<Provider> defaultProvider = service.getDefaultProvider();
         checkArgument(defaultProvider.isPresent(), String.format("please configure a default provider " +
             "by editing etc/com.axemblr.provisionr.%s.cfg", id));
@@ -114,7 +122,7 @@ public class CreatePoolCommand extends OsgiCommandSupport {
 
         final Software software = Software.builder().packages(packages).createSoftware();
 
-        return Pool.builder()
+        final Pool pool = Pool.builder()
             .provider(defaultProvider.get())
             .hardware(hardware)
             .software(software)
@@ -124,6 +132,17 @@ public class CreatePoolCommand extends OsgiCommandSupport {
             .expectedSize(size)
             .cacheBaseImage(cacheBaseImage)
             .createPool();
+
+        if (template != null) {
+            for (PoolTemplate candidate : templates) {
+                if (candidate.getId().equalsIgnoreCase(template)) {
+                    return candidate.apply(pool);
+                }
+            }
+            throw new NoSuchElementException("No pool template found with name: " + template);
+        }
+
+        return pool;
     }
 
     private Set<Rule> formatPortsAsIngressRules() {
@@ -134,7 +153,7 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         return rules.build();
     }
 
-    private AdminAccess collectCurrentUserCredentialsForAdminAccess() {
+    protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
         String userHome = System.getProperty("user.home");
 
         try {
@@ -162,6 +181,11 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     void setSize(int size) {
         checkArgument(size > 0, "size should be a positive number");
         this.size = size;
+    }
+
+    @VisibleForTesting
+    void setTemplate(String template) {
+        this.template = checkNotNull(template, "template is null");
     }
 
     @VisibleForTesting
