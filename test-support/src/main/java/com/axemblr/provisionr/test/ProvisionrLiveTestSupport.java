@@ -21,6 +21,7 @@ import com.axemblr.provisionr.api.provider.ProviderBuilder;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Stopwatch;
 import com.google.common.io.Resources;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -31,8 +32,12 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProvisionrLiveTestSupport {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProvisionrLiveTestSupport.class);
 
     @Inject
     protected BundleContext bundleContext;
@@ -116,21 +121,33 @@ public class ProvisionrLiveTestSupport {
         }
     }
 
-    public void waitForProcessEnd(final String processId) throws InterruptedException {
-        while (processNotEnded(processId)) {
-            TimeUnit.SECONDS.sleep(1);
-        }
+    public void waitForProcessEnd(String processInstanceId) throws Exception {
+        waitForProcessEnd(processInstanceId, 60000 /* milliseconds */);
     }
 
-    private boolean processNotEnded(final String processId) throws InterruptedException {
-        ProcessInstance localInstance = getProcessInstanceById(processId);
+    public void waitForProcessEnd(final String processInstanceId, int timeoutInMilliseconds) throws Exception {
+        Stopwatch stopwatch = new Stopwatch().start();
+        while (isProcessNotEnded(processInstanceId)) {
+            if (stopwatch.elapsedMillis() > timeoutInMilliseconds) {
+                throw new TimeoutException(String.format("Process %s not ended in %d milliseconds.",
+                    processInstanceId, timeoutInMilliseconds));
+            }
+            LOG.info(String.format("Process instance %s not ended. Waiting 1s.", processInstanceId));
+            TimeUnit.SECONDS.sleep(1);
+        }
+        LOG.info(String.format("Process instance %s ended as expected in less than %d milliseconds",
+            processInstanceId, timeoutInMilliseconds));
+    }
+
+    private boolean isProcessNotEnded(final String processInstanceId) throws InterruptedException {
+        ProcessInstance localInstance = getProcessInstanceById(processInstanceId);
         return localInstance != null && !localInstance.isEnded();
     }
 
-    private ProcessInstance getProcessInstanceById(final String processId) throws InterruptedException {
+    private ProcessInstance getProcessInstanceById(final String processInstanceId) throws InterruptedException {
         ProcessEngine engine = getOsgiService(ProcessEngine.class, 5000);
         return engine.getRuntimeService().createProcessInstanceQuery()
-            .processInstanceId(processId)
+            .processInstanceId(processInstanceId)
             .singleResult();
     }
 }
