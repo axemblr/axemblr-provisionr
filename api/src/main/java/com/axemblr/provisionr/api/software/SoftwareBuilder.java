@@ -61,6 +61,11 @@ public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
         return this;
     }
 
+    public SoftwareBuilder addPackage(String pkg) {
+        this.packages.add(pkg);
+        return this;
+    }
+
     public SoftwareBuilder repositories(Iterable<Repository> repositories) {
         this.repositories = ImmutableList.<Repository>builder().addAll(repositories);
         return this;

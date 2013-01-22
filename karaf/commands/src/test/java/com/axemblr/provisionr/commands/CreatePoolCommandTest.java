@@ -17,9 +17,15 @@
 package com.axemblr.provisionr.commands;
 
 import com.axemblr.provisionr.api.Provisionr;
+import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.provider.Provider;
+import com.axemblr.provisionr.core.templates.JenkinsTemplate;
+import com.axemblr.provisionr.core.templates.PoolTemplate;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.apache.felix.service.command.CommandSession;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -38,7 +44,9 @@ public class CreatePoolCommandTest {
         final Provisionr service = newProvisionrMockWithId(TEST_PROVISIONR_ID);
         final Pool pool = mock(Pool.class);
 
-        CreatePoolCommand command = new CreatePoolCommand(ImmutableList.of(service)) {
+        final List<Provisionr> services = ImmutableList.of(service);
+        final List<PoolTemplate> templates = ImmutableList.<PoolTemplate>of(new JenkinsTemplate());
+        CreatePoolCommand command = new CreatePoolCommand(services, templates) {
             @Override
             protected Pool createPoolFromArgumentsAndServiceDefaults(Provisionr service) {
                 return pool;
@@ -56,11 +64,37 @@ public class CreatePoolCommandTest {
 
     @Test(expected = NoSuchElementException.class)
     public void testProvisioningServiceNotFound() throws Exception {
-        CreatePoolCommand command = new CreatePoolCommand(Collections.<Provisionr>emptyList());
+        CreatePoolCommand command = new CreatePoolCommand(Collections.<Provisionr>emptyList(),
+            Collections.<PoolTemplate>emptyList());
         command.setId("dummy");
 
         CommandSession session = mock(CommandSession.class);
         command.execute(session);
+    }
+
+    @Test
+    public void testCreatePoolWithTemplate() {
+        final JenkinsTemplate template = new JenkinsTemplate();
+        CreatePoolCommand command = new CreatePoolCommand(Collections.<Provisionr>emptyList(),
+            ImmutableList.<PoolTemplate>of(template)) {
+
+            @Override
+            protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
+                return mock(AdminAccess.class);
+            }
+        };
+
+        command.setId("service");
+        command.setKey("key");
+        command.setTemplate(template.getId());
+
+        Provisionr service = mock(Provisionr.class);
+        when(service.getDefaultProvider()).thenReturn(Optional.of(mock(Provider.class)));
+
+        Pool pool = command.createPoolFromArgumentsAndServiceDefaults(service);
+
+        assertThat(pool.getSoftware().getRepositories()).hasSize(1);
+        assertThat(pool.getSoftware().getPackages()).contains("jenkins").contains("git-core");
     }
 
     private Provisionr newProvisionrMockWithId(String id) {

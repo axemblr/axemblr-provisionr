@@ -112,5 +112,13 @@
     <bean id="bouncyCastleAsJceProviderRegistration" class="net.schmizz.sshj.common.SecurityUtils"
           factory-method="getSecurityProvider"/>
 
+    <!-- Templates -->
+
+    <bean id="jenkinsTemplate" class="com.axemblr.provisionr.core.templates.JenkinsTemplate"/>
+    <service ref="jenkinsTemplate" interface="com.axemblr.provisionr.core.templates.PoolTemplate"/>
+
+    <bean id="clouderaCDH3" class="com.axemblr.provisionr.core.templates.ClouderaCDH3Template"/>
+    <service ref="clouderaCDH3" interface="com.axemblr.provisionr.core.templates.PoolTemplate"/>
+
 </blueprint>
 
