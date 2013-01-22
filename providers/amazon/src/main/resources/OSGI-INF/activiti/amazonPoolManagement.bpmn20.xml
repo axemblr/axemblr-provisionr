@@ -58,7 +58,6 @@
     </intermediateCatchEvent>
     <eventBasedGateway id="eventgateway1" name="Event Gateway"></eventBasedGateway>
     <serviceTask id="publishListOfMachines" name="Publish List of Machines" activiti:async="true" activiti:delegateExpression="${amazon_publishListOfMachines}"></serviceTask>
-    <userTask id="done" name="Done" activiti:async="true"></userTask>
     <scriptTask id="setStatusReady" name="Set status &quot;ready&quot;" activiti:async="true" scriptFormat="groovy">
       <script><![CDATA[execution.setVariable("status", "ready");]]></script>
     </scriptTask>
@@ -125,7 +124,6 @@
     <sequenceFlow id="flow58" name="" sourceRef="eventgateway1" targetRef="signalintermediatecatchevent1"></sequenceFlow>
     <sequenceFlow id="flow59" name="" sourceRef="eventgateway1" targetRef="catchTerminatePoolOnTimeoutEvent"></sequenceFlow>
     <sequenceFlow id="flow74" name="" sourceRef="bootstrapTimeoutBoundaryEvent" targetRef="throwTerminatePoolOnTimeoutEvent"></sequenceFlow>
-    <sequenceFlow id="flow87" name="" sourceRef="setStatusReady" targetRef="done"></sequenceFlow>
     <sequenceFlow id="flow88" name="" sourceRef="waitForAllInstancesToStart" targetRef="parallelgateway7"></sequenceFlow>
     <sequenceFlow id="flow89" name="" sourceRef="parallelgateway7" targetRef="publishListOfMachines"></sequenceFlow>
     <sequenceFlow id="flow90" name="" sourceRef="publishListOfMachines" targetRef="parallelgateway8"></sequenceFlow>
@@ -137,6 +135,21 @@
     <sequenceFlow id="flow105" name="" sourceRef="subprocess1" targetRef="setStatusReady"></sequenceFlow>
     <sequenceFlow id="flow106" name="" sourceRef="boundarytimer1" targetRef="signalintermediatethrowevent1"></sequenceFlow>
     <sequenceFlow id="flow107" name="" sourceRef="parallelgateway8" targetRef="spawnMachineSetupProcesses"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway7" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow108" name="" sourceRef="setStatusReady" targetRef="exclusivegateway7"></sequenceFlow>
+    <endEvent id="endevent8" name="End"></endEvent>
+    <sequenceFlow id="flow109" name="status is &quot;terminated&quot;" sourceRef="exclusivegateway7" targetRef="endevent8">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status == "terminated"}]]></conditionExpression>
+    </sequenceFlow>
+    <intermediateCatchEvent id="timerintermediatecatchevent5" name="TimerCatchEvent">
+      <timerEventDefinition>
+        <timeDuration>PT5S</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow id="flow110" name="status not &quot;terminated&quot;" sourceRef="exclusivegateway7" targetRef="timerintermediatecatchevent5">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status != "terminated"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow111" name="" sourceRef="timerintermediatecatchevent5" targetRef="exclusivegateway7"></sequenceFlow>
     <textAnnotation id="textannotation1" textFormat="text/plain">
       <text><![CDATA[10 minutes timeout (PT10M) static]]></text>
     </textAnnotation>
@@ -161,6 +174,14 @@
     <association id="association4" sourceRef="textannotation4" targetRef="catchTerminatePoolOnTimeoutEvent" associationDirection="None"></association>
     <association id="association5" sourceRef="textannotation5" targetRef="throwTerminatePoolOnTimeoutEvent" associationDirection="None"></association>
     <association id="association6" sourceRef="textannotation6" targetRef="signalintermediatethrowevent1" associationDirection="None"></association>
+    <textAnnotation id="textannotation7" textFormat="text/plain">
+      <text><![CDATA[Wait to 5 seconds and check again]]></text>
+    </textAnnotation>
+    <association id="association7" sourceRef="textannotation7" targetRef="timerintermediatecatchevent5" associationDirection="None"></association>
+    <textAnnotation id="textannotation8" textFormat="text/plain">
+      <text><![CDATA[TODO: extend loop to monitor machines]]></text>
+    </textAnnotation>
+    <association id="association8" sourceRef="textannotation8" targetRef="timerintermediatecatchevent5" associationDirection="None"></association>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_amazonPoolManagement">
     <bpmndi:BPMNPlane bpmnElement="amazonPoolManagement" id="BPMNPlane_amazonPoolManagement">
@@ -272,11 +293,8 @@
       <bpmndi:BPMNShape bpmnElement="publishListOfMachines" id="BPMNShape_publishListOfMachines">
         <omgdc:Bounds height="55" width="105" x="852" y="70"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="done" id="BPMNShape_done">
-        <omgdc:Bounds height="55" width="105" x="1728" y="70"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="setStatusReady" id="BPMNShape_setStatusReady">
-        <omgdc:Bounds height="55" width="105" x="1573" y="70"></omgdc:Bounds>
+        <omgdc:Bounds height="55" width="105" x="1326" y="264"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="parallelgateway7" id="BPMNShape_parallelgateway7">
         <omgdc:Bounds height="40" width="40" x="790" y="77"></omgdc:Bounds>
@@ -343,6 +361,15 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="signalintermediatethrowevent1" id="BPMNShape_signalintermediatethrowevent1">
         <omgdc:Bounds height="35" width="35" x="1150" y="7"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway7" id="BPMNShape_exclusivegateway7">
+        <omgdc:Bounds height="40" width="40" x="1473" y="271"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent8" id="BPMNShape_endevent8">
+        <omgdc:Bounds height="35" width="35" x="1580" y="274"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="timerintermediatecatchevent5" id="BPMNShape_timerintermediatecatchevent5">
+        <omgdc:Bounds height="35" width="35" x="1476" y="392"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
         <omgdi:waypoint x="65" y="97"></omgdi:waypoint>
@@ -450,10 +477,6 @@
         <omgdi:waypoint x="755" y="40"></omgdi:waypoint>
         <omgdi:waypoint x="870" y="24"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow87" id="BPMNEdge_flow87">
-        <omgdi:waypoint x="1678" y="97"></omgdi:waypoint>
-        <omgdi:waypoint x="1728" y="97"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow88" id="BPMNEdge_flow88">
         <omgdi:waypoint x="757" y="97"></omgdi:waypoint>
         <omgdi:waypoint x="790" y="97"></omgdi:waypoint>
@@ -489,8 +512,8 @@
         <omgdi:waypoint x="1244" y="97"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow105" id="BPMNEdge_flow105">
-        <omgdi:waypoint x="1514" y="97"></omgdi:waypoint>
-        <omgdi:waypoint x="1573" y="97"></omgdi:waypoint>
+        <omgdi:waypoint x="1379" y="200"></omgdi:waypoint>
+        <omgdi:waypoint x="1378" y="264"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow106" id="BPMNEdge_flow106">
         <omgdi:waypoint x="1246" y="40"></omgdi:waypoint>
@@ -499,6 +522,30 @@
       <bpmndi:BPMNEdge bpmnElement="flow107" id="BPMNEdge_flow107">
         <omgdi:waypoint x="1025" y="97"></omgdi:waypoint>
         <omgdi:waypoint x="1070" y="97"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow108" id="BPMNEdge_flow108">
+        <omgdi:waypoint x="1431" y="291"></omgdi:waypoint>
+        <omgdi:waypoint x="1473" y="291"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow109" id="BPMNEdge_flow109">
+        <omgdi:waypoint x="1513" y="291"></omgdi:waypoint>
+        <omgdi:waypoint x="1580" y="291"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="36" width="100" x="-33" y="-52"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow110" id="BPMNEdge_flow110">
+        <omgdi:waypoint x="1493" y="311"></omgdi:waypoint>
+        <omgdi:waypoint x="1412" y="409"></omgdi:waypoint>
+        <omgdi:waypoint x="1476" y="409"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="36" width="100" x="-51" y="-46"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow111" id="BPMNEdge_flow111">
+        <omgdi:waypoint x="1511" y="409"></omgdi:waypoint>
+        <omgdi:waypoint x="1576" y="409"></omgdi:waypoint>
+        <omgdi:waypoint x="1493" y="311"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
         <omgdc:Bounds height="50" width="100" x="795" y="-54"></omgdc:Bounds>
@@ -517,6 +564,12 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="textannotation6" id="BPMNShape_textannotation6">
         <omgdc:Bounds height="50" width="173" x="1180" y="-54"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation7" id="BPMNShape_textannotation7">
+        <omgdc:Bounds height="50" width="100" x="1387" y="442"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation8" id="BPMNShape_textannotation8">
+        <omgdc:Bounds height="50" width="100" x="1540" y="442"></omgdc:Bounds>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
