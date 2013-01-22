@@ -17,6 +17,7 @@
 package com.axemblr.provisionr.commands;
 
 import com.axemblr.provisionr.api.Provisionr;
+import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.core.templates.JenkinsTemplate;
@@ -75,7 +76,13 @@ public class CreatePoolCommandTest {
     public void testCreatePoolWithTemplate() {
         final JenkinsTemplate template = new JenkinsTemplate();
         CreatePoolCommand command = new CreatePoolCommand(Collections.<Provisionr>emptyList(),
-            ImmutableList.<PoolTemplate>of(template));
+            ImmutableList.<PoolTemplate>of(template)) {
+
+            @Override
+            protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
+                return mock(AdminAccess.class);
+            }
+        };
 
         command.setId("service");
         command.setKey("key");

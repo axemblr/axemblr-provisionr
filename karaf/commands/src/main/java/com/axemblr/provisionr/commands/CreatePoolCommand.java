@@ -153,7 +153,7 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         return rules.build();
     }
 
-    private AdminAccess collectCurrentUserCredentialsForAdminAccess() {
+    protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
         String userHome = System.getProperty("user.home");
 
         try {
