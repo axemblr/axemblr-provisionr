@@ -50,7 +50,7 @@
         <!-- Max number of job retries. Use -1 for infinity -->
         <argument value="13"/>
         <!-- Wait time between retries in seconds -->
-        <argument value="5"/>
+        <argument value="10"/>
     </bean>
 
     <bean id="configurationFactory" class="com.axemblr.provisionr.core.activiti.ConfigurationFactory">

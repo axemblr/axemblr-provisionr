@@ -37,6 +37,7 @@ import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectW
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -113,14 +114,14 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
             .createPool());
 
         final String businessKey = "j-" + UUID.randomUUID().toString();
-
-        provisionr.startPoolManagementProcess(businessKey, pool);
-        waitForPoolStatus(provisionr, businessKey, PoolStatus.READY);
-
-        List<Machine> machines = provisionr.getMachines(businessKey);
-        assertTrue(machines.size() >= TEST_POOL_SIZE && machines.size() <= TEST_POOL_SIZE);
+        String processInstanceId = provisionr.startPoolManagementProcess(businessKey, pool);
 
         try {
+            waitForPoolStatus(provisionr, businessKey, PoolStatus.READY);
+
+            List<Machine> machines = provisionr.getMachines(businessKey);
+            assertTrue(machines.size() >= TEST_POOL_SIZE && machines.size() <= TEST_POOL_SIZE);
+
             for (Machine machine : machines) {
                 assertSshCommand(machine, adminAccess, "test -f " + destinationPath);
 
@@ -131,7 +132,9 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
             }
         } finally {
             provisionr.destroyPool(businessKey);
+
             waitForPoolStatus(provisionr, businessKey, PoolStatus.TERMINATED);
+            waitForProcessEnd(processInstanceId);
         }
     }
 
@@ -157,8 +160,17 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
     private void waitForPoolStatus(Provisionr provisionr, String businessKey,
                                    String expectedStatus) throws InterruptedException, TimeoutException {
-        for (int i = 0; i < 60; i++) {
-            String status = provisionr.getStatus(businessKey);
+        for (int i = 0; i < 120; i++) {
+            String status;
+            try {
+                status = provisionr.getStatus(businessKey);
+
+            } catch (NoSuchElementException e) {
+                LOG.info(String.format("Pool management process not found with key %s. " +
+                    "Assuming process terminated as expected.", businessKey));
+                return;  /* The process ended as expected */
+            }
+
             if (status.equals(expectedStatus)) {
                 LOG.info("Pool status is '{}'. Advancing.", status);
                 return;
@@ -168,6 +180,6 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
                 TimeUnit.SECONDS.sleep(10);
             }
         }
-        throw new TimeoutException("Status check timed out after 10 minutes");
+        throw new TimeoutException("Status check timed out after 20 minutes");
     }
 }
