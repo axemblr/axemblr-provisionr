@@ -175,7 +175,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
                 LOG.info("Pool status is '{}'. Advancing.", status);
                 return;
             } else {
-                LOG.info("Pool status is '{}'. Waiting 10s for '{}'. Try {}/60",
+                LOG.info("Pool status is '{}'. Waiting 10s for '{}'. Try {}/120",
                     new Object[]{status, expectedStatus, i});
                 TimeUnit.SECONDS.sleep(10);
             }
