@@ -31,14 +31,14 @@ import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
 @Command(scope = "provisionr", name = "reset-retries",
-    description = "Reset to default (3) the number of retires of all jobs without retries left.")
+    description = "Reset to default (3) the number of retries of all jobs without retries left.")
 public class ResetRetriesCommand extends OsgiCommandSupport {
 
     private final ProcessEngine processEngine;
     private PrintStream out = System.out;
 
     @Option(name = "-k", aliases = "--key", description = "Reset number of retries for jobs associated with pool", required = true)
-    private String businessKey = "";
+    private String businessKey;
 
     public ResetRetriesCommand(ProcessEngine processEngine) {
         this.processEngine = checkNotNull(processEngine, "processEngine is null");
@@ -46,7 +46,7 @@ public class ResetRetriesCommand extends OsgiCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        if (businessKey.isEmpty()) {
+        if (businessKey == null || businessKey.isEmpty()) {
             out.println("Please supply a business key");
         } else {
             // reverse the list to start the sub-processes first (they have bigger id's)
