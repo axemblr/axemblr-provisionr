@@ -54,5 +54,10 @@
                 <shell:argument ref="provisionrServices"/>
             </shell:action>
         </shell:command>
+        <shell:command name="provisionr/reset-retries">
+            <shell:action class="com.axemblr.provisionr.commands.ResetRetriesCommand">
+                <shell:argument ref="processEngine"/>
+            </shell:action>
+        </shell:command>
     </shell:command-bundle>
 </blueprint>
