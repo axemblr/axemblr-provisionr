@@ -39,6 +39,18 @@ public abstract class PuppetActivity implements JavaDelegate {
 
     private static final Logger LOG = LoggerFactory.getLogger(PuppetActivity.class);
 
+    /**
+     * Puppet apply had no failures during the current transaction
+     * <p/>
+     * --detailed-exitcodes Provide transaction information via exit codes. If this is
+     * enabled, an exit code of '2' means there were changes, an exit code of '4' means
+     * there were failures during the transaction, and an exit code of '6' means there
+     * were both changes and failures.
+     *
+     * @see <a href="http://docs.puppetlabs.com/man/apply.html" />
+     */
+    public static final int PUPPET_FINISHED_WITH_NO_FAILURES = 2;
+
     private final String remoteFileName;
 
     public PuppetActivity(String remoteFileName) {
@@ -93,15 +105,16 @@ public abstract class PuppetActivity implements JavaDelegate {
                     "do echo 'Puppet command not found. Waiting for userdata.sh script to finish (10s)' " +
                     "&& sleep 10; " +
                     "done " +
-                    "&& sudo puppet apply --debug --verbose " + destination;
+                    "&& sudo puppet apply --detailed-exitcodes --debug --verbose " + destination;
                 Session.Command command = session.exec(runScriptWithWaitCommand);
 
                 Ssh.logCommandOutput(LOG, machine.getExternalId(), command);
                 command.join();
 
-                if (command.getExitStatus() != 0) {
-                    throw new RuntimeException(String.format("Failed to execute puppet. Exit code: %d. Exit message: %s",
-                        command.getExitStatus(), command.getExitErrorMessage()));
+                final Integer exitStatus = command.getExitStatus();
+                if (exitStatus != PUPPET_FINISHED_WITH_NO_FAILURES && exitStatus != 0) {
+                    throw new RuntimeException(String.format("Failed to execute puppet. " +
+                        "Exit code: %d. Exit message: %s", exitStatus, command.getExitErrorMessage()));
 
                 } else {
                     LOG.info("<< Command completed successfully with exit code 0");
