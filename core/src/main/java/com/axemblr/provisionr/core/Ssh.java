@@ -41,7 +41,12 @@ public class Ssh {
 
     private static final Logger LOG = LoggerFactory.getLogger(Ssh.class);
 
-    public static final int DEFAULT_TIMEOUT = 2 * 60 * 1000; /* 2 minutes in milliseconds */
+    /**
+     * Fail if a connection can't be established in this amount of time
+     */
+    public static final int DEFAULT_CONNECT_TIMEOUT = 30 * 1000; /* milliseconds */
+
+    public static final int DEFAULT_READ_TIMEOUT = 10 * 60 * 1000; /* milliseconds */
 
     private Ssh() {
     }
@@ -62,7 +67,7 @@ public class Ssh {
     }
 
     public static SSHClient newClient(Machine machine, AdminAccess adminAccess) throws IOException {
-        return newClient(machine, adminAccess, DEFAULT_TIMEOUT);
+        return newClient(machine, adminAccess, DEFAULT_READ_TIMEOUT);
     }
 
     /**
@@ -78,7 +83,7 @@ public class Ssh {
         client.addHostKeyVerifier(AcceptAnyHostKeyVerifier.INSTANCE);
 
         if (timeoutInMillis != 0) {
-            client.setConnectTimeout(timeoutInMillis);
+            client.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT);
             client.setTimeout(timeoutInMillis);
         }
         client.connect(machine.getPublicDnsName(), machine.getSshPort());
