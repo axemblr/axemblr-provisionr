@@ -19,7 +19,7 @@
 
     <groupId>com.axemblr.provisionr</groupId>
     <artifactId>provisionr-parent</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.2.1</version>
     <packaging>pom</packaging>
 
     <modelVersion>4.0.0</modelVersion>
@@ -54,7 +54,7 @@
         <connection>scm:git:git@github.com:axemblr/axemblr-provisionr.git</connection>
         <developerConnection>scm:git:git@github.com:axemblr/axemblr-provisionr.git</developerConnection>
         <url>https://github.com/axemblr/axemblr-provisionr</url>
-        <tag>HEAD</tag>
+        <tag>provisionr-0.2.1</tag>
     </scm>
 
     <issueManagement>
