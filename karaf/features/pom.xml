@@ -15,7 +15,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>provisionr-parent</artifactId>
         <groupId>com.axemblr.provisionr</groupId>
@@ -101,15 +102,11 @@
                 </executions>
                 <configuration>
                     <options>
-                        <platform>equinox</platform>
+                        <platform>felix</platform>
                         <profiles>log</profiles>
                     </options>
                 </configuration>
             </plugin>
-            <!--
-             features:addurl mvn:com.axemblr.provisionr/provisionr-features/0.0.1-SNAPSHOT/xml/features
-             features:install <feature-name>
-             -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -148,11 +145,9 @@
                         <configuration>
                             <descriptors>
                                 <descriptor>file:${project.build.directory}/features.xml</descriptor>
-                                <descriptor>mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.karaf.version}/xml/features
-                                </descriptor>
                             </descriptors>
                             <features>
-                                <feature>axemblr-provisionr</feature>
+                                <feature>axemblr-provisionr-all</feature>
                             </features>
                             <repository>target/features-repo</repository>
                         </configuration>

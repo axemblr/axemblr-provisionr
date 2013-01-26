@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<features name="axemblr-provisionr-core-features-${project.version}"
+          xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+    <feature name="activiti-karaf" version="${activiti.version}">
+        <feature>transaction</feature>
+        <bundle dependency="true">
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.antlr/${antlr.osgi.version}
+        </bundle>
+        <bundle dependency="true">mvn:org.eclipse.jetty.orbit/org.objectweb.asm/${asm.version}</bundle>
+        <bundle dependency="true">mvn:javax.mail/mail/${java.mail.version}</bundle>
+
+        <bundle dependency="true">mvn:com.h2database/h2/${h2.version}</bundle>
+        <bundle dependency="true">mvn:org.mybatis/mybatis/${mybatis.version}</bundle>
+
+        <bundle dependency="true">mvn:org.codehaus.groovy/groovy/${groovy.version}</bundle>
+
+        <bundle start="true">mvn:org.activiti/activiti-engine/${activiti.version}</bundle>
+        <bundle start="true">mvn:org.activiti/activiti-osgi/${activiti.version}</bundle>
+    </feature>
+
+    <feature name="axemblr-provisionr-core" version="${project.version}">
+        <feature version="${activiti.version}">activiti-karaf</feature>
+
+        <bundle dependency="true">mvn:com.google.code.gson/gson/${gson.version}</bundle>
+        <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
+        <bundle dependency="true">mvn:org.bouncycastle/bcprov-jdk16/${bouncycastle.version}</bundle>
+        <bundle dependency="true">mvn:net.schmizz/sshj/${sshj.version}</bundle>
+        <bundle dependency="true">
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/${jzlib.bundle.version}
+        </bundle>
+        <bundle dependency="true">wrap:mvn:com.github.spullara.mustache.java/compiler/${mustache.version}</bundle>
+
+        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-api/${project.version}</bundle>
+        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-core/${project.version}</bundle>
+        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-commands/${project.version}</bundle>
+
+        <configfile finalname="/etc/com.axemblr.provisionr.cfg">
+            mvn:com.axemblr.provisionr/provisionr-core/${project.version}/cfg/defaults
+        </configfile>
+    </feature>
+</features>

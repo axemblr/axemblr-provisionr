@@ -18,8 +18,8 @@
 
     <reference-list id="provisionrServices" interface="com.axemblr.provisionr.api.Provisionr"/>
 
-    <bean id="poolClient" class="com.axemblr.provisionr.client.ProvisionrClient"
-          init-method="init">
+    <bean id="poolClient" class="com.axemblr.provisionr.client.ProvisionrClient" init-method="init">
         <argument ref="provisionrServices"/>
     </bean>
+
 </blueprint>

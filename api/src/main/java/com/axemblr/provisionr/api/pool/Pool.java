@@ -19,14 +19,12 @@ package com.axemblr.provisionr.api.pool;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
-import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.collect.ImmutableMap;
-import java.io.Serializable;
 import java.util.Map;
 
 public class Pool extends WithOptions {
