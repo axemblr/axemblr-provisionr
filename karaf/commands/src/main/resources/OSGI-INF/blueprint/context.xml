@@ -17,7 +17,7 @@
 
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
            xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
-    >
+        >
 
     <reference-list id="provisionrServices" interface="com.axemblr.provisionr.api.Provisionr"
                     availability="optional" activation="eager"/>
@@ -52,6 +52,7 @@
         <shell:command name="provisionr/destroy">
             <shell:action class="com.axemblr.provisionr.commands.DestroyPoolCommand">
                 <shell:argument ref="provisionrServices"/>
+                <shell:argument ref="processEngine"/>
             </shell:action>
         </shell:command>
         <shell:command name="provisionr/reset-retries">
