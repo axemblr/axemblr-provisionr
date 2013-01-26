@@ -23,6 +23,13 @@ public class CoreProcessVariables {
     }
 
     /**
+     * Provider ID as returned by the Provisionr object
+     *
+     * @see com.axemblr.provisionr.api.Provisionr
+     */
+    public static final String PROVIDER = "provider";
+
+    /**
      * Pool configuration description
      *
      * @see com.axemblr.provisionr.api.pool.Pool

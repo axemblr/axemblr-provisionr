@@ -71,7 +71,9 @@ public class AmazonProvisionr extends ProvisionrSupport {
     @Override
     public String startPoolManagementProcess(String businessKey, Pool pool) {
         Map<String, Object> arguments = Maps.newHashMap();
+
         arguments.put(CoreProcessVariables.POOL, pool);
+        arguments.put(CoreProcessVariables.PROVIDER, getId());
         arguments.put(CoreProcessVariables.POOL_BUSINESS_KEY, businessKey);
 
         /* Authenticate as kermit to make the process visible in the Explorer UI */

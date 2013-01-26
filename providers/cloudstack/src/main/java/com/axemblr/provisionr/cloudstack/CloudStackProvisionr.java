@@ -67,12 +67,13 @@ public class CloudStackProvisionr extends ProvisionrSupport {
 
     @Override
     public String startPoolManagementProcess(String businessKey, Pool pool) {
-        LOG.info("**** CloudStack (startCreatePoolProcess) id: " + businessKey + " pool: " + pool);
-        //TODO: make sure the all information in the pool is valid - i.e. it will not make the cloud scream at us !!
         Map<String, Object> arguments = Maps.newHashMap();
+
         arguments.put(CoreProcessVariables.POOL, pool);
+        arguments.put(CoreProcessVariables.PROVIDER, getId());
         arguments.put(CoreProcessVariables.POOL_BUSINESS_KEY, businessKey);
 
+        /* Authenticate as kermit to make the process visible in the Explorer UI */
         processEngine.getIdentityService().setAuthenticatedUserId(CoreConstants.ACTIVITI_EXPLORER_DEFAULT_USER);
 
         RuntimeService runtimeService = processEngine.getRuntimeService();
