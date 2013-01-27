@@ -32,6 +32,12 @@
     <dependencies>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-core</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-assembly</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

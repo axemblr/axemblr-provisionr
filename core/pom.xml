@@ -30,7 +30,16 @@
     <artifactId>provisionr-core</artifactId>
     <packaging>bundle</packaging>
 
+    <properties>
+        <osgi.import>*</osgi.import>
+        <osgi.export>com.axemblr.provisionr.core*</osgi.export>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -54,6 +63,10 @@
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.fileinstall</artifactId>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
@@ -107,6 +120,11 @@
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>xmlunit</groupId>
+            <artifactId>xmlunit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -125,7 +143,8 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Export-Packages>com.axemblr.provisionr.core, *</Export-Packages>
+                        <Import-Packages>${osgi.import}</Import-Packages>
+                        <Export-Packages>${osgi.export}</Export-Packages>
                     </instructions>
                 </configuration>
             </plugin>
@@ -150,6 +169,27 @@
                                     <file>${project.build.directory}/classes/com.axemblr.provisionr.cfg</file>
                                     <type>cfg</type>
                                     <classifier>defaults</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>
+                                        ${project.build.directory}/classes/org.apache.felix.fileinstall-templates.cfg
+                                    </file>
+                                    <type>cfg</type>
+                                    <classifier>fileinstall</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>
+                                        ${project.build.directory}/classes/com/axemblr/provisionr/core/templates/cdh3.xml
+                                    </file>
+                                    <type>template</type>
+                                    <classifier>cdh3</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>
+                                        ${project.build.directory}/classes/com/axemblr/provisionr/core/templates/jenkins.xml
+                                    </file>
+                                    <type>template</type>
+                                    <classifier>jenkins</classifier>
                                 </artifact>
                             </artifacts>
                         </configuration>

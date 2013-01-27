@@ -37,17 +37,17 @@
     <dependencies>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-console</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-amazon</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-cloudstack</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-console</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

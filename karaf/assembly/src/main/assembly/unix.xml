@@ -33,7 +33,7 @@
                 <exclude>etc/org.apache.karaf.features.cfg</exclude>
                 <exclude>etc/custom.properties</exclude>
                 <exclude>etc/startup.properties</exclude>
-                <exclude>etc/jre.properties*</exclude>
+                <!--<exclude>etc/jre.properties*</exclude>-->
                 <exclude>etc/org.apache.karaf.features.repos.cfg</exclude>
                 <exclude>readme.txt</exclude>
                 <exclude>LICENSE</exclude>
@@ -74,6 +74,18 @@
             <lineEnding>unix</lineEnding>
             <fileMode>0644</fileMode>
         </fileSet>
+
+        <!-- Copy over templates -->
+        <fileSet>
+            <directory>target/classes/templates</directory>
+            <outputDirectory>/templates/</outputDirectory>
+            <includes>
+                <include>*.*</include>
+            </includes>
+            <lineEnding>unix</lineEnding>
+            <fileMode>0644</fileMode>
+        </fileSet>
+
 
         <!-- Add features to system repository -->
         <fileSet>
