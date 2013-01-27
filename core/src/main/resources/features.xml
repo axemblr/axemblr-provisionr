@@ -50,7 +50,6 @@
 
         <bundle start="true">mvn:com.axemblr.provisionr/provisionr-api/${project.version}</bundle>
         <bundle start="true">mvn:com.axemblr.provisionr/provisionr-core/${project.version}</bundle>
-        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-commands/${project.version}</bundle>
 
         <configfile finalname="/etc/com.axemblr.provisionr.cfg">
             mvn:com.axemblr.provisionr/provisionr-core/${project.version}/cfg/defaults
