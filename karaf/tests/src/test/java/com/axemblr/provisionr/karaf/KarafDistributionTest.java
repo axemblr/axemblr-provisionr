@@ -37,8 +37,6 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import org.ops4j.pax.exam.MavenUtils;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -79,19 +77,16 @@ public class KarafDistributionTest {
     public Option[] configuration() throws Exception {
         return new Option[]{
             useDefaultKarafAsInProjectWithJunitBundles(),
-            projectVersionAsSystemProperty(),
-            systemProperty("jclouds.version").value(MavenUtils
-                .getArtifactVersion("org.jclouds.karaf", "jclouds-karaf"))
+            projectVersionAsSystemProperty()
         };
     }
 
     @Test
     public void testAllFeaturesStartAsExpected() throws Exception {
         features.addRepository(getProvisionrFeaturesUrl());
-        features.addRepository(getJcloudsKarafFeaturesUrl());
 
-        features.installFeature("axemblr-provisionr");
-        assertFeatureInstalled("axemblr-provisionr");
+        features.installFeature("axemblr-provisionr-all");
+        assertFeatureInstalled("axemblr-provisionr-all");
 
         assertAllBundlesAreActive();
 
@@ -156,14 +151,6 @@ public class KarafDistributionTest {
         } finally {
             tracker.close();
         }
-    }
-
-    private URI getJcloudsKarafFeaturesUrl() {
-        return URI.create(maven("org.jclouds.karaf", "jclouds-karaf")
-            .version(System.getProperty("jclouds.version"))
-            .classifier("features")
-            .type("xml")
-            .getURL());
     }
 
     private URI getProvisionrFeaturesUrl() {
