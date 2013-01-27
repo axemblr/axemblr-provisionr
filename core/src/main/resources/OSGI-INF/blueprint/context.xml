@@ -24,6 +24,16 @@
             <cfg:property name="activiti.db.user" value="sa"/>
             <cfg:property name="activiti.db.password" value=""/>
             <cfg:property name="activiti.db.schemaUpdate" value="true"/>
+
+            <cfg:property name="activiti.executor.queueSize" value="30"/>
+            <cfg:property name="activiti.executor.corePoolSize" value="15"/>
+            <cfg:property name="activiti.executor.maxPoolSize" value="100"/>
+            <cfg:property name="activiti.executor.maxJobsPerAcquisition" value="30"/>
+            <cfg:property name="activiti.executor.waitTimeInMillis" value="1000"/>
+            <cfg:property name="activiti.executor.lockTimeInMillis" value="600000"/>
+
+            <cfg:property name="activiti.job.maxNumberOfRetries" value="13"/>
+            <cfg:property name="activiti.job.timeBetweenRetriesInSeconds" value="10"/>
         </cfg:default-properties>
     </cfg:property-placeholder>
 
@@ -34,20 +44,18 @@
     </bean>
 
     <bean id="jobExecutor" class="org.activiti.engine.impl.jobexecutor.DefaultJobExecutor">
-        <property name="queueSize" value="30"/>
-        <property name="corePoolSize" value="15"/>
-        <property name="maxPoolSize" value="100"/>
-        <property name="maxJobsPerAcquisition" value="30"/>
-        <property name="waitTimeInMillis" value="1000"/>
-        <property name="lockTimeInMillis" value="600000"/>
+        <property name="queueSize" value="$(activiti.executor.queueSize)"/>
+        <property name="corePoolSize" value="$(activiti.executor.corePoolSize)"/>
+        <property name="maxPoolSize" value="$(activiti.executor.maxPoolSize)"/>
+        <property name="maxJobsPerAcquisition" value="$(activiti.executor.maxJobsPerAcquisition)"/>
+        <property name="waitTimeInMillis" value="$(activiti.executor.waitTimeInMillis)"/>
+        <property name="lockTimeInMillis" value="$(activiti.executor.lockTimeInMillis)"/>
     </bean>
 
     <bean id="configurableFailedJobCommandFactory"
           class="com.axemblr.provisionr.core.activiti.ConfigurableFailedJobCommandFactory">
-        <!-- Max number of job retries. Use -1 for infinity -->
-        <argument value="13"/>
-        <!-- Wait time between retries in seconds -->
-        <argument value="10"/>
+        <argument value="$(activiti.job.maxNumberOfRetries)"/>
+        <argument value="$(activiti.job.timeBetweenRetriesInSeconds)"/>
     </bean>
 
     <bean id="configurationFactory" class="com.axemblr.provisionr.core.activiti.ConfigurationFactory">
