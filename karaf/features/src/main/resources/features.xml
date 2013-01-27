@@ -54,8 +54,14 @@
         mvn:com.axemblr.provisionr/provisionr-cloudstack/${project.version}/xml/features
     </repository>
 
+    <feature name="axemblr-provisionr-commands" version="${project.version}">
+        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-commands/${project.version}</bundle>
+    </feature>
+
     <feature name="axemblr-provisionr-all" version="${project.version}">
         <feature version="${project.version}">axemblr-provisionr-core</feature>
+        <feature version="${project.version}">axemblr-provisionr-commands</feature>
+
         <feature version="${project.version}">axemblr-provisionr-amazon</feature>
         <feature version="${project.version}">axemblr-provisionr-cloudstack</feature>
 
