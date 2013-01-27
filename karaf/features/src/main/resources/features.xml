@@ -16,44 +16,26 @@
   ~ limitations under the License.
   -->
 
-<features name="provisionr-features-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
-    <feature name="activiti" version="${activiti.version}">
-        <feature>jpa</feature>
-        <feature>transaction</feature>
-        <bundle dependency="true">
-            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.antlr/${antlr.osgi.version}
-        </bundle>
-        <bundle dependency="true">mvn:org.eclipse.jetty.orbit/org.objectweb.asm/${asm.version}</bundle>
-        <bundle dependency="true">mvn:javax.mail/mail/${java.mail.version}</bundle>
-
-        <bundle dependency="true">mvn:com.h2database/h2/${h2.version}</bundle>
-        <bundle dependency="true">mvn:org.mybatis/mybatis/${mybatis.version}</bundle>
-
-        <bundle dependency="true">mvn:org.codehaus.groovy/groovy/${groovy.version}</bundle>
-
-        <bundle start="true">mvn:org.activiti/activiti-engine/${activiti.version}</bundle>
-        <bundle start="true">mvn:org.activiti/activiti-osgi/${activiti.version}</bundle>
-    </feature>
+<features name="axemblr-provisionr-features-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
 
     <feature name="activiti-karaf-commands" version="${project.version}">
-        <feature version="${activiti.version}">activiti</feature>
         <bundle dependency="true">mvn:com.google.code.gson/gson/${gson.version}</bundle>
         <bundle start="true">mvn:org.activiti.karaf/activiti-karaf-commands/${project.version}</bundle>
     </feature>
 
     <feature name="activiti-karaf-web-explorer" version="${project.version}">
         <feature>war</feature>
-        <feature version="${activiti.version}">activiti</feature>
+        <feature>jpa</feature>
 
         <bundle>mvn:commons-io/commons-io/2.0.1</bundle>
         <bundle>mvn:commons-fileupload/commons-fileupload/1.2.2</bundle>
         <bundle>mvn:org.codehaus.jackson/jackson-core-asl/1.4.3</bundle>
         <bundle>mvn:org.codehaus.jackson/jackson-mapper-asl/1.4.3</bundle>
 
-        <feature>jpa</feature>
         <feature version="${spring.version}">spring</feature>
         <feature version="${spring.version}">spring-jdbc</feature>
         <feature version="${spring.version}">spring-orm</feature>
+
         <feature version="${spring.osgi.version}">spring-dm</feature>
         <feature version="${spring.osgi.version}">spring-dm-web</feature>
 
@@ -62,45 +44,21 @@
         <bundle start="true">mvn:org.activiti.karaf/activiti-karaf-web-explorer/${version}/war</bundle>
     </feature>
 
-    <feature name="axemblr-provisionr-core" version="${project.version}">
-        <feature version="${activiti.version}">activiti</feature>
-        <bundle dependency="true">mvn:com.google.code.gson/gson/${gson.version}</bundle>
-        <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
-        <bundle dependency="true">mvn:org.bouncycastle/bcprov-jdk16/${bouncycastle.version}</bundle>
-        <bundle dependency="true">mvn:net.schmizz/sshj/${sshj.version}</bundle>
-        <bundle dependency="true">
-            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/${jzlib.bundle.version}
-        </bundle>
-        <bundle dependency="true">wrap:mvn:com.github.spullara.mustache.java/compiler/${mustache.version}</bundle>
-        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-api/${project.version}</bundle>
-        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-core/${project.version}</bundle>
-        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-commands/${project.version}</bundle>
-    </feature>
+    <repository>
+        mvn:com.axemblr.provisionr/provisionr-core/${project.version}/xml/features
+    </repository>
+    <repository>
+        mvn:com.axemblr.provisionr/provisionr-amazon/${project.version}/xml/features
+    </repository>
+    <repository>
+        mvn:com.axemblr.provisionr/provisionr-cloudstack/${project.version}/xml/features
+    </repository>
 
-    <feature name="axemblr-provisionr-amazon" version="${project.version}">
-        <feature version="${project.version}">axemblr-provisionr-core</feature>
-        <bundle dependency="true">
-            mvn:org.jbundle.util.osgi.wrapped/org.jbundle.util.osgi.wrapped.org.apache.http.client/${http-client.version}
-        </bundle>
-        <bundle dependency="true">
-            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/${commons-codec.version}
-        </bundle>
-        <bundle dependency="true">
-            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aws-java-sdk/${aws.sdk.version}
-        </bundle>
-        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-amazon/${project.version}</bundle>
-    </feature>
-
-    <feature name="axemblr-provisionr-cloudstack" version="${project.version}">
-        <feature version="${jclouds.karaf.version}">jclouds-api-cloudstack</feature>
-        <feature version="${project.version}">axemblr-provisionr-core</feature>
-        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-cloudstack/${project.version}</bundle>
-    </feature>
-
-    <feature name="axemblr-provisionr" version="${project.version}">
+    <feature name="axemblr-provisionr-all" version="${project.version}">
         <feature version="${project.version}">axemblr-provisionr-core</feature>
         <feature version="${project.version}">axemblr-provisionr-amazon</feature>
         <feature version="${project.version}">axemblr-provisionr-cloudstack</feature>
+
         <feature version="${project.version}">activiti-karaf-commands</feature>
         <feature version="${project.version}">activiti-karaf-web-explorer</feature>
     </feature>

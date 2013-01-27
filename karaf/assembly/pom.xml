@@ -15,7 +15,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>provisionr-parent</artifactId>
         <groupId>com.axemblr.provisionr</groupId>
@@ -132,18 +133,17 @@
                                     mvn:org.apache.karaf.assemblies.features/standard/${karaf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:com.axemblr.provisionr/provisionr-features/${project.version}/xml/features
+                                    mvn:org.apache.karaf.assemblies.features/enterprise/${karaf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:org.jclouds.karaf/jclouds-karaf/${jclouds.karaf.version}/xml/features
+                                    mvn:com.axemblr.provisionr/provisionr-features/${project.version}/xml/features
                                 </descriptor>
                             </descriptors>
                             <features>
                                 <feature>config</feature>
                                 <feature>management</feature>
                                 <feature>webconsole</feature>
-                                <feature>war</feature>
-                                <feature>axemblr-provisionr</feature>
+                                <feature>axemblr-provisionr-all</feature>
                             </features>
                             <includeMvnBasedDescriptors>true</includeMvnBasedDescriptors>
                             <repository>target/features-repo</repository>

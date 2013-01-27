@@ -15,7 +15,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.axemblr.provisionr</groupId>
         <artifactId>provisionr-parent</artifactId>
@@ -24,8 +25,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axemblr Provisionr :: Web Console</name>
-    <groupId>com.axemblr.provisionr</groupId>
+    <name>Axemblr Provisionr :: Console &amp; REST API</name>
+    <description>A basic web console and a REST API for Axemblr Provisionr</description>
+
     <artifactId>provisionr-console</artifactId>
     <packaging>bundle</packaging>
 
@@ -33,6 +35,10 @@
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.axemblr.provisionr</groupId>
+            <artifactId>provisionr-core</artifactId>
         </dependency>
     </dependencies>
 
