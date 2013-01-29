@@ -15,11 +15,15 @@
 */
 package com.axemblr.provisionr.amazon.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.activiti.engine.delegate.DelegateExecution;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.DescribeSpotInstanceRequestsRequest;
+import com.amazonaws.services.ec2.model.DescribeSpotInstanceRequestsResult;
 import com.amazonaws.services.ec2.model.RequestSpotInstancesRequest;
 import com.amazonaws.services.ec2.model.RequestSpotInstancesResult;
 import com.amazonaws.services.ec2.model.SpotInstanceRequest;
@@ -42,8 +46,59 @@ public class RunSpotInstances extends RunInstances {
     	
     	RequestSpotInstancesResult requestResult = client.requestSpotInstances(request);
     	
-        execution.setVariable(ProcessVariables.INSTANCE_IDS,
-        		collectSpotInstanceRequestIds(requestResult.getSpotInstanceRequests()));
+    	List<String> spotInstanceRequestIds = 
+    			collectSpotInstanceRequestIds(requestResult.getSpotInstanceRequests());
+    	
+    	// Create a variable that will track whether there are any
+    	// requests still in the open state.
+    	boolean anyOpen;
+    	List<String> instanceIds = new ArrayList<String>();
+    	do {
+    	    // Create the describeRequest object with all of the request ids
+    	    // to monitor (e.g. that we started).
+    	    DescribeSpotInstanceRequestsRequest describeRequest = new DescribeSpotInstanceRequestsRequest();
+    	    describeRequest.setSpotInstanceRequestIds(spotInstanceRequestIds);
+
+    	    // Initialize the anyOpen variable to false - which assumes there
+    	    // are no requests open unless we find one that is still open.
+    	    anyOpen = false;
+
+    	    try {
+    	        // Retrieve all of the requests we want to monitor.
+    	        DescribeSpotInstanceRequestsResult describeResult = client.describeSpotInstanceRequests(describeRequest);
+    	        List<SpotInstanceRequest> describeResponses = describeResult.getSpotInstanceRequests();
+
+    	        // Look through each request and determine if they are all in
+    	        // the active state.
+    	        for (SpotInstanceRequest describeResponse : describeResponses) {
+	    	        if (describeResponse.getState().equals("open")) {
+	    	            anyOpen = true;
+	    	            break;
+	    	        }
+	    	        // Add the instance id to the list we will
+	    	        // eventually terminate.
+	    	        if (describeResponse.getState().equals("active")) {
+	    	        	instanceIds.add(describeResponse.getInstanceId());
+	    	        }
+    	        }
+    	    } catch (AmazonServiceException e) {
+				// If we have an exception, ensure we don't break out of
+				// the loop. This prevents the scenario where there was
+				// blip on the wire.
+				anyOpen = true;
+    	    }
+    	    
+    	    // TODO: check that this timeout is ok
+    	    try {
+    	        // Sleep for 60 seconds.
+    	        Thread.sleep(60*1000);
+    	    } catch (Exception e) {
+    	        // Do nothing because it woke up early.
+    	    }
+    	} while (anyOpen);
+    	
+    	
+        execution.setVariable(ProcessVariables.INSTANCE_IDS, instanceIds);
     }
     
     private List<String> collectSpotInstanceRequestIds(List<SpotInstanceRequest> requestResponses) {
