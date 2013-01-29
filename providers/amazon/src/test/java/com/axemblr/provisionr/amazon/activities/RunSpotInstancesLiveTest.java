@@ -16,5 +16,28 @@
 
 package com.axemblr.provisionr.amazon.activities;
 
-public class RunSpotInstancesLiveTest extends AmazonActivityLiveTest<RunSpotInstances> {
+import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Test;
+
+public class RunSpotInstancesLiveTest extends RunInstancesLiveTest<RunSpotInstances> {
+	
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+		
+		// TODO: is adding the bid as an option for the pool ok?
+		Map<String, String> options = new HashMap<String, String>();
+		options.put("bid", "0.03");
+		when(pool.getOptions()).thenReturn(options);
+	}
+	
+	@Test
+	public void testRunSpotInstances() {
+		// TODO 
+	}
+	
 }
