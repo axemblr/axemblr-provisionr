@@ -15,13 +15,22 @@
 */
 package com.axemblr.provisionr.amazon.activities;
 
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.axemblr.provisionr.amazon.core.ProviderClientCache;
-import com.axemblr.provisionr.api.pool.Pool;
+import java.util.List;
+
 import org.activiti.engine.delegate.DelegateExecution;
 
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.RequestSpotInstancesRequest;
+import com.amazonaws.services.ec2.model.RequestSpotInstancesResult;
+import com.amazonaws.services.ec2.model.SpotInstanceRequest;
+import com.axemblr.provisionr.amazon.ProcessVariables;
+import com.axemblr.provisionr.amazon.core.ProviderClientCache;
+import com.axemblr.provisionr.api.pool.Pool;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
-public class RunSpotInstances extends AmazonActivity {
+
+public class RunSpotInstances extends RunInstances {
 
     public RunSpotInstances(ProviderClientCache cache) {
         super(cache);
@@ -29,6 +38,22 @@ public class RunSpotInstances extends AmazonActivity {
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+    	final RequestSpotInstancesRequest request = createSpotInstancesRequest(pool, execution);
+    	
+    	RequestSpotInstancesResult requestResult = client.requestSpotInstances(request);
+    	
+        execution.setVariable(ProcessVariables.INSTANCE_IDS,
+        		collectSpotInstanceRequestIds(requestResult.getSpotInstanceRequests()));
+    }
+    
+    private List<String> collectSpotInstanceRequestIds(List<SpotInstanceRequest> requestResponses) {
+        /* Make a copy as an ArrayList to force lazy collection evaluation */
+        return Lists.newArrayList(Lists.transform(requestResponses,
+            new Function<SpotInstanceRequest, String>() {
+                @Override
+                public String apply(SpotInstanceRequest instanceRequest) {
+                    return instanceRequest.getSpotInstanceRequestId();
+                }
+            }));
     }
 }
