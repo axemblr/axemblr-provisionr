@@ -1,7 +1,10 @@
 package com.axemblr.provisionr.amazon.activities;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import net.schmizz.sshj.common.Base64;
 
@@ -12,6 +15,7 @@ import com.amazonaws.AmazonWebServiceRequest;
 import com.amazonaws.services.ec2.model.LaunchSpecification;
 import com.amazonaws.services.ec2.model.RequestSpotInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
+import com.amazonaws.services.ec2.model.SpotInstanceType;
 import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.core.ImageTable;
 import com.axemblr.provisionr.amazon.core.ImageTableQuery;
@@ -61,15 +65,23 @@ public abstract class RunInstances extends AmazonActivity {
             "/com/axemblr/provisionr/amazon/userdata.sh"), Charsets.UTF_8);
 
         if (spot) {
-        	LaunchSpecification ls = new LaunchSpecification();
-        	ls.setInstanceType(instanceType);
-        	ls.setKeyName(keyPairName);
-        	ls.setImageId(imageId);
-        	ls.setSecurityGroups(Arrays.asList(new String[] {securityGroupName}));
-        	ls.setUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));
-        	return new RequestSpotInstancesRequest()
-        		.withLaunchSpecification(ls)
-	            .withInstanceCount(pool.getExpectedSize());
+            Calendar validUntil = Calendar.getInstance();
+            validUntil.add(Calendar.MINUTE, 10);
+            final String spotPrice = checkNotNull(pool.getProvider().getOption(ProviderOptions.SPOT_BID),
+                    "The bid for spot instances was not specified");
+            LaunchSpecification ls = new LaunchSpecification()
+                .withInstanceType(instanceType)
+                .withKeyName(keyPairName)
+                .withImageId(imageId)
+                .withSecurityGroups(Arrays.asList(new String[] { securityGroupName }))
+                .withUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));
+            return new RequestSpotInstancesRequest()
+                .withSpotPrice(spotPrice)
+                .withLaunchSpecification(ls)
+                .withLaunchGroup(businessKey)
+                .withInstanceCount(pool.getExpectedSize())
+                .withType(SpotInstanceType.OneTime)
+                .withValidUntil(validUntil.getTime());
         } else {
         	return new RunInstancesRequest()
 	            .withClientToken(businessKey)
