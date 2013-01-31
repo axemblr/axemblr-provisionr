@@ -16,10 +16,18 @@
 
 package com.axemblr.provisionr.amazon.activities;
 
+import java.util.List;
+
 import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Reservation;
 import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.core.CoreProcessVariables;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
@@ -51,5 +59,17 @@ public abstract class AmazonActivity implements JavaDelegate {
             "variable with the name '%s'.", CoreProcessVariables.POOL);
 
         execute(providerClientCache.getUnchecked(pool.getProvider()), pool, execution);
+    }
+    
+    protected List<Instance> collectInstancesFromReservations(List<Reservation> reservation) {
+        /* Make a copy as an ArrayList to force lazy collection evaluation */
+        List<List<Instance>> allInstances = Lists.newArrayList(Lists.transform(reservation, new Function<Reservation, List<Instance>>() {
+            @Override
+            public List<Instance> apply(Reservation reservation) {
+                return reservation.getInstances();
+            }
+        }));
+
+        return Lists.newArrayList(Iterables.concat(allInstances));
     }
 }

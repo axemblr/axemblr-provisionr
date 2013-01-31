@@ -35,6 +35,48 @@ public class ProcessVariables {
     public static final String RESERVATION_ID = "reservationId";
 
     /**
+     * The amount the user is willing to pay for spot instances in the
+     * Amazon pool he's trying to start. If set, the request is for spot
+     * instances, if null the request is for on demand instances.
+     * 
+     * @see com.axemblr.provisionr.amazon.activities.RunSpotInstances
+     */
+    public static final String SPOT_BID = "spotBid";
+
+    /**
+     * Flag that gets set when the process attempts to send spot requests
+     * for the first time. Because the describe call is not consistent
+     * until a reasonable delay passes, this will be used to timeout the
+     * Activiti retries so that the requests are not resent if they were
+     * successful. 
+     * 
+     * @see com.axemblr.provisionr.amazon.activities.RunSpotInstances
+     */
+    public static final String SPOT_REQUESTS_SENT = "spotRequestsSent";
+
+    /**
+     * List of request IDs as returned by Amazon for spot instances. These need to 
+     * be followed up to get the actual instance IDs.
+     * 
+     * @see com.axemblr.provisionr.amazon.activities.RunSpotInstances
+     */
+    public static final String SPOT_INSTANCE_REQUEST_IDS = "spotInstanceRequestIds";
+
+    /**
+     * Have all spot instance requests been handled by Amazon? (none are pending)
+     * 
+     *  @see com.axemblr.provisionr.amazon.activities.CheckNoRequestsAreOpen
+     */
+    public static final String NO_SPOT_INSTANCE_REQUESTS_OPEN = "noSpotInstanceRequestsOpen";
+
+    /**
+     * Are all spot instance requests in an active state? (none cancelled, none terminated)
+     * 
+     * @see com.axemblr.provisionr.amazon.activities.CheckAllRequestsAreActive
+     */
+    public static final String ALL_SPOT_INSTANCE_REQUESTS_ACTIVE = "allSpotInstanceRequestsActive";
+
+    /**
      * List of instance IDs as returned by Amazon
      *
      * @see com.axemblr.provisionr.amazon.activities.RunOnDemandInstances

@@ -16,6 +16,18 @@
 
 package com.axemblr.provisionr.commands;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.File;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
+import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.console.OsgiCommandSupport;
+
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.hardware.Hardware;
@@ -29,21 +41,12 @@ import com.axemblr.provisionr.core.templates.PoolTemplate;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-import java.io.File;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
 
 /**
  * A typical call looks like this:
@@ -68,6 +71,10 @@ public class CreatePoolCommand extends OsgiCommandSupport {
 
     @Option(name = "-h", aliases = "--hardware-type", description = "Virtual machine hardware type")
     private String hardwareType = "t1.micro";
+    
+    @Option(name = "-b", aliases = "--bid", description = "Bid for Amazon Spot Instance. If specified, requests" +
+        "spot instances, otherwise defaults to on demand instances.")
+    private Float spotBid;
 
     @Option(name = "--port", description = "Firewall port that need to be open for any TCP traffic " +
         "(multi-valued). SSH (22) is always open by default.", multiValued = true)
@@ -109,7 +116,16 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         final Optional<Provider> defaultProvider = service.getDefaultProvider();
         checkArgument(defaultProvider.isPresent(), String.format("please configure a default provider " +
             "by editing etc/com.axemblr.provisionr.%s.cfg", id));
+        
+        Provider provider;
+        if (spotBid != null) {
+            provider = defaultProvider.get().toBuilder()
+                    .option("spotBid", spotBid.toString()).createProvider();
+        } else {
+            provider = defaultProvider.get();
+        }
 
+        
         /* Always allow ICMP and ssh traffic by default */
         final Network network = Network.builder().addRules(
             Rule.builder().anySource().icmp().createRule(),
@@ -122,8 +138,9 @@ public class CreatePoolCommand extends OsgiCommandSupport {
 
         final Software software = Software.builder().packages(packages).createSoftware();
 
+        
         final Pool pool = Pool.builder()
-            .provider(defaultProvider.get())
+            .provider(provider)
             .hardware(hardware)
             .software(software)
             .network(network)
@@ -132,7 +149,7 @@ public class CreatePoolCommand extends OsgiCommandSupport {
             .expectedSize(size)
             .cacheBaseImage(cacheBaseImage)
             .createPool();
-
+        
         if (template != null) {
             for (PoolTemplate candidate : templates) {
                 if (candidate.getId().equalsIgnoreCase(template)) {

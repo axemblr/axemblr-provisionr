@@ -15,15 +15,18 @@
 */
 package com.axemblr.provisionr.amazon.activities;
 
-import java.util.ArrayList;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.activiti.engine.delegate.DelegateExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DescribeSpotInstanceRequestsRequest;
 import com.amazonaws.services.ec2.model.DescribeSpotInstanceRequestsResult;
+import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.RequestSpotInstancesRequest;
 import com.amazonaws.services.ec2.model.RequestSpotInstancesResult;
 import com.amazonaws.services.ec2.model.SpotInstanceRequest;
@@ -31,74 +34,54 @@ import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 
 public class RunSpotInstances extends RunInstances {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RunSpotInstances.class);
+    
     public RunSpotInstances(ProviderClientCache cache) {
         super(cache);
     }
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws Exception {
-    	final RequestSpotInstancesRequest request = createSpotInstancesRequest(pool, execution);
-    	
-    	RequestSpotInstancesResult requestResult = client.requestSpotInstances(request);
-    	
-    	List<String> spotInstanceRequestIds = 
-    			collectSpotInstanceRequestIds(requestResult.getSpotInstanceRequests());
-    	
-    	// Create a variable that will track whether there are any
-    	// requests still in the open state.
-    	boolean anyOpen;
-    	List<String> instanceIds = new ArrayList<String>();
-    	do {
-    	    // Create the describeRequest object with all of the request ids
-    	    // to monitor (e.g. that we started).
-    	    DescribeSpotInstanceRequestsRequest describeRequest = new DescribeSpotInstanceRequestsRequest();
-    	    describeRequest.setSpotInstanceRequestIds(spotInstanceRequestIds);
+        /* before sending a new request, we check to see if we already registered
+           a launch group with the process ID, if yes, we don't re-send the request */
+        final String businessKey = execution.getProcessBusinessKey();
 
-    	    // Initialize the anyOpen variable to false - which assumes there
-    	    // are no requests open unless we find one that is still open.
-    	    anyOpen = false;
+        /* we timeout if requests have already been sent - the activity is being retried. */
+        Optional<Object> alreadySent = Optional.fromNullable(
+                execution.getVariable(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS));
+        if (alreadySent.isPresent()) {
+            try {
+                Thread.sleep(60 * 1000);
+            } catch (InterruptedException exception) {
+                LOG.warn("Timeout to make describe calls consistent was interrupted", exception);
+            }
+        }
 
-    	    try {
-    	        // Retrieve all of the requests we want to monitor.
-    	        DescribeSpotInstanceRequestsResult describeResult = client.describeSpotInstanceRequests(describeRequest);
-    	        List<SpotInstanceRequest> describeResponses = describeResult.getSpotInstanceRequests();
+        DescribeSpotInstanceRequestsResult result = client.describeSpotInstanceRequests(
+                new DescribeSpotInstanceRequestsRequest()
+                        .withFilters(new Filter()
+                            .withName("launch-group").withValues(businessKey)
+                            .withName("state").withValues("open", "active")));
+        List<SpotInstanceRequest> pending = result.getSpotInstanceRequests();
+        if (pending.size() > 0) {
+            LOG.info("Not resending spot instance requests {} for businessKey: {}.", pending, businessKey);
+            execution.setVariable(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS, 
+                    collectSpotInstanceRequestIds(pending));
+            return;
+        }
 
-    	        // Look through each request and determine if they are all in
-    	        // the active state.
-    	        for (SpotInstanceRequest describeResponse : describeResponses) {
-	    	        if (describeResponse.getState().equals("open")) {
-	    	            anyOpen = true;
-	    	            break;
-	    	        }
-	    	        // Add the instance id to the list we will
-	    	        // eventually terminate.
-	    	        if (describeResponse.getState().equals("active")) {
-	    	        	instanceIds.add(describeResponse.getInstanceId());
-	    	        }
-    	        }
-    	    } catch (AmazonServiceException e) {
-				// If we have an exception, ensure we don't break out of
-				// the loop. This prevents the scenario where there was
-				// blip on the wire.
-				anyOpen = true;
-    	    }
-    	    
-    	    // TODO: check that this timeout is ok
-    	    try {
-    	        // Sleep for 60 seconds.
-    	        Thread.sleep(60*1000);
-    	    } catch (Exception e) {
-    	        // Do nothing because it woke up early.
-    	    }
-    	} while (anyOpen);
-    	
-    	
-        execution.setVariable(ProcessVariables.INSTANCE_IDS, instanceIds);
+        final RequestSpotInstancesRequest request = createSpotInstancesRequest(pool, execution);
+        execution.setVariable(ProcessVariables.SPOT_REQUESTS_SENT, true);
+        RequestSpotInstancesResult requestResult = client.requestSpotInstances(request);
+        List<String> spotInstanceRequestIds = collectSpotInstanceRequestIds(requestResult.getSpotInstanceRequests());
+
+        execution.setVariable(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS, spotInstanceRequestIds);
     }
     
     private List<String> collectSpotInstanceRequestIds(List<SpotInstanceRequest> requestResponses) {

@@ -80,7 +80,7 @@
         <argument ref="providerClientCache"/>
     </bean>
     <service ref="amazon_runOnDemandInstances" auto-export="interfaces"/>
-
+        
     <bean id="amazon_terminateInstances"
           class="com.axemblr.provisionr.amazon.activities.TerminateInstances">
         <argument ref="providerClientCache"/>
@@ -99,6 +99,36 @@
     </bean>
     <service ref="amazon_checkAllInstancesAreTerminated" auto-export="interfaces"/>
 
+    <bean id="amazon_runSpotInstances"
+          class="com.axemblr.provisionr.amazon.activities.RunSpotInstances">
+        <argument ref="providerClientCache"/>
+    </bean>
+    <service ref="amazon_runSpotInstances" auto-export="interfaces"/>
+    
+	<bean id="amazon_checkNoRequestsAreOpen"
+          class="com.axemblr.provisionr.amazon.activities.CheckNoRequestsAreOpen">
+        <argument ref="providerClientCache"/>
+    </bean>
+    <service ref="amazon_checkNoRequestsAreOpen" auto-export="interfaces"/>
+
+	<bean id="amazon_checkAllRequestsAreActive"
+          class="com.axemblr.provisionr.amazon.activities.CheckAllRequestsAreActive">
+        <argument ref="providerClientCache"/>
+    </bean>
+    <service ref="amazon_checkAllRequestsAreActive" auto-export="interfaces"/>
+    
+    <bean id="amazon_cancelSpotRequests"
+          class="com.axemblr.provisionr.amazon.activities.CancelSpotRequests">
+        <argument ref="providerClientCache"/>
+    </bean>
+    <service ref="amazon_cancelSpotRequests" auto-export="interfaces"/>
+    
+    <bean id="amazon_getInstanceIdsFromSpotRequests"
+          class="com.axemblr.provisionr.amazon.activities.GetInstanceIdsFromSpotRequests">
+        <argument ref="providerClientCache"/>
+    </bean>
+    <service ref="amazon_getInstanceIdsFromSpotRequests" auto-export="interfaces"/>
+    
     <bean id="amazon_publishListOfMachines"
           class="com.axemblr.provisionr.amazon.activities.PublishListOfMachines">
         <argument ref="providerClientCache"/>

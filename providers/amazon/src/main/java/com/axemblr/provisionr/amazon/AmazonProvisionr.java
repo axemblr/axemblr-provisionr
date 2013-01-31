@@ -17,6 +17,7 @@
 package com.axemblr.provisionr.amazon;
 
 import com.axemblr.provisionr.amazon.config.DefaultProviderConfig;
+import com.axemblr.provisionr.amazon.options.ProviderOptions;
 import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
@@ -75,6 +76,9 @@ public class AmazonProvisionr extends ProvisionrSupport {
         arguments.put(CoreProcessVariables.POOL, pool);
         arguments.put(CoreProcessVariables.PROVIDER, getId());
         arguments.put(CoreProcessVariables.POOL_BUSINESS_KEY, businessKey);
+        
+        /* needed because the Activiti EL doesn't work as expected and properties can't be read from the pool. */
+        arguments.put(ProcessVariables.SPOT_BID, pool.getProvider().getOption(ProviderOptions.SPOT_BID));
 
         /* Authenticate as kermit to make the process visible in the Explorer UI */
         processEngine.getIdentityService().setAuthenticatedUserId(CoreConstants.ACTIVITI_EXPLORER_DEFAULT_USER);
