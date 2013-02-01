@@ -25,7 +25,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axemblr Provisionr :: Assembly</name>
+    <name>Axemblr Provisionr :: Custom Karaf Distribution</name>
+    <description>Install all the features as a custom Karaf distribution</description>
     <artifactId>provisionr-assembly</artifactId>
 
     <dependencies>

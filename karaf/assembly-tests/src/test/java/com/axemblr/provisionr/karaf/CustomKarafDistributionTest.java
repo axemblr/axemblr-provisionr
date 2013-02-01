@@ -17,30 +17,35 @@
 package com.axemblr.provisionr.karaf;
 
 import com.axemblr.provisionr.api.Provisionr;
-import static com.axemblr.provisionr.test.KarafTests.projectVersionAsSystemProperty;
-import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
+import static com.axemblr.provisionr.test.KarafTests.getKarafVersionAsInProject;
 import com.google.common.base.Stopwatch;
 import com.google.common.io.CharStreams;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.apache.karaf.features.Feature;
 import org.apache.karaf.features.FeaturesService;
+import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.keepRuntimeFolder;
+import static org.apache.karaf.tooling.exam.options.KarafDistributionOption.logLevel;
+import org.apache.karaf.tooling.exam.options.LogLevelOption;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -50,13 +55,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Test Axemblr Provisionr Feature installation in Apache Karaf.
+ * Run a set of tests on the custom Karaf distribution
  */
 @RunWith(JUnit4TestRunner.class)
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
-public class KarafDistributionTest {
+public class CustomKarafDistributionTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KarafDistributionTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CustomKarafDistributionTest.class);
 
     public static final String ACTIVITI_EXPLORER_URL = "http://localhost:8181/activiti-explorer/";
 
@@ -75,17 +80,23 @@ public class KarafDistributionTest {
 
     @Configuration
     public Option[] configuration() throws Exception {
+        MavenArtifactUrlReference distributionUrl = maven().groupId("com.axemblr.provisionr")
+            .artifactId("provisionr-assembly").versionAsInProject().type("tar.gz");
+
         return new Option[]{
-            useDefaultKarafAsInProjectWithJunitBundles(),
-            projectVersionAsSystemProperty()
+            karafDistributionConfiguration()
+                .frameworkUrl(distributionUrl)
+                .karafVersion(getKarafVersionAsInProject())
+                .name("Axemblr Provisionr")
+                .unpackDirectory(new File("target/exam")),
+            keepRuntimeFolder(),
+            junitBundles(),
+            logLevel(LogLevelOption.LogLevel.INFO)
         };
     }
 
     @Test
     public void testAllFeaturesStartAsExpected() throws Exception {
-        features.addRepository(getProvisionrFeaturesUrl());
-
-        features.installFeature("axemblr-provisionr-all");
         assertFeatureInstalled("axemblr-provisionr-all");
 
         assertAllBundlesAreActive();
@@ -118,9 +129,8 @@ public class KarafDistributionTest {
         }
     }
 
-    private <T> void assertProvisionrServicesAreStartedInLessThan(int timeoutInMilliseconds) throws InterruptedException {
-        final ServiceTracker<T, T> tracker = new ServiceTracker<T, T>(bundleContext,
-            Provisionr.class.getCanonicalName(), null);
+    private void assertProvisionrServicesAreStartedInLessThan(int timeoutInMilliseconds) throws InterruptedException {
+        final ServiceTracker tracker = new ServiceTracker(bundleContext, Provisionr.class.getCanonicalName(), null);
         tracker.open(true);
         try {
             final Stopwatch stopwatch = new Stopwatch().start();
@@ -151,14 +161,6 @@ public class KarafDistributionTest {
         } finally {
             tracker.close();
         }
-    }
-
-    private URI getProvisionrFeaturesUrl() {
-        return URI.create(maven("com.axemblr.provisionr", "provisionr-features")
-            .version(System.getProperty("project.version"))
-            .classifier("features")
-            .type("xml")
-            .getURL());
     }
 
     private void assertAllBundlesAreActive() {

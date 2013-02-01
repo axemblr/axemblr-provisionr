@@ -15,7 +15,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>provisionr-parent</artifactId>
         <groupId>com.axemblr.provisionr</groupId>
@@ -24,27 +25,20 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axemblr Provisionr :: Karaf Integration Tests</name>
-    <artifactId>karaf-tests</artifactId>
+    <name>Axemblr Provisionr :: Custom Karaf Distribution Tests</name>
+    <artifactId>provisionr-assembly-tests</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-features</artifactId>
+            <artifactId>provisionr-assembly</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-test-support</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jclouds.karaf</groupId>
-            <artifactId>jclouds-karaf</artifactId>
-            <version>${jclouds.karaf.version}</version>
-            <type>xml</type>
-            <classifier>features</classifier>
             <scope>test</scope>
         </dependency>
     </dependencies>

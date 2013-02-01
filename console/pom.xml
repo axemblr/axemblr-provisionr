@@ -25,8 +25,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axemblr Provisionr :: Console &amp; REST API</name>
-    <description>A basic web console and a REST API for Axemblr Provisionr</description>
+    <name>Axemblr Provisionr :: Web Console &amp; REST API</name>
+    <description>A basic web console and a REST API</description>
 
     <artifactId>provisionr-console</artifactId>
     <packaging>bundle</packaging>
