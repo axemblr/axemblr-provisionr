@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2013 S.C. Axemblr Software Solutions S.R.L
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<features name="axemblr-provisionr-console-features-${project.version}"
+          xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+    <repository>
+        mvn:com.axemblr.provisionr/provisionr-core/${project.version}/xml/features
+    </repository>
+    <repository>
+        mvn:org.apache.cxf.karaf/apache-cxf/${cxf.version}/xml/features
+    </repository>
+
+    <feature name="axemblr-provisionr-console" version="${project.version}">
+        <feature version="${cxf.version}">cxf</feature>
+        <feature version="${project.version}">axemblr-provisionr-core</feature>
+
+        <bundle start="true">mvn:com.axemblr.provisionr/provisionr-console/${project.version}</bundle>
+
+        <configfile finalname="/etc/com.axemblr.provisionr.console.cfg">
+            mvn:com.axemblr.provisionr/provisionr-console/${project.version}/cfg/defaults
+        </configfile>
+    </feature>
+
+</features>

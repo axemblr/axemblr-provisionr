@@ -63,7 +63,6 @@
                 </property>
             </activation>
             <modules>
-                <module>karaf/tests</module>
                 <module>providers/amazon-tests</module>
                 <module>providers/cloudstack-tests</module>
             </modules>
@@ -72,6 +71,7 @@
             <id>with-assembly</id>
             <modules>
                 <module>karaf/assembly</module>
+                <module>karaf/assembly-tests</module>
             </modules>
         </profile>
     </profiles>

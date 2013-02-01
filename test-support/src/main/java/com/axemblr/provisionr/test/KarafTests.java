@@ -46,7 +46,7 @@ public class KarafTests {
      * Use the same Karaf version from the project for integration testing with Pax Exam
      */
     public static DefaultCompositeOption useDefaultKarafAsInProjectWithJunitBundles() {
-        String karafVersion = MavenUtils.asInProject().getVersion(KARAF_GROUP_ID, KARAF_ARTIFACT_ID);
+        String karafVersion = getKarafVersionAsInProject();
 
         MavenArtifactUrlReference karafUrl = maven().groupId(KARAF_GROUP_ID)
             .artifactId(KARAF_ARTIFACT_ID)
@@ -62,6 +62,10 @@ public class KarafTests {
             .add(keepRuntimeFolder())
             .add(junitBundles())
             .add(logLevel(LogLevelOption.LogLevel.INFO));
+    }
+
+    public static String getKarafVersionAsInProject() {
+        return MavenUtils.asInProject().getVersion(KARAF_GROUP_ID, KARAF_ARTIFACT_ID);
     }
 
     /**
