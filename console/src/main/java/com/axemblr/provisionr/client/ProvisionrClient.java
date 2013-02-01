@@ -17,22 +17,15 @@
 package com.axemblr.provisionr.client;
 
 import com.axemblr.provisionr.api.Provisionr;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
-import java.util.UUID;
 
 public class ProvisionrClient {
 
     private final List<Provisionr> services;
 
     public ProvisionrClient(List<Provisionr> services) {
-        this.services = services;
-    }
-
-    public void init() {
-        System.out.println("**** Starting client. Got " + services.size() + " services.");
-        for (Provisionr service : services) {
-            service.startPoolManagementProcess(UUID.randomUUID().toString(), null);
-        }
+        this.services = checkNotNull(services, "services is null");
     }
 
     public List<Provisionr> getServices() {

@@ -33,7 +33,8 @@
                 <exclude>etc/org.apache.karaf.features.cfg</exclude>
                 <exclude>etc/custom.properties</exclude>
                 <exclude>etc/startup.properties</exclude>
-                <exclude>etc/org.apache.karaf.management.cfg</exclude>
+                <exclude>etc/jre.properties*</exclude>
+                <exclude>etc/org.apache.karaf.features.repos.cfg</exclude>
                 <exclude>readme.txt</exclude>
                 <exclude>LICENSE</exclude>
                 <exclude>NOTICE</exclude>

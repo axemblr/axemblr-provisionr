@@ -25,36 +25,25 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axemblr Provisionr :: Assembly</name>
+    <name>Axemblr Provisionr :: Custom Karaf Distribution</name>
+    <description>Install all the features as a custom Karaf distribution</description>
     <artifactId>provisionr-assembly</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
             <artifactId>provisionr-branding</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-amazon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-cloudstack</artifactId>
-            <version>${project.version}</version>
+            <artifactId>provisionr-features</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.karaf</groupId>
             <artifactId>apache-karaf</artifactId>
             <version>${karaf.version}</version>
             <type>tar.gz</type>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti.karaf</groupId>
-            <artifactId>activiti-karaf-commands</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
