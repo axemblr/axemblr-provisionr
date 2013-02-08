@@ -96,6 +96,15 @@
     <service ref="runtimeService" interface="org.activiti.engine.RuntimeService"/>
     <service ref="repositoryService" interface="org.activiti.engine.RepositoryService"/>
 
+    <!-- force registration of Bouncy Castle as JCE provider - needed for jclouds -->
+    <bean id="bouncyCastleAsJceProviderRegistration" class="net.schmizz.sshj.common.SecurityUtils"
+          factory-method="getSecurityProvider"/>
+
+    <bean id="poolTemplateInstaller" class="com.axemblr.provisionr.core.templates.PoolTemplateInstaller">
+        <argument ref="blueprintBundleContext"/>
+    </bean>
+    <service ref="poolTemplateInstaller" auto-export="interfaces"/>
+
     <!-- Reusable Activiti activities -->
 
     <bean id="checkSshPortIsOpen" class="com.axemblr.provisionr.core.activities.IsMachinePortOpen">
@@ -112,18 +121,6 @@
 
     <bean id="downloadFiles" class="com.axemblr.provisionr.core.activities.DownloadFiles"/>
     <service ref="downloadFiles" auto-export="interfaces"/>
-
-    <!-- force registration of Bouncy Castle as JCE provider - needed for jclouds -->
-    <bean id="bouncyCastleAsJceProviderRegistration" class="net.schmizz.sshj.common.SecurityUtils"
-          factory-method="getSecurityProvider"/>
-
-    <!-- Templates -->
-
-    <bean id="jenkinsTemplate" class="com.axemblr.provisionr.core.templates.JenkinsTemplate"/>
-    <service ref="jenkinsTemplate" interface="com.axemblr.provisionr.core.templates.PoolTemplate"/>
-
-    <bean id="clouderaCDH3" class="com.axemblr.provisionr.core.templates.ClouderaCDH3Template"/>
-    <service ref="clouderaCDH3" interface="com.axemblr.provisionr.core.templates.PoolTemplate"/>
 
 </blueprint>
 

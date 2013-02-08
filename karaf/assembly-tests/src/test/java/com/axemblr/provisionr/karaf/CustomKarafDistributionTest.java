@@ -17,6 +17,7 @@
 package com.axemblr.provisionr.karaf;
 
 import com.axemblr.provisionr.api.Provisionr;
+import com.axemblr.provisionr.core.templates.PoolTemplate;
 import static com.axemblr.provisionr.test.KarafTests.getKarafVersionAsInProject;
 import com.google.common.base.Stopwatch;
 import com.google.common.io.CharStreams;
@@ -70,7 +71,15 @@ public class CustomKarafDistributionTest {
     public static final int DEFAULT_JETTY_PORT = 8181;
     public static final int TIMEOUT_IN_MILLISECONDS = 1000;
 
-    public static final int EXPECTED_NUMBER_OF_PROVISIONR_SERVICES = 2; /* amazon & cloudstack */
+    /**
+     * We are only starting Amazon by default. The support for cloudstack is not ready yet.
+     */
+    public static final int EXPECTED_NUMBER_OF_PROVISIONR_SERVICES = 1;
+
+    /**
+     * We only register two pool templates by default through the provisionr-core bundle
+     */
+    public static final int EXPECTED_NUMBER_OF_POOL_TEMPLATES = 2;
 
     @Inject
     private FeaturesService features;
@@ -102,7 +111,9 @@ public class CustomKarafDistributionTest {
         assertAllBundlesAreActive();
 
         assertJettyStartsInLessThan(5000 /* milliseconds */);
+
         assertProvisionrServicesAreStartedInLessThan(5000 /* milliseconds */);
+        assertPoolTemplatesAreRegisteredInLessThan(5000 /* milliseconds */);
 
         assertActivitiExplorerIsRunningInLessThan(30000 /* milliseconds */);
     }
@@ -129,31 +140,43 @@ public class CustomKarafDistributionTest {
         }
     }
 
-    private void assertProvisionrServicesAreStartedInLessThan(int timeoutInMilliseconds) throws InterruptedException {
-        final ServiceTracker tracker = new ServiceTracker(bundleContext, Provisionr.class.getCanonicalName(), null);
+    private void assertProvisionrServicesAreStartedInLessThan(int timeoutInMilliseconds) throws Exception {
+        assertServicesAreStartedInLessThan(Provisionr.class,
+            EXPECTED_NUMBER_OF_PROVISIONR_SERVICES, timeoutInMilliseconds);
+    }
+
+    private void assertPoolTemplatesAreRegisteredInLessThan(int timeoutInMilliseconds) throws Exception {
+        assertServicesAreStartedInLessThan(PoolTemplate.class,
+            EXPECTED_NUMBER_OF_POOL_TEMPLATES, timeoutInMilliseconds);
+
+    }
+
+    private void assertServicesAreStartedInLessThan(
+        Class<?> klass, int expectedCardinality, int timeoutInMilliseconds
+    ) throws Exception {
+        final ServiceTracker tracker = new ServiceTracker(bundleContext, klass.getName(), null);
         tracker.open(true);
         try {
             final Stopwatch stopwatch = new Stopwatch().start();
-            final int expectedCount = EXPECTED_NUMBER_OF_PROVISIONR_SERVICES;
 
             while (true) {
                 Object[] services = tracker.getServices();
-                if (services == null || services.length < expectedCount) {
+                if (services == null || services.length < expectedCardinality) {
                     final int actualCount = (services == null) ? 0 : services.length;
                     if (stopwatch.elapsedMillis() > timeoutInMilliseconds) {
-                        fail(String.format("Expected to find %d Provisionr services. Found only %d in %d milliseconds",
-                            expectedCount, actualCount, timeoutInMilliseconds));
+                        fail(String.format("Expected to find %d %s services. Found only %d in %d milliseconds",
+                            expectedCardinality, klass.getSimpleName(), actualCount, timeoutInMilliseconds));
                     }
 
                     LOG.info(String.format("Found %d services implementing %s. Trying again in 1s.",
-                        actualCount, Provisionr.class.getCanonicalName()));
+                        actualCount, klass.getName()));
                     TimeUnit.SECONDS.sleep(1);
 
-                } else if (services.length > expectedCount) {
+                } else if (services.length > expectedCardinality) {
                     fail(String.format("Expected to find %d services implementing %s. Found %d (more than expected).",
-                        expectedCount, Provisionr.class.getCanonicalName(), services.length));
+                        expectedCardinality, klass.getName(), services.length));
 
-                } else if (services.length == expectedCount) {
+                } else if (services.length == expectedCardinality) {
                     break;  /* done - the test was successful */
                 }
             }

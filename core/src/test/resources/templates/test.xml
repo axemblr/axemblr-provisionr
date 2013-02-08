@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<template os-version="10.04 LTS" id="jenkins">
+    <description>Just testing</description>
+    <files>
+        <file source="http://google.com" destination="/opt/google.html"/>
+    </files>
+    <packages>
+        <package>jenkins</package>
+        <package>git-core</package>
+        <package>subversion</package>
+    </packages>
+    <ports>
+        <port>8080</port>
+        <port>22</port>
+    </ports>
+    <repositories>
+        <repository id="jenkins">
+            <entries>
+                <entry>deb ...</entry>
+            </entries>
+            <key>-----BEGIN PGP PUBLIC KEY BLOCK----- ...</key>
+        </repository>
+    </repositories>
+</template>
