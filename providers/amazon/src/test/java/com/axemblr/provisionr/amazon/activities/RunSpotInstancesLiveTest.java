@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -36,10 +37,9 @@ import com.amazonaws.services.ec2.model.Filter;
 import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.options.ProviderOptions;
 import com.axemblr.provisionr.test.ProcessVariablesCollector;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 public class RunSpotInstancesLiveTest extends RunInstancesLiveTest<RunSpotInstances> {
-	
-    private static final Logger LOG = LoggerFactory.getLogger(RunSpotInstancesLiveTest.class);
 
     /**
      * This should be set a bit higher than the on demand instance
@@ -47,53 +47,49 @@ public class RunSpotInstancesLiveTest extends RunInstancesLiveTest<RunSpotInstan
      * the spot bid is too low. 
      */
     public static String AMAZON_SPOT_BID = "0.04";
-    
-    /**
-     * The timeout is needed because the describe calls don't 
-     * immediately return all the spot requests, we need to wait a while.
-     */
-    private static int TIMEOUT = 60 * 1000;
-    
-	@Override
-	public void setUp() throws Exception {
+
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
-        
+
         final String region = getProviderProperty(ProviderOptions.REGION, ProviderOptions.DEFAULT_REGION);
         provider = collectProviderCredentialsFromSystemProperties()
                 .option(ProviderOptions.REGION, region)
                 .option(ProviderOptions.SPOT_BID, AMAZON_SPOT_BID)
                 .createProvider();
         when(pool.getProvider()).thenReturn(provider);
-	}
-	
-	@Test
-	public void testRunSpotInstances() throws Exception {
+    }
+
+    @Test
+    public void testRunSpotInstances() throws Exception {
         ProcessVariablesCollector collector = new ProcessVariablesCollector();
         collector.install(execution);
-        
+
         activity.execute(execution);
-        
+
         @SuppressWarnings("unchecked")
         ArgumentCaptor<List<String>> argument = (ArgumentCaptor<List<String>>) 
                 (Object) ArgumentCaptor.forClass(List.class);
         verify(execution).setVariable(eq(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS), argument.capture());
         when(execution.getVariable(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS)).thenReturn(argument.getValue());
-        timeout(TIMEOUT);
+        /* The timeout is needed because the describe calls don't return immediately. */
+        // TODO: see if we can eliminate this after adding the process variables conditions
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.MINUTES);
 
         // shouldn't do anything
         activity.execute(execution);
-        
-        timeout(TIMEOUT);
-        
+
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.MINUTES);
+
         DescribeSpotInstanceRequestsResult result = client.describeSpotInstanceRequests(
                 new DescribeSpotInstanceRequestsRequest().withFilters(new Filter()
                     .withName("launch-group").withValues(BUSINESS_KEY)));
-        
+
         assertThat(result.getSpotInstanceRequests()).hasSize(1);
-        
-        timeout(TIMEOUT);
-	}
-	
+        /* we also need to sleep before the teardown */
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.MINUTES);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void tearDown() throws Exception {
@@ -101,7 +97,7 @@ public class RunSpotInstancesLiveTest extends RunInstancesLiveTest<RunSpotInstan
         ArgumentCaptor<List<String>> argument = (ArgumentCaptor<List<String>>) 
                 (Object) ArgumentCaptor.forClass(List.class);
 
-        executeActivitiesInSequence(execution, 
+        executeActivitiesInSequence(execution,
                 CancelSpotRequests.class, 
                 GetInstanceIdsFromSpotRequests.class);
 
@@ -111,13 +107,5 @@ public class RunSpotInstancesLiveTest extends RunInstancesLiveTest<RunSpotInstan
         executeActivitiesInSequence(execution, TerminateInstances.class);
         super.tearDown();
     }
-	
-	private void timeout(int ms) {
-        try {
-            Thread.sleep(ms);   
-        } catch (InterruptedException exception) {
-            LOG.info("Prematurely woken up");
-        }
-	}
-	
+
 }

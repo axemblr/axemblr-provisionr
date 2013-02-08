@@ -16,23 +16,31 @@
 
 package com.axemblr.provisionr.commands;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
+import com.axemblr.provisionr.api.provider.ProviderBuilder;
 import com.axemblr.provisionr.core.templates.JenkinsTemplate;
 import com.axemblr.provisionr.core.templates.PoolTemplate;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import org.apache.felix.service.command.CommandSession;
-import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class CreatePoolCommandTest {
 
@@ -89,12 +97,37 @@ public class CreatePoolCommandTest {
         command.setTemplate(template.getId());
 
         Provisionr service = mock(Provisionr.class);
-        when(service.getDefaultProvider()).thenReturn(Optional.of(mock(Provider.class)));
+        Provider provider = mock(Provider.class);
+        ProviderBuilder providerBuilder = mock(ProviderBuilder.class);
+        when(providerBuilder.options(anyMapOf(String.class, String.class))).thenReturn(providerBuilder);
+        when(providerBuilder.createProvider()).thenReturn(provider);
+        when(provider.toBuilder()).thenReturn(providerBuilder);
+
+        when(service.getDefaultProvider()).thenReturn(Optional.of(provider));
 
         Pool pool = command.createPoolFromArgumentsAndServiceDefaults(service);
 
         assertThat(pool.getSoftware().getRepositories()).hasSize(1);
         assertThat(pool.getSoftware().getPackages()).contains("jenkins").contains("git-core");
+    }
+
+    @Test
+    public void testProviderSpecificOptions() {
+        CreatePoolCommand command = new CreatePoolCommand(Collections.<Provisionr>emptyList(),
+            Collections.<PoolTemplate>emptyList());
+        command.setId("service");
+        command.setKey("key");
+        command.setProviderOptions(Lists.newArrayList("spotBid=0.07"));
+
+        Provisionr service = mock(Provisionr.class);
+        // TODO: consider refactoring this with an argument captor instead of 
+        // using an actual object
+        Provider provider = new ProviderBuilder().id("id").endpoint("endpoint")
+                .accessKey("aKey").secretKey("sKey").createProvider();
+        when(service.getDefaultProvider()).thenReturn(Optional.of(provider));
+
+        Pool pool = command.createPoolFromArgumentsAndServiceDefaults(service);
+        assertThat(pool.getProvider().getOption("spotBid")).isEqualTo("0.07");
     }
 
     private Provisionr newProvisionrMockWithId(String id) {
