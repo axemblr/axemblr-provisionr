@@ -48,6 +48,9 @@
         mvn:com.axemblr.provisionr/provisionr-core/${project.version}/xml/features
     </repository>
     <repository>
+        mvn:com.axemblr.provisionr/provisionr-console/${project.version}/xml/features
+    </repository>
+    <repository>
         mvn:com.axemblr.provisionr/provisionr-amazon/${project.version}/xml/features
     </repository>
     <repository>
@@ -61,9 +64,10 @@
     <feature name="axemblr-provisionr-all" version="${project.version}">
         <feature version="${project.version}">axemblr-provisionr-core</feature>
         <feature version="${project.version}">axemblr-provisionr-commands</feature>
-
         <feature version="${project.version}">axemblr-provisionr-amazon</feature>
-        <feature version="${project.version}">axemblr-provisionr-cloudstack</feature>
+
+        <!--<feature version="${project.version}">axemblr-provisionr-console</feature>-->
+        <!--<feature version="${project.version}">axemblr-provisionr-cloudstack</feature>-->
 
         <feature version="${project.version}">activiti-karaf-commands</feature>
         <feature version="${project.version}">activiti-karaf-web-explorer</feature>

@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 public class SpawnProcessForEachMachineTest {
 
-    private static final String SAMPLE_PROCESS_KEY = "sample";
+    private static final String EMPTY_PROCESS_KEY = "empty";
     private static final String RESULT = "result";
 
     private static final String BUSINESS_KEY = UUID.randomUUID().toString();
@@ -59,10 +59,10 @@ public class SpawnProcessForEachMachineTest {
         ProcessEngine processEngine = new StandaloneInMemProcessEngineConfiguration()
             .setJobExecutorActivate(true).buildProcessEngine();
         processEngine.getRepositoryService().createDeployment()
-            .addClasspathResource("diagrams/sample.bpmn20.xml").deploy();
+            .addClasspathResource("diagrams/empty.bpmn20.xml").deploy();
 
         try {
-            JavaDelegate delegate = new SpawnProcessForEachMachine(processEngine, SAMPLE_PROCESS_KEY, "test", RESULT);
+            JavaDelegate delegate = new SpawnProcessForEachMachine(processEngine, EMPTY_PROCESS_KEY, "test", RESULT);
             delegate.execute(execution);
 
             @SuppressWarnings("unchecked")

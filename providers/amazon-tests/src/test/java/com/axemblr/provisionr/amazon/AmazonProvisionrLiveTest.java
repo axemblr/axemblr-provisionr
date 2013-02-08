@@ -29,12 +29,15 @@ import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.core.PoolStatus;
 import com.axemblr.provisionr.core.Ssh;
-import com.axemblr.provisionr.core.templates.JenkinsTemplate;
+import com.axemblr.provisionr.core.templates.PoolTemplate;
+import com.axemblr.provisionr.core.templates.xml.XmlTemplate;
 import static com.axemblr.provisionr.test.KarafTests.installProvisionrFeatures;
 import static com.axemblr.provisionr.test.KarafTests.installProvisionrTestSupportBundle;
 import static com.axemblr.provisionr.test.KarafTests.passThroughAllSystemPropertiesWithPrefix;
 import static com.axemblr.provisionr.test.KarafTests.useDefaultKarafAsInProjectWithJunitBundles;
 import com.axemblr.provisionr.test.ProvisionrLiveTestSupport;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -61,6 +64,8 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
     public static final Logger LOG = LoggerFactory.getLogger(AmazonProvisionrLiveTest.class);
 
     public static final int TEST_POOL_SIZE = 2;
+
+    public static final String DEFAULT_JENKINS_TEMPLATE_PATH = "/com/axemblr/provisionr/core/templates/jenkins.xml";
 
     public AmazonProvisionrLiveTest() {
         super(AmazonProvisionr.ID);
@@ -117,7 +122,9 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
             .file("http://axemblr.com", destinationPath)
             .createSoftware();
 
-        JenkinsTemplate jenkins = new JenkinsTemplate();
+        PoolTemplate jenkins = XmlTemplate.newXmlTemplate(Resources.toString(Resources
+            .getResource(PoolTemplate.class, DEFAULT_JENKINS_TEMPLATE_PATH), Charsets.UTF_8));
+
         final Pool pool = jenkins.apply(Pool.builder()
             .provider(provider)
             .network(network)
