@@ -28,30 +28,31 @@ import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 
 public abstract class RunInstances extends AmazonActivity {
 
-	public static final String DEFAULT_ARCH = "amd64";
+    public static final String DEFAULT_ARCH = "amd64";
     public static final String DEFAULT_TYPE = "instance-store";
 
-	
-	protected RunInstances(ProviderClientCache providerClientCache) {
-		super(providerClientCache);
-	}
-	
-	protected RunInstancesRequest createOnDemandInstancesRequest(Pool pool, DelegateExecution execution) 
-			throws IOException {
-		return (RunInstancesRequest) createRequest(pool, execution, false);
-	}
-	
-	protected RequestSpotInstancesRequest createSpotInstancesRequest(Pool pool, DelegateExecution execution) 
-			throws IOException {
-		return (RequestSpotInstancesRequest) createRequest(pool, execution, true);
-	}
-	
-	private AmazonWebServiceRequest createRequest(Pool pool, DelegateExecution execution, boolean spot) 
-			throws IOException {
+
+    protected RunInstances(ProviderClientCache providerClientCache) {
+        super(providerClientCache);
+    }
+
+    protected RunInstancesRequest createOnDemandInstancesRequest(Pool pool, DelegateExecution execution) 
+            throws IOException {
+        return (RunInstancesRequest) createRequest(pool, execution, false);
+    }
+
+    protected RequestSpotInstancesRequest createSpotInstancesRequest(Pool pool, DelegateExecution execution) 
+            throws IOException {
+        return (RequestSpotInstancesRequest) createRequest(pool, execution, true);
+    }
+
+    private AmazonWebServiceRequest createRequest(Pool pool, DelegateExecution execution, boolean spot) 
+            throws IOException {
         final String businessKey = execution.getProcessBusinessKey();
 
         final String securityGroupName = SecurityGroups.formatNameFromBusinessKey(businessKey);
@@ -73,7 +74,7 @@ public abstract class RunInstances extends AmazonActivity {
                 .withInstanceType(instanceType)
                 .withKeyName(keyPairName)
                 .withImageId(imageId)
-                .withSecurityGroups(Arrays.asList(new String[] { securityGroupName }))
+                .withSecurityGroups(Lists.newArrayList(securityGroupName))
                 .withUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));
             return new RequestSpotInstancesRequest()
                 .withSpotPrice(spotPrice)
@@ -83,18 +84,18 @@ public abstract class RunInstances extends AmazonActivity {
                 .withType(SpotInstanceType.OneTime)
                 .withValidUntil(validUntil.getTime());
         } else {
-        	return new RunInstancesRequest()
-	            .withClientToken(businessKey)
-	            .withSecurityGroups(securityGroupName)
-	            .withKeyName(keyPairName)
-	            .withInstanceType(instanceType)
-	            .withImageId(imageId)
-	            .withMinCount(pool.getMinSize())
-	            .withMaxCount(pool.getExpectedSize())
-	            .withUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));
+            return new RunInstancesRequest()
+                .withClientToken(businessKey)
+                .withSecurityGroups(securityGroupName)
+                .withKeyName(keyPairName)
+                .withInstanceType(instanceType)
+                .withImageId(imageId)
+                .withMinCount(pool.getMinSize())
+                .withMaxCount(pool.getExpectedSize())
+                .withUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));
         }
-	}
-	
+    }
+
     private String getImageIdFromProcessVariablesOrQueryImageTable(
             VariableScope execution, Provider provider, String instanceType
         ) {

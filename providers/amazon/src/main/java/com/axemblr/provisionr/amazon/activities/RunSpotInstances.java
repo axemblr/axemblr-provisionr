@@ -18,6 +18,7 @@ package com.axemblr.provisionr.amazon.activities;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;
@@ -35,7 +36,9 @@ import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 
 public class RunSpotInstances extends RunInstances {
@@ -55,25 +58,25 @@ public class RunSpotInstances extends RunInstances {
         /* we timeout if requests have already been sent - the activity is being retried. */
         Optional<Object> alreadySent = Optional.fromNullable(
                 execution.getVariable(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS));
-        if (alreadySent.isPresent()) {
-            try {
-                Thread.sleep(60 * 1000);
-            } catch (InterruptedException exception) {
-                LOG.warn("Timeout to make describe calls consistent was interrupted", exception);
-            }
-        }
 
-        DescribeSpotInstanceRequestsResult result = client.describeSpotInstanceRequests(
-                new DescribeSpotInstanceRequestsRequest()
-                        .withFilters(new Filter()
-                            .withName("launch-group").withValues(businessKey)
-                            .withName("state").withValues("open", "active")));
-        List<SpotInstanceRequest> pending = result.getSpotInstanceRequests();
-        if (pending.size() > 0) {
-            LOG.info("Not resending spot instance requests {} for businessKey: {}.", pending, businessKey);
-            execution.setVariable(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS, 
-                    collectSpotInstanceRequestIds(pending));
-            return;
+        if (alreadySent.isPresent()) {
+            DescribeSpotInstanceRequestsRequest describeRequest = new DescribeSpotInstanceRequestsRequest()
+                    .withFilters(new Filter()
+                        .withName("launch-group").withValues(businessKey)
+                        .withName("state").withValues("open", "active"));
+            Stopwatch stopwatch = new Stopwatch().start();
+            while (stopwatch.elapsedTime(TimeUnit.MINUTES) < 2) {
+                DescribeSpotInstanceRequestsResult result = client.describeSpotInstanceRequests(describeRequest);
+                List<SpotInstanceRequest> pending = result.getSpotInstanceRequests();
+                if (pending.size() > 0) {
+                    LOG.info("Not resending spot instance requests {} for businessKey: {}.", pending, businessKey);
+                    execution.setVariable(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS, 
+                            collectSpotInstanceRequestIds(pending));
+                    return;
+                }
+                LOG.info("The describe call has not returned anything yet, waiting 20s and retrying.");
+                Uninterruptibles.sleepUninterruptibly(20, TimeUnit.SECONDS);
+            }
         }
 
         final RequestSpotInstancesRequest request = createSpotInstancesRequest(pool, execution);

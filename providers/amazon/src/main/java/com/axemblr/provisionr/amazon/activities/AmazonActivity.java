@@ -60,15 +60,15 @@ public abstract class AmazonActivity implements JavaDelegate {
 
         execute(providerClientCache.getUnchecked(pool.getProvider()), pool, execution);
     }
-    
+
     protected List<Instance> collectInstancesFromReservations(List<Reservation> reservation) {
         /* Make a copy as an ArrayList to force lazy collection evaluation */
-        List<List<Instance>> allInstances = Lists.newArrayList(Lists.transform(reservation, new Function<Reservation, List<Instance>>() {
+        List<List<Instance>> allInstances = Lists.transform(reservation, new Function<Reservation, List<Instance>>() {
             @Override
             public List<Instance> apply(Reservation reservation) {
                 return reservation.getInstances();
             }
-        }));
+        });
 
         return Lists.newArrayList(Iterables.concat(allInstances));
     }

@@ -29,14 +29,9 @@ public class CancelSpotRequests extends AmazonActivity {
         @SuppressWarnings("unchecked")
         List<String> requests = (List<String>) execution.getVariable(ProcessVariables.SPOT_INSTANCE_REQUEST_IDS);
         checkNotNull(requests, "process variable '{}' not found", ProcessVariables.SPOT_INSTANCE_REQUEST_IDS);
-        try {
-            if (requests.size() > 0) {
-                client.cancelSpotInstanceRequests(new CancelSpotInstanceRequestsRequest()
-                        .withSpotInstanceRequestIds(requests));
-            }
-        } catch (AmazonServiceException exception) {
-            LOG.warn("There was an error cancelling your spot instance requests: {}", exception);
-            throw exception;
+        if (requests.size() > 0) {
+            client.cancelSpotInstanceRequests(new CancelSpotInstanceRequestsRequest()
+                    .withSpotInstanceRequestIds(requests));
         }
-    }    
+    }
 }

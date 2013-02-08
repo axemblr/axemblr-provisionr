@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
- * Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,21 +62,16 @@ public class AllSpotRequestsMatchPredicate extends AmazonActivity {
         DescribeSpotInstanceRequestsRequest describeRequest = new DescribeSpotInstanceRequestsRequest();
         describeRequest.setSpotInstanceRequestIds(requestIds);
 
-        try {
-            // Retrieve all of the requests we want to monitor.
-            DescribeSpotInstanceRequestsResult describeResult = client.describeSpotInstanceRequests(describeRequest);
-            List<SpotInstanceRequest> requests = describeResult.getSpotInstanceRequests();
+        // Retrieve all of the requests we want to monitor.
+        DescribeSpotInstanceRequestsResult describeResult = client.describeSpotInstanceRequests(describeRequest);
+        List<SpotInstanceRequest> requests = describeResult.getSpotInstanceRequests();
 
-            if (Iterables.all(requests, predicate)) {
-                LOG.info(">> All {} requests match predicate {} ", requests, predicate);
-                execution.setVariable(resultVariable, true);
-            } else {
-                LOG.info("<< Not all requests {} match predicate {}", requests, predicate);
-                execution.setVariable(resultVariable, false);
-            }
-        } catch (AmazonServiceException exception) {
-            // couldn't find relevant error codes, so we always propagate the exception
-            throw Throwables.propagate(exception);
+        if (Iterables.all(requests, predicate)) {
+            LOG.info(">> All {} requests match predicate {} ", requests, predicate);
+            execution.setVariable(resultVariable, true);
+        } else {
+            LOG.info("<< Not all requests {} match predicate {}", requests, predicate);
+            execution.setVariable(resultVariable, false);
         }
     }
 }
