@@ -15,7 +15,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>provisionr-parent</artifactId>
         <groupId>com.axemblr.provisionr</groupId>
@@ -31,8 +32,6 @@
     <properties>
         <osgi.export>com.axemblr.provisionr.test*</osgi.export>
         <osgi.import>
-            org.osgi.framework;version="[1.3, 2.0)",
-            org.osgi.util.tracker;version="[1.3, 2.0)",
             org.mockito*;resolution:=optional,
             *
         </osgi.import>
@@ -42,7 +41,6 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
-            <version>4.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>

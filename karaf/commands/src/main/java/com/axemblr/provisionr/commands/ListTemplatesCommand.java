@@ -41,7 +41,7 @@ public class ListTemplatesCommand extends OsgiCommandSupport {
     @Override
     protected Object doExecute() throws Exception {
         for (PoolTemplate template : templates) {
-            out.printf("%s\t\t%s\n", template.getId(), template.getDescription());
+            out.printf("- %s\n\t%s\n", template.getId(), template.getDescription());
         }
 
         return null;

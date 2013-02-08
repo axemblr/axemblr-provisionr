@@ -20,10 +20,14 @@ import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
-import com.axemblr.provisionr.core.templates.JenkinsTemplate;
 import com.axemblr.provisionr.core.templates.PoolTemplate;
+import com.axemblr.provisionr.core.templates.xml.XmlTemplate;
+import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.Resources;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,7 +49,7 @@ public class CreatePoolCommandTest {
         final Pool pool = mock(Pool.class);
 
         final List<Provisionr> services = ImmutableList.of(service);
-        final List<PoolTemplate> templates = ImmutableList.<PoolTemplate>of(new JenkinsTemplate());
+        final List<PoolTemplate> templates = ImmutableList.of();
         CreatePoolCommand command = new CreatePoolCommand(services, templates) {
             @Override
             protected Pool createPoolFromArgumentsAndServiceDefaults(Provisionr service) {
@@ -74,7 +78,8 @@ public class CreatePoolCommandTest {
 
     @Test
     public void testCreatePoolWithTemplate() {
-        final JenkinsTemplate template = new JenkinsTemplate();
+        final PoolTemplate template = XmlTemplate.newXmlTemplate(readDefaultTemplate("jenkins"));
+
         CreatePoolCommand command = new CreatePoolCommand(Collections.<Provisionr>emptyList(),
             ImmutableList.<PoolTemplate>of(template)) {
 
@@ -101,5 +106,16 @@ public class CreatePoolCommandTest {
         Provisionr service = mock(Provisionr.class);
         when(service.getId()).thenReturn(id);
         return service;
+    }
+
+
+    private String readDefaultTemplate(String name) {
+        try {
+            return Resources.toString(Resources.getResource(PoolTemplate.class,
+                String.format("/com/axemblr/provisionr/core/templates/%s.xml", name)), Charsets.UTF_8);
+
+        } catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
     }
 }

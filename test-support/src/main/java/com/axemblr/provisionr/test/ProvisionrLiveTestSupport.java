@@ -57,13 +57,13 @@ public class ProvisionrLiveTestSupport {
      * Retrieve a reference to an OSGi service using the class name
      */
     protected <T> T getOsgiService(Class<T> klass, int timeoutInMilliseconds) throws InterruptedException {
-        ServiceTracker<T, T> tracker = new ServiceTracker<T, T>(bundleContext,
+        ServiceTracker tracker = new ServiceTracker(bundleContext,
             klass.getCanonicalName(), null);
         tracker.open(true);
 
         try {
-            return checkNotNull(tracker.waitForService(timeoutInMilliseconds), "OSGi Service not available "
-                + klass.getCanonicalName());
+            return (T) checkNotNull(tracker.waitForService(timeoutInMilliseconds),
+                "OSGi Service not available " + klass.getCanonicalName());
         } finally {
             tracker.close();
         }

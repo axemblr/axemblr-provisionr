@@ -16,9 +16,12 @@
 
 package com.axemblr.provisionr.commands;
 
-import com.axemblr.provisionr.core.templates.JenkinsTemplate;
 import com.axemblr.provisionr.core.templates.PoolTemplate;
+import com.axemblr.provisionr.core.templates.xml.XmlTemplate;
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.Resources;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -48,7 +51,10 @@ public class ListTemplatesCommandTest {
 
     @Test
     public void testListTemplates() throws Exception {
-        final ImmutableList<PoolTemplate> templates = ImmutableList.<PoolTemplate>of(new JenkinsTemplate());
+        final ImmutableList<PoolTemplate> templates = ImmutableList.<PoolTemplate>of(
+            XmlTemplate.newXmlTemplate(readDefaultTemplate("jenkins")),
+            XmlTemplate.newXmlTemplate(readDefaultTemplate("cdh3")));
+
         ListTemplatesCommand command = new ListTemplatesCommand(templates);
 
         command.setOut(out);
@@ -56,6 +62,16 @@ public class ListTemplatesCommandTest {
 
         out.flush();
 
-        assertThat(outputStream.toString()).contains("jenkins");
+        assertThat(outputStream.toString()).contains("jenkins").contains("cdh3");
+    }
+
+    private String readDefaultTemplate(String name) {
+        try {
+            return Resources.toString(Resources.getResource(PoolTemplate.class,
+                String.format("/com/axemblr/provisionr/core/templates/%s.xml", name)), Charsets.UTF_8);
+
+        } catch (IOException e) {
+            throw Throwables.propagate(e);
+        }
     }
 }
