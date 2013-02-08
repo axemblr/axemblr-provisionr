@@ -82,15 +82,30 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
     }
 
     @Test
-    public void startProvisioningProcess() throws Exception {
+    public void startProvisioningProcessForOnDemandInstances() throws Exception {
+        startProvisioningProcess(null);
+    }
+
+    @Test
+    public void startProvisioningProcessForSpotInstances() throws Exception {
+        startProvisioningProcess("0.04");
+    }
+
+    private void startProvisioningProcess(String spotBid) throws Exception {
         waitForProcessDeployment(AmazonProvisionr.MANAGEMENT_PROCESS_KEY);
 
         final Provisionr provisionr = getOsgiService(Provisionr.class, 5000);
 
-        final Provider provider = collectProviderCredentialsFromSystemProperties()
+        Provider provider = collectProviderCredentialsFromSystemProperties()
             .option(ProviderOptions.REGION, getProviderProperty(
                 ProviderOptions.REGION, ProviderOptions.DEFAULT_REGION))
             .createProvider();
+
+        if (spotBid != null) {
+            provider = provider.toBuilder()
+                    .option(ProviderOptions.SPOT_BID, spotBid)
+                    .createProvider();
+        }
 
         final Network network = Network.builder().addRules(
             Rule.builder().anySource().icmp().createRule(),

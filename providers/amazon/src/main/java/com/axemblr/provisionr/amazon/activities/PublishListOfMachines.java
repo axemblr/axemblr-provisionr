@@ -59,12 +59,11 @@ public class PublishListOfMachines extends AmazonActivity {
         LOG.info(">> Describing instances {}", instanceIds);
         DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
             .withInstanceIds(instanceIds));
-        checkArgument(result.getReservations().size() == 1, "found more than one reservation");
 
-        Reservation reservation = result.getReservations().get(0);
-        LOG.info("<< Got one reservation with {} running instances", reservation.getInstances().size());
+        LOG.info("<< Got the following reservations: {}", result.getReservations());
 
-        List<Machine> machines = Lists.transform(reservation.getInstances(),
+        List<Instance> instances = collectInstancesFromReservations(result.getReservations());
+        List<Machine> machines = Lists.transform(instances,
             new Function<Instance, Machine>() {
                 @Override
                 public Machine apply(Instance instance) {

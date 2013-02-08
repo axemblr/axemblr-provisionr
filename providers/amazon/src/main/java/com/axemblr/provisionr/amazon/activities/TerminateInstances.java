@@ -22,7 +22,6 @@ import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
 import static com.google.common.base.Preconditions.checkNotNull;
-import java.util.Arrays;
 import java.util.List;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.slf4j.Logger;
@@ -46,6 +45,8 @@ public class TerminateInstances extends AmazonActivity {
         checkNotNull(instanceIds, "process variable '{}' not found", ProcessVariables.INSTANCE_IDS);
 
         LOG.info(">> Terminating instances: {}", instanceIds);
-        client.terminateInstances(new TerminateInstancesRequest().withInstanceIds(instanceIds));
+        if (instanceIds.size() > 0) {
+            client.terminateInstances(new TerminateInstancesRequest().withInstanceIds(instanceIds));
+        }
     }
 }

@@ -16,6 +16,8 @@
 
 package com.axemblr.provisionr.amazon.options;
 
+import com.google.common.base.Optional;
+
 public class ProviderOptions {
 
     private ProviderOptions() {
@@ -24,5 +26,6 @@ public class ProviderOptions {
 
     public static final String REGION = "region";
     public static final String DEFAULT_REGION = "us-east-1";
+    public static final String SPOT_BID = "spotBid";
 
 }
