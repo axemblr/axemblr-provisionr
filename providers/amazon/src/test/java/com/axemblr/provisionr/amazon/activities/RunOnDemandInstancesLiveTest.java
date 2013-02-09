@@ -16,81 +16,23 @@
 
 package com.axemblr.provisionr.amazon.activities;
 
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
-import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
-import com.axemblr.provisionr.core.CoreProcessVariables;
-import com.axemblr.provisionr.test.ProcessVariablesCollector;
-import com.axemblr.provisionr.amazon.ProcessVariables;
-import com.axemblr.provisionr.api.access.AdminAccess;
-import com.axemblr.provisionr.api.hardware.Hardware;
-import com.axemblr.provisionr.api.network.Network;
-import com.axemblr.provisionr.api.network.Rule;
-import com.axemblr.provisionr.api.pool.Pool;
-import java.util.List;
-import org.activiti.engine.delegate.DelegateExecution;
 import static org.fest.assertions.api.Assertions.assertThat;
-import org.junit.Test;
-import org.mockito.Matchers;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-public class RunOnDemandInstancesLiveTest extends AmazonActivityLiveTest<RunOnDemandInstances> {
+import java.util.List;
 
-    private DelegateExecution execution;
-    private Pool pool;
+import org.junit.Test;
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void setUp() throws Exception {
-        super.setUp();
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
+import com.axemblr.provisionr.amazon.ProcessVariables;
+import com.axemblr.provisionr.test.ProcessVariablesCollector;
 
-        execution = mock(DelegateExecution.class);
-        pool = mock(Pool.class);
-
-        final AdminAccess adminAccess = AdminAccess.builder()
-            .username("admin")
-            .publicKey(getResourceAsString("keys/test.pub"))
-            .privateKey(getResourceAsString("keys/test"))
-            .createAdminAccess();
-
-        final Network network = Network.builder().addRules(
-            Rule.builder().anySource().tcp().port(22).createRule()).createNetwork();
-
-        final Hardware hardware = Hardware.builder().type("t1.micro").createHardware();
-
-        when(pool.getProvider()).thenReturn(provider);
-        when(pool.getAdminAccess()).thenReturn(adminAccess);
-        when(pool.getNetwork()).thenReturn(network);
-
-        when(pool.getMinSize()).thenReturn(1);
-        when(pool.getExpectedSize()).thenReturn(1);
-
-        when(pool.getHardware()).thenReturn(hardware);
-
-        when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
-
-        executeActivitiesInSequence(execution,
-            EnsureKeyPairExists.class,
-            EnsureSecurityGroupExists.class
-        );
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void tearDown() throws Exception {
-        executeActivitiesInSequence(execution,
-            DeleteSecurityGroup.class,
-            DeleteKeyPair.class
-        );
-        super.tearDown();
-    }
+public class RunOnDemandInstancesLiveTest extends RunInstancesLiveTest<RunOnDemandInstances> {
 
     @Test
     public void testRunInstances() throws Exception {

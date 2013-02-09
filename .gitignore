@@ -19,3 +19,5 @@ target
 core/.xml
 felix-cache
 .metadata
+test-support/.externalToolBuilders
+test-support/maven-eclipse.xml

@@ -16,6 +16,9 @@
 
 package com.axemblr.provisionr.commands;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.hardware.Hardware;
@@ -29,18 +32,21 @@ import com.axemblr.provisionr.core.templates.PoolTemplate;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
+
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
@@ -68,6 +74,11 @@ public class CreatePoolCommand extends OsgiCommandSupport {
 
     @Option(name = "-h", aliases = "--hardware-type", description = "Virtual machine hardware type")
     private String hardwareType = "t1.micro";
+
+    @Option(name = "-o", aliases = "--provider-options", description = "Provider-specific options (multi-valued)." +
+        "Expects either the key=value format or just plain key. If value is not specified, defaults to 'true'." +
+        "Supported values: spotBid=x.xxx (Amazon).", multiValued = true)
+    private List<String> providerOptions = Lists.newArrayList();
 
     @Option(name = "--port", description = "Firewall port that need to be open for any TCP traffic " +
         "(multi-valued). SSH (22) is always open by default.", multiValued = true)
@@ -110,6 +121,14 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         checkArgument(defaultProvider.isPresent(), String.format("please configure a default provider " +
             "by editing etc/com.axemblr.provisionr.%s.cfg", id));
 
+        /* append the provider options that were passed in and rebuild the default provider */
+        // TODO: this currently does not support overriding default options, it will throw an exception
+        Map<String,String> options = ImmutableMap.<String, String>builder()
+                .putAll(defaultProvider.get().getOptions())     // default options
+                .putAll(parseProviderOptions(providerOptions))  // options added by the user
+                .build();
+        Provider provider = defaultProvider.get().toBuilder().options(options).createProvider();
+
         /* Always allow ICMP and ssh traffic by default */
         final Network network = Network.builder().addRules(
             Rule.builder().anySource().icmp().createRule(),
@@ -122,8 +141,9 @@ public class CreatePoolCommand extends OsgiCommandSupport {
 
         final Software software = Software.builder().packages(packages).createSoftware();
 
+
         final Pool pool = Pool.builder()
-            .provider(defaultProvider.get())
+            .provider(provider)
             .hardware(hardware)
             .software(software)
             .network(network)
@@ -143,6 +163,16 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         }
 
         return pool;
+    }
+
+    private Map<String, String> parseProviderOptions(List<String> providerOptions) {
+        Map<String, String> result = Maps.newHashMap();
+        for (String option : providerOptions) {
+            String[] parts = option.split("=");
+            String value = parts.length > 1 ? parts[1] : "true";
+            result.put(parts[0], value);
+        }
+        return result;
     }
 
     private Set<Rule> formatPortsAsIngressRules() {
@@ -201,6 +231,11 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     @VisibleForTesting
     void setPackages(List<String> packages) {
         this.packages = ImmutableList.copyOf(packages);
+    }
+
+    @VisibleForTesting
+    void setProviderOptions(List<String> providerOptions) {
+        this.providerOptions = ImmutableList.copyOf(providerOptions);
     }
 
     @VisibleForTesting

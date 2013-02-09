@@ -16,23 +16,29 @@
 
 package com.axemblr.provisionr.amazon.activities;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.List;
+
+import org.activiti.engine.delegate.DelegateExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.services.ec2.model.SpotInstanceRequest;
 import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
-import java.util.List;
-import org.activiti.engine.delegate.DelegateExecution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.collect.Lists;
 
 public abstract class AllInstancesMatchPredicate extends AmazonActivity {
 
@@ -57,9 +63,9 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
         try {
             DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
                 .withInstanceIds(instanceIds));
-            checkState(result.getReservations().size() == 1, "the instance ids are part of multiple reservations");
 
-            List<Instance> instances = result.getReservations().get(0).getInstances();
+            List<Instance> instances = collectInstancesFromReservations(result.getReservations());
+
             if (Iterables.all(instances, predicate)) {
                 LOG.info(">> All {} instances match predicate {} ", instanceIds, predicate);
                 execution.setVariable(resultVariable, true);
