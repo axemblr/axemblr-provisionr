@@ -16,34 +16,24 @@
 
 package com.axemblr.provisionr.amazon.activities;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.activiti.engine.delegate.DelegateExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.axemblr.provisionr.amazon.ProcessVariables;
-import com.axemblr.provisionr.amazon.core.ImageTable;
-import com.axemblr.provisionr.amazon.core.ImageTableQuery;
-import com.axemblr.provisionr.amazon.core.KeyPairs;
 import com.axemblr.provisionr.amazon.core.ProviderClientCache;
-import com.axemblr.provisionr.amazon.core.SecurityGroups;
-import com.axemblr.provisionr.amazon.options.ProviderOptions;
-import com.axemblr.provisionr.amazon.options.SoftwareOptions;
 import com.axemblr.provisionr.api.pool.Pool;
-import com.axemblr.provisionr.api.provider.Provider;
-import com.google.common.base.Charsets;
 import com.google.common.base.Function;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
-import com.google.common.io.Resources;
-import java.io.IOException;
-import java.util.List;
-import net.schmizz.sshj.common.Base64;
-import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.delegate.VariableScope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class RunOnDemandInstances extends AmazonActivity {
+public class RunOnDemandInstances extends RunInstances {
 
     private static final Logger LOG = LoggerFactory.getLogger(RunOnDemandInstances.class);
 
@@ -56,28 +46,8 @@ public class RunOnDemandInstances extends AmazonActivity {
 
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws IOException {
-        final String businessKey = execution.getProcessBusinessKey();
 
-        final String securityGroupName = SecurityGroups.formatNameFromBusinessKey(businessKey);
-        final String keyPairName = KeyPairs.formatNameFromBusinessKey(businessKey);
-
-        final String instanceType = pool.getHardware().getType();
-        final String imageId = getImageIdFromProcessVariablesOrQueryImageTable(
-            execution, pool.getProvider(), instanceType);
-
-        final String userData = Resources.toString(Resources.getResource(RunOnDemandInstances.class,
-            "/com/axemblr/provisionr/amazon/userdata.sh"), Charsets.UTF_8);
-
-        final RunInstancesRequest request = new RunInstancesRequest()
-            .withClientToken(businessKey)
-            .withSecurityGroups(securityGroupName)
-            .withKeyName(keyPairName)
-            .withInstanceType(instanceType)
-            .withImageId(imageId)
-            .withMinCount(pool.getMinSize())
-            .withMaxCount(pool.getExpectedSize())
-            .withUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));
-
+        final RunInstancesRequest request = createOnDemandInstancesRequest(pool, execution);
         // TODO allow for more options (e.g. monitoring & termination protection etc.)
 
         LOG.info(">> Sending RunInstances request: {}", request);
@@ -92,38 +62,6 @@ public class RunOnDemandInstances extends AmazonActivity {
             collectInstanceIdsAsList(result.getReservation().getInstances()));
     }
 
-    private String getImageIdFromProcessVariablesOrQueryImageTable(
-        VariableScope execution, Provider provider, String instanceType
-    ) {
-        final String imageId = (String) execution.getVariable(ProcessVariables.CACHED_IMAGE_ID);
-        if (imageId != null) {
-            return imageId;
-        }
-
-        ImageTable imageTable;
-        try {
-            imageTable = ImageTable.fromCsvResource("/com/axemblr/provisionr/amazon/ubuntu.csv");
-        } catch (IOException e) {
-            throw Throwables.propagate(e);
-        }
-
-        final String region = provider.getOptionOr(ProviderOptions.REGION, ProviderOptions.DEFAULT_REGION);
-        final String version = provider.getOptionOr(SoftwareOptions.BASE_OPERATING_SYSTEM_VERSION,
-            SoftwareOptions.DEFAULT_BASE_OPERATING_SYSTEM_VERSION);
-
-        ImageTableQuery query = imageTable.query()
-            .filterBy("region", region)
-            .filterBy("version", version)
-            .filterBy("arch", DEFAULT_ARCH);
-
-        if (instanceType.equals("t1.micro")) {
-            query.filterBy("type", "ebs");
-        } else {
-            query.filterBy("type", DEFAULT_TYPE);
-        }
-
-        return query.singleResult();
-    }
 
     private List<String> collectInstanceIdsAsList(List<Instance> instances) {
         /* Make a copy as an ArrayList to force lazy collection evaluation */
