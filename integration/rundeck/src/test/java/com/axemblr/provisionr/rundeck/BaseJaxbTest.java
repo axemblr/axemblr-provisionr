@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.axemblr.provisionr.core;
+package com.axemblr.provisionr.rundeck;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
