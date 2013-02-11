@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2012 S.C. Axemblr Software Solutions S.R.L
+  ~ Copyright (c) 2013 S.C. Axemblr Software Solutions S.R.L
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,65 +14,58 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>provisionr-parent</artifactId>
         <groupId>com.axemblr.provisionr</groupId>
         <version>0.3.0-SNAPSHOT</version>
-        <relativePath>../../parent</relativePath>
+        <relativePath>../../parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axemblr Provisionr :: Karaf Features</name>
-    <artifactId>provisionr-features</artifactId>
-    <packaging>jar</packaging>
+    <name>Axemblr Provisionr :: Rundeck</name>
+    <description>Integration with Rundeck (http://rundeck.org/). Provides a Resource Model endpoint</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <artifactId>provisionr-rundeck</artifactId>
+    <packaging>bundle</packaging>
 
-    <!-- Dependencies are used only for ordering the reactor -->
     <dependencies>
         <dependency>
             <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-amazon</artifactId>
+            <artifactId>provisionr-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-cloudstack</artifactId>
-            <scope>provided</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-console</artifactId>
-            <scope>provided</scope>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-rundeck</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
+            <groupId>xmlunit</groupId>
+            <artifactId>xmlunit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.axemblr.provisionr</groupId>
-            <artifactId>provisionr-commands</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert-core</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.activiti.karaf</groupId>
-            <artifactId>activiti-karaf-commands</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti.karaf</groupId>
-            <artifactId>activiti-karaf-web-explorer</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -81,7 +74,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <targetPath>${project.build.directory}</targetPath>
                 <includes>
                     <include>**/*</include>
                 </includes>
@@ -89,43 +81,12 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <id>filter</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>resources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.ops4j.pax.exam</groupId>
-                <artifactId>maven-paxexam-plugin</artifactId>
-                <version>1.2.4</version>
-                <executions>
-                    <execution>
-                        <id>generate-config</id>
-                        <goals>
-                            <goal>generate-config</goal>
-                            <goal>generate-depends-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <options>
-                        <platform>felix</platform>
-                        <profiles>log</profiles>
-                    </options>
-                </configuration>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
                 <executions>
                     <execution>
                         <id>attach-artifacts</id>
@@ -136,7 +97,7 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <file>${project.build.directory}/features.xml</file>
+                                    <file>${project.build.directory}/classes/features.xml</file>
                                     <type>xml</type>
                                     <classifier>features</classifier>
                                 </artifact>
@@ -152,17 +113,17 @@
                 <executions>
                     <execution>
                         <id>add-features-to-repo</id>
-                        <phase>generate-resources</phase>
+                        <phase>package</phase>
                         <goals>
                             <!-- We are doing so to just to validate that all artifacts are reachable -->
                             <goal>add-features-to-repo</goal>
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>file:${project.build.directory}/features.xml</descriptor>
+                                <descriptor>file:${project.build.directory}/classes/features.xml</descriptor>
                             </descriptors>
                             <features>
-                                <feature>axemblr-provisionr-all</feature>
+                                <feature>axemblr-provisionr-core</feature>
                             </features>
                             <repository>target/features-repo</repository>
                         </configuration>

@@ -37,6 +37,7 @@
         <module>test-support</module>
         <module>providers/amazon</module>
         <module>providers/cloudstack</module>
+        <module>integration/rundeck</module>
     </modules>
 
     <profiles>
