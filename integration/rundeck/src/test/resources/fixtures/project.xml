@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project>
+    <node username="psql" tags="a,b" name="db-1" hostname="db-1.example.com">
+        <attribute value="val1" name="key1"/>
+        <attribute value="val2" name="key2"/>
+    </node>
+    <node username="django" name="web-1" hostname="web-1.example.com"/>
+</project>

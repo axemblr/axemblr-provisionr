@@ -66,6 +66,8 @@ public class CustomKarafDistributionTest {
 
     public static final String ACTIVITI_EXPLORER_URL = "http://localhost:8181/activiti-explorer/";
 
+    public static final String RUNDECK_RESOURCE_URL = "http://localhost:8181/rundeck/machines.xml";
+
     public static final String LOCALHOST = "localhost";
 
     public static final int DEFAULT_JETTY_PORT = 8181;
@@ -115,27 +117,31 @@ public class CustomKarafDistributionTest {
         assertProvisionrServicesAreStartedInLessThan(5000 /* milliseconds */);
         assertPoolTemplatesAreRegisteredInLessThan(5000 /* milliseconds */);
 
-        assertActivitiExplorerIsRunningInLessThan(30000 /* milliseconds */);
+        assertUrlContainsInLessThan(ACTIVITI_EXPLORER_URL, "Vaadin", 10000 /* milliseconds */);
+        assertUrlContainsInLessThan(RUNDECK_RESOURCE_URL, "<project", 10000 /* milliseconds */);
     }
 
-    private void assertActivitiExplorerIsRunningInLessThan(int timeoutInMilliseconds) throws InterruptedException {
+    private void assertUrlContainsInLessThan(
+        String url, String expectedContent, int timeoutInMilliseconds
+    ) throws InterruptedException {
+
         final Stopwatch stopwatch = new Stopwatch().start();
         while (true) {
             if (stopwatch.elapsedMillis() > timeoutInMilliseconds) {
-                fail(String.format("Activiti Explorer did not start at %s in less than %d milliseconds",
-                    ACTIVITI_EXPLORER_URL, timeoutInMilliseconds));
+                fail(String.format("Unable to fetch url '%s' in less than %d milliseconds",
+                    url, timeoutInMilliseconds));
             }
 
             try {
-                String content = CharStreams.toString(
-                    new InputStreamReader(new URL(ACTIVITI_EXPLORER_URL).openStream()));
+                String content = CharStreams.toString(new InputStreamReader(new URL(url).openStream()));
+                assertTrue(String.format("Expected to find '%s' in: %s", expectedContent, content),
+                    content.contains(expectedContent));
 
-                assertTrue(content.contains("Vaadin"));
                 break;  /* test completed as expected */
 
             } catch (Exception e) {
-                LOG.info(String.format("Activiti Explorer not started yet (%s). Trying again in 10s.", e.getMessage()));
-                TimeUnit.SECONDS.sleep(10);
+                LOG.info(String.format("Unable to fetch %s (%s). Trying again in 5s.", url, e.getMessage()));
+                TimeUnit.SECONDS.sleep(5);
             }
         }
     }
