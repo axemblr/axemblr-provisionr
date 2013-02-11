@@ -19,7 +19,7 @@
     <parent>
         <artifactId>provisionr-parent</artifactId>
         <groupId>com.axemblr.provisionr</groupId>
-        <version>0.3.0-SNAPSHOT</version>
+        <version>0.3.0</version>
         <relativePath>../../parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
