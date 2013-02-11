@@ -72,6 +72,8 @@ public class CloudStackProvisionr extends ProvisionrSupport {
         arguments.put(CoreProcessVariables.POOL, pool);
         arguments.put(CoreProcessVariables.PROVIDER, getId());
         arguments.put(CoreProcessVariables.POOL_BUSINESS_KEY, businessKey);
+        arguments.put(CoreProcessVariables.BOOTSTRAP_TIMEOUT, 
+                convertTimeoutToISO8601TimeDuration(pool.getBootstrapTimeInSeconds()));
 
         /* Authenticate as kermit to make the process visible in the Explorer UI */
         processEngine.getIdentityService().setAuthenticatedUserId(CoreConstants.ACTIVITI_EXPLORER_DEFAULT_USER);

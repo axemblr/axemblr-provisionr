@@ -4,6 +4,7 @@
 .idea
 target
 */target
+bin/
 
 # Package Files #
 *.jar

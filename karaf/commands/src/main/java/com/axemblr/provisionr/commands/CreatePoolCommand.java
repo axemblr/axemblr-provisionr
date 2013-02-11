@@ -75,6 +75,10 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     @Option(name = "-h", aliases = "--hardware-type", description = "Virtual machine hardware type")
     private String hardwareType = "t1.micro";
 
+    @Option(name = "--timeout", description = "Timeout in seconds for the pool's initialization steps. " +
+        "If not specified, defaults to 600 seconds.")
+    private int bootstrapTimeout = 600;
+
     @Option(name = "-o", aliases = "--provider-options", description = "Provider-specific options (multi-valued)." +
         "Expects either the key=value format or just plain key. If value is not specified, defaults to 'true'." +
         "Supported values: spotBid=x.xxx (Amazon).", multiValued = true)
@@ -151,6 +155,7 @@ public class CreatePoolCommand extends OsgiCommandSupport {
             .minSize(size)
             .expectedSize(size)
             .cacheBaseImage(cacheBaseImage)
+            .bootstrapTimeInSeconds(bootstrapTimeout)
             .createPool();
 
         if (template != null) {

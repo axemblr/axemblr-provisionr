@@ -76,4 +76,20 @@ public abstract class ProvisionrSupport implements Provisionr {
 
         }
     }
+
+    /**
+     * Convert a timeout specified in seconds to a string representation that can be used
+     * inside the Activiti definitions of timeouts. 
+     * 
+     * @see http://en.wikipedia.org/wiki/ISO_8601#Durations
+     */
+    protected String convertTimeoutToISO8601TimeDuration(int bootstrapTimeoutInSeconds) {
+        StringBuilder result = new StringBuilder("PT");
+        if (bootstrapTimeoutInSeconds % 60 == 0) {
+            result.append(bootstrapTimeoutInSeconds / 60).append("M");
+        } else {
+            result.append(bootstrapTimeoutInSeconds).append("S");
+        }
+        return result.toString();
+    }
 }

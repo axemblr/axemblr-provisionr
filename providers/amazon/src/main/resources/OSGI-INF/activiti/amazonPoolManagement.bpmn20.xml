@@ -45,7 +45,7 @@
     </subProcess>
     <boundaryEvent id="bootstrapTimeoutBoundaryEvent" attachedToRef="waitForAllInstancesToStart" cancelActivity="true">
       <timerEventDefinition>
-        <timeDuration>PT10M</timeDuration>
+        <timeDuration>${bootstrapTimeout}</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <intermediateThrowEvent id="throwTerminatePoolOnTimeoutEvent" name="Terminate Pool On Timeout Event">
@@ -93,7 +93,7 @@
     </subProcess>
     <boundaryEvent id="boundarytimer1" attachedToRef="subprocess1" cancelActivity="true">
       <timerEventDefinition>
-        <timeDuration>PT15M</timeDuration>
+        <timeDuration>${bootstrapTimeout}</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <intermediateThrowEvent id="signalintermediatethrowevent1" name="SignalThrowEvent">
@@ -176,7 +176,7 @@
     </intermediateThrowEvent>
     <boundaryEvent id="boundarytimer2" name="Timer" attachedToRef="waitForAllRequestsToBeProcessed" cancelActivity="true">
       <timerEventDefinition>
-        <timeDuration>PT10M</timeDuration>
+        <timeDuration>${bootstrapTimeout}</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <sequenceFlow id="flow135" sourceRef="boundarytimer2" targetRef="signalintermediatethrowevent2"></sequenceFlow>
@@ -214,7 +214,7 @@
     <sequenceFlow id="flow166" sourceRef="catchTerminatePoolOnSpotRequestError" targetRef="cancelSpotRequests"></sequenceFlow>
     <sequenceFlow id="flow167" sourceRef="cancelSpotRequests" targetRef="getInstanceIdsFromSpotRequests2"></sequenceFlow>
     <textAnnotation id="textannotation1" textFormat="text/plain">
-      <text>10 minutes timeout (PT10M) static</text>
+      <text>Configurable timeout. Defaults to PT10M.</text>
     </textAnnotation>
     <textAnnotation id="textannotation2" textFormat="text/plain">
       <text>Check all instances are running by using batch API operations</text>
@@ -250,7 +250,7 @@
     <association id="association9" sourceRef="textannotation9" targetRef="waitForAllRequestsToBeProcessed"></association>
     <association id="association10" sourceRef="waitForAllRequestsToBeProcessed" targetRef="textannotation9"></association>
     <textAnnotation id="textannotation10">
-      <text>10 minutes timeout</text>
+      <text>Configurable timeout. Defaults to PT10M.</text>
     </textAnnotation>
     <association id="association12" sourceRef="boundarytimer2" targetRef="textannotation10"></association>
     <textAnnotation id="textannotation11">
