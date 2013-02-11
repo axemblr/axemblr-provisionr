@@ -76,7 +76,9 @@ public class AmazonProvisionr extends ProvisionrSupport {
         arguments.put(CoreProcessVariables.POOL, pool);
         arguments.put(CoreProcessVariables.PROVIDER, getId());
         arguments.put(CoreProcessVariables.POOL_BUSINESS_KEY, businessKey);
-        
+        arguments.put(CoreProcessVariables.BOOTSTRAP_TIMEOUT, 
+                convertTimeoutToISO8601TimeDuration(pool.getBootstrapTimeInSeconds()));
+
         /* needed because the Activiti EL doesn't work as expected and properties can't be read from the pool. */
         arguments.put(ProcessVariables.SPOT_BID, pool.getProvider().getOption(ProviderOptions.SPOT_BID));
 
