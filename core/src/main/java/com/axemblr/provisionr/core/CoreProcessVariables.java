@@ -56,4 +56,9 @@ public class CoreProcessVariables {
      */
     public static final String POOL_BUSINESS_KEY = "poolBusinessKey";
 
+    /**
+     * Configurable value for the interval of time in which to wait for the pool
+     * to become available.
+     */
+    public static final String BOOTSTRAP_TIMEOUT = "bootstrapTimeout";
 }
