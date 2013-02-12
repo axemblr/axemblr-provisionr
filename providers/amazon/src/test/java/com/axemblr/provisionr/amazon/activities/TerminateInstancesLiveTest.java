@@ -39,7 +39,6 @@ public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<Terminate
     private ProcessVariablesCollector collector;
 
     @Override
-    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         super.setUp();
 
@@ -71,12 +70,6 @@ public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<Terminate
 
         collector = new ProcessVariablesCollector();
         collector.install(execution);
-
-        executeActivitiesInSequence(execution,
-            EnsureKeyPairExists.class,
-            EnsureSecurityGroupExists.class,
-            RunOnDemandInstances.class
-        );
     }
 
     @Override
@@ -90,13 +83,33 @@ public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<Terminate
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testTerminateInstances() throws Exception {
+        executeActivitiesInSequence(execution,
+                EnsureKeyPairExists.class,
+                EnsureSecurityGroupExists.class,
+                RunOnDemandInstances.class
+            );
+
         when(execution.getVariable(ProcessVariables.INSTANCE_IDS))
             .thenReturn(collector.getVariable(ProcessVariables.INSTANCE_IDS));
 
         activity.execute(execution);
 
         /* the second execution should do nothing */
+        activity.execute(execution);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testTerminateInstancesNoIdsPresent() throws Exception {
+        executeActivitiesInSequence(execution,
+                EnsureKeyPairExists.class,
+                EnsureSecurityGroupExists.class
+            );
+        when(execution.getVariable(ProcessVariables.INSTANCE_IDS)).thenReturn(null);
+
+        // should not throw any exception and should not do anything
         activity.execute(execution);
     }
 }
