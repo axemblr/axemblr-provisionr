@@ -18,27 +18,24 @@ package com.axemblr.provisionr.amazon.activities;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-
-import org.activiti.engine.delegate.DelegateExecution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.Reservation;
-import com.amazonaws.services.ec2.model.SpotInstanceRequest;
 import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.api.pool.Pool;
-import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+
+import java.util.List;
+
+import org.activiti.engine.delegate.DelegateExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AllInstancesMatchPredicate extends AmazonActivity {
 
@@ -57,12 +54,20 @@ public abstract class AllInstancesMatchPredicate extends AmazonActivity {
     @Override
     public void execute(AmazonEC2 client, Pool pool, DelegateExecution execution) throws Exception {
         @SuppressWarnings("unchecked")
-        List<String> instanceIds = (List<String>) execution.getVariable(ProcessVariables.INSTANCE_IDS);
-        checkNotNull(instanceIds, "process variable '{}' not found", ProcessVariables.INSTANCE_IDS);
+        Optional<List<String>> instanceIds = 
+            Optional.fromNullable((List<String>) execution.getVariable(ProcessVariables.INSTANCE_IDS));
+
+        if (!instanceIds.isPresent()) {
+            LOG.warn("<< Process variable '{}' not found", ProcessVariables.INSTANCE_IDS);
+            return;
+        } else if (instanceIds.get().size() == 0) {
+            LOG.info(">> No instances are currently registered in the process.");
+            return;
+        }
 
         try {
             DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
-                .withInstanceIds(instanceIds));
+                .withInstanceIds(instanceIds.get()));
 
             List<Instance> instances = collectInstancesFromReservations(result.getReservations());
 
