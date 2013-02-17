@@ -63,6 +63,10 @@
             mvn:com.axemblr.provisionr/provisionr-core/${project.version}/template/cdh3
         </configfile>
 
+        <configfile finalname="/templates/cdh4.xml">
+            mvn:com.axemblr.provisionr/provisionr-core/${project.version}/template/cdh4
+        </configfile>
+
         <configfile finalname="/templates/jenkins.xml">
             mvn:com.axemblr.provisionr/provisionr-core/${project.version}/template/jenkins
         </configfile>

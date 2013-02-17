@@ -185,6 +185,13 @@
                                 </artifact>
                                 <artifact>
                                     <file>
+                                        ${project.build.directory}/classes/com/axemblr/provisionr/core/templates/cdh4.xml
+                                    </file>
+                                    <type>template</type>
+                                    <classifier>cdh4</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>
                                         ${project.build.directory}/classes/com/axemblr/provisionr/core/templates/jenkins.xml
                                     </file>
                                     <type>template</type>
