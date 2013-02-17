@@ -81,7 +81,7 @@ public class CustomKarafDistributionTest {
     /**
      * We only register two pool templates by default through the provisionr-core bundle
      */
-    public static final int EXPECTED_NUMBER_OF_POOL_TEMPLATES = 2;
+    public static final int EXPECTED_NUMBER_OF_POOL_TEMPLATES = 3;
 
     @Inject
     private FeaturesService features;
