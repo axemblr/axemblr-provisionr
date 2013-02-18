@@ -36,6 +36,7 @@ Core developers:
 
 * Andrei Savu - asavu@axemblr.com - [LinkedIn](http://www.linkedin.com/in/sandrei), [Github](https://github.com/andreisavu)
 * Ioan Eugen Stan - ieugen@axemblr.com - [LinkedIn](http://www.linkedin.com/in/ieugen), [Github](https://github.com/ieugen)
+* Alex Ciminian - [LinkedIn](http://www.linkedin.com/in/alexciminian), [GitHub](https://github.com/cimi)
 
 License
 -------
@@ -53,7 +54,7 @@ For those of you who really dig our software, we have created two mailing lists 
 
 Join us on IRC channel *#axemblr* on *irc.freenode.net*.
 
-We appreciate any kind of help so don't heasitate. 
+We appreciate any kind of help so don't hesitate.
 
 
 Supported cloud providers
@@ -143,7 +144,7 @@ If you want to manage Apache Karaf you can access the webconsole at
 
 And don't forget to destroy the pool
 
-    provisionr [0.0.1-SNAPSHOT] $ provisionr:destroy --id amazon --key mypool    
+    provisionr [0.0.1-SNAPSHOT] $ provisionr:destroy --key mypool    
 
 How to build?
 -------------
