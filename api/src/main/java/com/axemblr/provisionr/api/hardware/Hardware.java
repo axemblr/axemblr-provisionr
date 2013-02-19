@@ -16,11 +16,12 @@
 
 package com.axemblr.provisionr.api.hardware;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
-import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.collect.ImmutableMap;
-import java.io.Serializable;
+
+import java.util.List;
 import java.util.Map;
 
 public class Hardware extends WithOptions {
@@ -30,6 +31,7 @@ public class Hardware extends WithOptions {
     }
 
     private final String type;
+    private List<BlockDevice> blockDevices;
 
     Hardware(String type, Map<String, String> options) {
         super(options);
@@ -40,13 +42,17 @@ public class Hardware extends WithOptions {
         return type;
     }
 
+    public List<BlockDevice> getBlockDevices() {
+        return blockDevices;
+    }
+
     public HardwareBuilder toBuilder() {
         return builder().type(type).options(getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type, getOptions());
+        return Objects.hashCode(type, getOptions(), getBlockDevices());
     }
 
     @Override
@@ -59,13 +65,15 @@ public class Hardware extends WithOptions {
         }
         final Hardware other = (Hardware) obj;
         return Objects.equal(this.type, other.type)
-            && Objects.equal(this.getOptions(), other.getOptions());
+            && Objects.equal(this.getOptions(), other.getOptions())
+            && Objects.equal(this.getBlockDevices(), other.getBlockDevices());
     }
 
     @Override
     public String toString() {
         return "Hardware{" +
             "type='" + type + '\'' +
+            ", blockDevices=" + getBlockDevices() + 
             ", options=" + getOptions() +
             '}';
     }

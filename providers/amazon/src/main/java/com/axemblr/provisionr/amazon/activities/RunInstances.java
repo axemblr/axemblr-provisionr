@@ -2,16 +2,9 @@ package com.axemblr.provisionr.amazon.activities;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Calendar;
-
-import net.schmizz.sshj.common.Base64;
-
-import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.delegate.VariableScope;
-
 import com.amazonaws.AmazonWebServiceRequest;
+import com.amazonaws.services.ec2.model.BlockDeviceMapping;
+import com.amazonaws.services.ec2.model.EbsBlockDevice;
 import com.amazonaws.services.ec2.model.LaunchSpecification;
 import com.amazonaws.services.ec2.model.RequestSpotInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
@@ -24,12 +17,22 @@ import com.axemblr.provisionr.amazon.core.ProviderClientCache;
 import com.axemblr.provisionr.amazon.core.SecurityGroups;
 import com.axemblr.provisionr.amazon.options.ProviderOptions;
 import com.axemblr.provisionr.amazon.options.SoftwareOptions;
+import com.axemblr.provisionr.api.hardware.BlockDevice;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.List;
+
+import net.schmizz.sshj.common.Base64;
+
+import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.delegate.VariableScope;
 
 public abstract class RunInstances extends AmazonActivity {
 
@@ -65,6 +68,19 @@ public abstract class RunInstances extends AmazonActivity {
         final String userData = Resources.toString(Resources.getResource(RunInstances.class,
             "/com/axemblr/provisionr/amazon/userdata.sh"), Charsets.UTF_8);
 
+        List<BlockDevice> blockDevices = pool.getHardware().getBlockDevices();
+        List<BlockDeviceMapping> blockDeviceMappings = Lists.newArrayList();
+        if (blockDevices != null && blockDevices.size() > 0) {
+            int count = 1;
+            for (BlockDevice device : blockDevices) {
+                blockDeviceMappings.add(new BlockDeviceMapping().withDeviceName("/dev/sda" + count++)
+                        .withEbs(new EbsBlockDevice()
+                            .withVolumeSize(device.getSize())
+                            .withDeleteOnTermination(true)
+                         ));
+            }
+        }
+
         if (spot) {
             Calendar validUntil = Calendar.getInstance();
             validUntil.add(Calendar.MINUTE, 10);
@@ -74,6 +90,7 @@ public abstract class RunInstances extends AmazonActivity {
                 .withInstanceType(instanceType)
                 .withKeyName(keyPairName)
                 .withImageId(imageId)
+                .withBlockDeviceMappings(blockDeviceMappings)
                 .withSecurityGroups(Lists.newArrayList(securityGroupName))
                 .withUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));
             return new RequestSpotInstancesRequest()
@@ -90,6 +107,7 @@ public abstract class RunInstances extends AmazonActivity {
                 .withKeyName(keyPairName)
                 .withInstanceType(instanceType)
                 .withImageId(imageId)
+                .withBlockDeviceMappings(blockDeviceMappings)
                 .withMinCount(pool.getMinSize())
                 .withMaxCount(pool.getExpectedSize())
                 .withUserData(Base64.encodeBytes(userData.getBytes(Charsets.UTF_8)));

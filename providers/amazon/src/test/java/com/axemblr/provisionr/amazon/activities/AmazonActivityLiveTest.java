@@ -72,12 +72,11 @@ public abstract class AmazonActivityLiveTest<T extends AmazonActivity> extends P
      * @param klass
      * @param clientCache cache for AmazonEC2 client connections
      */
-    @SuppressWarnings("unchecked")
     protected <A extends AmazonActivity> A createAmazonActivityInstance(
         Class<A> klass, ProviderClientCache clientCache
     ) {
         try {
-            Constructor constructor = klass.getConstructor(ProviderClientCache.class);
+            Constructor<A> constructor = klass.getConstructor(ProviderClientCache.class);
             return (A) constructor.newInstance(clientCache);
 
         } catch (Exception e) {

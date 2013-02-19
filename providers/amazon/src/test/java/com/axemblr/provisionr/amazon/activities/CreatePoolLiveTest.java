@@ -3,25 +3,28 @@ package com.axemblr.provisionr.amazon.activities;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.activiti.engine.delegate.DelegateExecution;
-
 import com.axemblr.provisionr.api.access.AdminAccess;
+import com.axemblr.provisionr.api.hardware.BlockDevice;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 
-public abstract class RunInstancesLiveTest<T extends AmazonActivity> extends AmazonActivityLiveTest<T> {
-    
-	protected DelegateExecution execution;
+import java.util.ArrayList;
+
+import org.activiti.engine.delegate.DelegateExecution;
+
+public abstract class CreatePoolLiveTest<T extends AmazonActivity> extends AmazonActivityLiveTest<T> {
+
+    protected DelegateExecution execution;
     protected Pool pool;
-	
-	@Override
+    protected Hardware hardware;
+
     @SuppressWarnings("unchecked")
+    @Override
     public void setUp() throws Exception {
         super.setUp();
-
         execution = mock(DelegateExecution.class);
         pool = mock(Pool.class);
 
@@ -34,7 +37,9 @@ public abstract class RunInstancesLiveTest<T extends AmazonActivity> extends Ama
         final Network network = Network.builder().addRules(
             Rule.builder().anySource().tcp().port(22).createRule()).createNetwork();
 
-        final Hardware hardware = Hardware.builder().type("t1.micro").createHardware();
+        hardware = mock(Hardware.class);
+        when(hardware.getType()).thenReturn("t1.micro");
+        when(hardware.getBlockDevices()).thenReturn(new ArrayList<BlockDevice>());
 
         when(pool.getProvider()).thenReturn(provider);
         when(pool.getAdminAccess()).thenReturn(adminAccess);
@@ -53,7 +58,7 @@ public abstract class RunInstancesLiveTest<T extends AmazonActivity> extends Ama
             EnsureSecurityGroupExists.class
         );
     }
-	
+
     @Override
     @SuppressWarnings("unchecked")
     public void tearDown() throws Exception {

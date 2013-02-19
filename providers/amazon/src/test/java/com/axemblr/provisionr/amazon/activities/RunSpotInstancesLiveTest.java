@@ -36,10 +36,11 @@ import com.amazonaws.services.ec2.model.DescribeSpotInstanceRequestsResult;
 import com.amazonaws.services.ec2.model.Filter;
 import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.options.ProviderOptions;
+import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.test.ProcessVariablesCollector;
 import com.google.common.util.concurrent.Uninterruptibles;
 
-public class RunSpotInstancesLiveTest extends RunInstancesLiveTest<RunSpotInstances> {
+public class RunSpotInstancesLiveTest extends CreatePoolLiveTest<RunSpotInstances> {
 
     /**
      * This should be set a bit higher than the on demand instance
