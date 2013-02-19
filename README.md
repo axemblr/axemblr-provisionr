@@ -34,8 +34,8 @@ Who is behind this?
 
 Core developers:
 
-* Andrei Savu - asavu@axemblr.com - [LinkedIn](http://www.linkedin.com/in/sandrei), [Github](https://github.com/andreisavu)
-* Ioan Eugen Stan - ieugen@axemblr.com - [LinkedIn](http://www.linkedin.com/in/ieugen), [Github](https://github.com/ieugen)
+* Andrei Savu - [LinkedIn](http://www.linkedin.com/in/sandrei), [Github](https://github.com/andreisavu)
+* Ioan Eugen Stan - [LinkedIn](http://www.linkedin.com/in/ieugen), [Github](https://github.com/ieugen)
 * Alex Ciminian - [LinkedIn](http://www.linkedin.com/in/alexciminian), [GitHub](https://github.com/cimi)
 
 License
