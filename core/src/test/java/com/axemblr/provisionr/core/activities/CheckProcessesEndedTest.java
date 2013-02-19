@@ -31,7 +31,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CheckProcessesEndedTest {
+public class CheckProcessesEndedTest extends CheckProcessesTest {
 
     private static final String PROCESS_IDS = "process_ids";
 
@@ -95,30 +95,4 @@ public class CheckProcessesEndedTest {
         assertThat((Boolean) collector.getVariable(RESULT)).isTrue();
     }
 
-    private RuntimeService mockRuntimeService(Map<String, ProcessInstance> instances,
-                                              String... notFoundProcessInstanceIds) {
-        RuntimeService runtimeService = mock(RuntimeService.class);
-
-        ProcessInstanceQuery generalQuery = mock(ProcessInstanceQuery.class);
-        for (Map.Entry<String, ProcessInstance> entry : instances.entrySet()) {
-            ProcessInstanceQuery specificQuery = mock(ProcessInstanceQuery.class);
-            when(specificQuery.singleResult()).thenReturn(entry.getValue());
-
-            when(generalQuery.processInstanceId(eq(entry.getKey()))).thenReturn(specificQuery);
-        }
-        for (String notFound : notFoundProcessInstanceIds) {
-            /* create a mock that returns null for all method calls (default) */
-            when(generalQuery.processInstanceId(eq(notFound)))
-                .thenReturn(mock(ProcessInstanceQuery.class));
-        }
-        when(runtimeService.createProcessInstanceQuery()).thenReturn(generalQuery);
-
-        return runtimeService;
-    }
-
-    private ProcessInstance mockProcessInstance(boolean ended) {
-        ProcessInstance processInstance = mock(ProcessInstance.class);
-        when(processInstance.isEnded()).thenReturn(ended);
-        return processInstance;
-    }
 }
