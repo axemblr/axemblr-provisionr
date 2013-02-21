@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.access.AdminAccess;
+import com.axemblr.provisionr.api.hardware.BlockDevice;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
@@ -78,6 +79,11 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     @Option(name = "--timeout", description = "Timeout in seconds for the pool's initialization steps. " +
         "If not specified, defaults to 600 seconds.")
     private int bootstrapTimeout = 600;
+
+    @Option(name = "--volumes", description = "Block devices that will be attached to each instance. " +
+        "(multi-valued) Expects size=[block device size] and count=[number of block devices for one instance]. " +
+        "If count is not specified, defaults to 1.", multiValued = true)
+    private List<String> blockDeviceOptions = Lists.newArrayList();
 
     @Option(name = "-o", aliases = "--provider-options", description = "Provider-specific options (multi-valued)." +
         "Expects either the key=value format or just plain key. If value is not specified, defaults to 'true'." +
@@ -141,10 +147,12 @@ public class CreatePoolCommand extends OsgiCommandSupport {
             formatPortsAsIngressRules()
         ).createNetwork();
 
-        final Hardware hardware = Hardware.builder().type(hardwareType).createHardware();
+        final Hardware hardware = Hardware.builder()
+                .type(hardwareType)
+                .blockDevices(parseBlockDeviceOptions(blockDeviceOptions))
+                .createHardware();
 
         final Software software = Software.builder().packages(packages).createSoftware();
-
 
         final Pool pool = Pool.builder()
             .provider(provider)
@@ -168,6 +176,31 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         }
 
         return pool;
+    }
+
+    private List<BlockDevice> parseBlockDeviceOptions(List<String> options) {
+        List<BlockDevice> result = Lists.newArrayList();
+        int count = 0, size = 0;
+        for (String option : options) {
+            String[] parts = option.split("=");
+            checkArgument(parts.length == 2, "Arguments for the --block-device option must be key=value");
+            if ("size".equals(parts[0])) {
+                size = Integer.parseInt(parts[1]);
+                checkArgument(size > 0, "The block device size must be a positive integer");
+            } else if ("count".equals(parts[0])) {
+                count = Integer.parseInt(parts[1]);
+                checkArgument(count > 0, "The number of block devices must be a positive integer");
+            }
+        }
+
+        if (size > 0 && count == 0) {
+            count = 1;
+        }
+
+        for (int i = 0; i < count; i++) {
+            result.add(BlockDevice.builder().size(size).createBlockDevice());
+        }
+        return result;
     }
 
     private Map<String, String> parseProviderOptions(List<String> providerOptions) {
@@ -241,6 +274,11 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     @VisibleForTesting
     void setProviderOptions(List<String> providerOptions) {
         this.providerOptions = ImmutableList.copyOf(providerOptions);
+    }
+
+    @VisibleForTesting
+    void setBlockDeviceOptions(List<String> blockDeviceOptions) {
+        this.blockDeviceOptions = ImmutableList.copyOf(blockDeviceOptions);
     }
 
     @VisibleForTesting

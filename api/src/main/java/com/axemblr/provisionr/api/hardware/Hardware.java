@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.Map;
@@ -33,9 +34,10 @@ public class Hardware extends WithOptions {
     private final String type;
     private List<BlockDevice> blockDevices;
 
-    Hardware(String type, Map<String, String> options) {
+    Hardware(String type, List<BlockDevice> blockDevices, Map<String, String> options) {
         super(options);
         this.type = checkNotNull(type, "type is null");
+        this.blockDevices = blockDevices;
     }
 
     public String getType() {
@@ -47,7 +49,7 @@ public class Hardware extends WithOptions {
     }
 
     public HardwareBuilder toBuilder() {
-        return builder().type(type).options(getOptions());
+        return builder().type(type).blockDevices(blockDevices).options(getOptions());
     }
 
     @Override

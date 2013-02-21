@@ -16,6 +16,8 @@
 
 package com.axemblr.provisionr.api.hardware;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
 
@@ -25,8 +27,13 @@ public class BlockDevice extends WithOptions {
 
     private int size;
 
-    public BlockDevice(int size, Map<String, String> options) {
+    public static BlockDeviceBuilder builder() {
+        return new BlockDeviceBuilder();
+    }
+
+    BlockDevice(int size, Map<String, String> options) {
         super(options);
+        checkArgument(size > 0, "the block device size should be a positive integer");
         this.size = size;
     }
 

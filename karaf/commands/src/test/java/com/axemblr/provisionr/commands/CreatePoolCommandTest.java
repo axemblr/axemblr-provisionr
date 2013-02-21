@@ -17,8 +17,6 @@
 package com.axemblr.provisionr.commands;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -26,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.access.AdminAccess;
+import com.axemblr.provisionr.api.hardware.BlockDevice;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.provider.ProviderBuilder;
@@ -35,24 +34,29 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Resources;
-import java.io.IOException;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.apache.felix.service.command.CommandSession;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 
 public class CreatePoolCommandTest {
 
     public static final String TEST_PROVISIONR_ID = "amazon";
     public static final String TEST_BUSINESS_KEY = "j-123";
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testCreatePoolStartsTheManagementProcess() throws Exception {
@@ -91,14 +95,7 @@ public class CreatePoolCommandTest {
     public void testCreatePoolWithTemplate() {
         final PoolTemplate template = XmlTemplate.newXmlTemplate(readDefaultTemplate("jenkins"));
 
-        CreatePoolCommand command = new CreatePoolCommand(Collections.<Provisionr>emptyList(),
-            ImmutableList.<PoolTemplate>of(template)) {
-
-            @Override
-            protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
-                return mock(AdminAccess.class);
-            }
-        };
+        CreatePoolCommand command = newPoolCommandWithMockedAdminAccess(template);
 
         command.setId("service");
         command.setKey("key");
@@ -116,14 +113,7 @@ public class CreatePoolCommandTest {
 
     @Test
     public void testProviderSpecificOptions() {
-        CreatePoolCommand command = new CreatePoolCommand(Collections.<Provisionr>emptyList(),
-            ImmutableList.<PoolTemplate>of()) {
-
-            @Override
-            protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
-                return mock(AdminAccess.class);
-            }
-        };
+        CreatePoolCommand command = newPoolCommandWithMockedAdminAccess();
         command.setId("service");
         command.setKey("key");
         command.setProviderOptions(Lists.newArrayList("spotBid=0.07"));
@@ -141,6 +131,40 @@ public class CreatePoolCommandTest {
 
         assertThat(argument.getValue().containsKey("spotBid")).isTrue();
         assertThat(argument.getValue().get("spotBid")).isEqualTo("0.07");
+    }
+
+    @Test
+    public void testBlockDeviceOptions() {
+        CreatePoolCommand command = newPoolCommandWithMockedAdminAccess();
+        command.setId("service");
+        command.setKey("key");
+
+        Provisionr service = mock(Provisionr.class);
+        Provider provider = newProviderMockWithBuilder();
+        when(service.getDefaultProvider()).thenReturn(Optional.of(provider));
+
+        Pool pool = command.createPoolFromArgumentsAndServiceDefaults(service);
+        assertThat(pool.getHardware().getBlockDevices()).isEmpty();
+
+        command.setBlockDeviceOptions(Lists.newArrayList("size=8", "count=2"));
+        pool = command.createPoolFromArgumentsAndServiceDefaults(service);
+        assertThat(pool.getHardware().getBlockDevices()).hasSize(2);
+        assertThat(pool.getHardware().getBlockDevices().get(0).getSize()).isEqualTo(8);
+        assertThat(pool.getHardware().getBlockDevices().get(1).getSize()).isEqualTo(8);
+
+        command.setBlockDeviceOptions(Lists.newArrayList("size=7"));
+        pool = command.createPoolFromArgumentsAndServiceDefaults(service);
+        assertThat(pool.getHardware().getBlockDevices()).hasSize(1);
+        assertThat(pool.getHardware().getBlockDevices().get(0).getSize()).isEqualTo(7);
+
+        command.setBlockDeviceOptions(Lists.newArrayList("this=breaks"));
+        exception.expect(IllegalArgumentException.class);
+        pool = command.createPoolFromArgumentsAndServiceDefaults(service);
+
+        command.setBlockDeviceOptions(Lists.newArrayList("count=1"));
+        exception.expect(IllegalArgumentException.class);
+        pool = command.createPoolFromArgumentsAndServiceDefaults(service);
+
     }
 
     private Provisionr newProvisionrMockWithId(String id) {
@@ -167,5 +191,20 @@ public class CreatePoolCommandTest {
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }
+    }
+
+    private CreatePoolCommand newPoolCommandWithMockedAdminAccess(PoolTemplate template) {
+        List<PoolTemplate> templates = template != null ? ImmutableList.<PoolTemplate>of(template) :
+            ImmutableList.<PoolTemplate>of();
+        return new CreatePoolCommand(Collections.<Provisionr>emptyList(), templates) {
+            @Override
+            protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
+                return mock(AdminAccess.class);
+            }
+        };
+    }
+
+    private CreatePoolCommand newPoolCommandWithMockedAdminAccess() {
+        return this.newPoolCommandWithMockedAdminAccess(null);
     }
 }
