@@ -80,9 +80,8 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         "If not specified, defaults to 600 seconds.")
     private int bootstrapTimeout = 600;
 
-    @Option(name = "--volumes", description = "Block devices that will be attached to each instance. " +
-        "(multi-valued) Expects size=[block device size] and count=[number of block devices for one instance]. " +
-        "If count is not specified, defaults to 1.", multiValued = true)
+    @Option(name = "--volume", description = "Block devices that will be attached to each instance. " +
+        "(multi-valued) Expects the following format: [mapping]:[size in GB]. ", multiValued = true)
     private List<String> blockDeviceOptions = Lists.newArrayList();
 
     @Option(name = "-o", aliases = "--provider-options", description = "Provider-specific options (multi-valued)." +
@@ -180,25 +179,10 @@ public class CreatePoolCommand extends OsgiCommandSupport {
 
     private List<BlockDevice> parseBlockDeviceOptions(List<String> options) {
         List<BlockDevice> result = Lists.newArrayList();
-        int count = 0, size = 0;
         for (String option : options) {
-            String[] parts = option.split("=");
-            checkArgument(parts.length == 2, "Arguments for the --block-device option must be key=value");
-            if ("size".equals(parts[0])) {
-                size = Integer.parseInt(parts[1]);
-                checkArgument(size > 0, "The block device size must be a positive integer");
-            } else if ("count".equals(parts[0])) {
-                count = Integer.parseInt(parts[1]);
-                checkArgument(count > 0, "The number of block devices must be a positive integer");
-            }
-        }
-
-        if (size > 0 && count == 0) {
-            count = 1;
-        }
-
-        for (int i = 0; i < count; i++) {
-            result.add(BlockDevice.builder().size(size).createBlockDevice());
+            String[] parts = option.split(":");
+            checkArgument(parts.length == 2, "The arguments for the --volume option must be mapping:size");
+            result.add(BlockDevice.builder().name(parts[0]).size(Integer.parseInt(parts[1])).createBlockDevice());
         }
         return result;
     }

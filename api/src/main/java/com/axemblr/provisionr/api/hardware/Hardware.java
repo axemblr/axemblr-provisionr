@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class Hardware extends WithOptions {
     Hardware(String type, List<BlockDevice> blockDevices, Map<String, String> options) {
         super(options);
         this.type = checkNotNull(type, "type is null");
-        this.blockDevices = blockDevices;
+        this.blockDevices = ImmutableList.copyOf(blockDevices);
     }
 
     public String getType() {

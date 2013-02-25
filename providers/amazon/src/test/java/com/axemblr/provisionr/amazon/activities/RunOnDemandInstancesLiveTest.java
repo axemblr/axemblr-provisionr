@@ -81,7 +81,11 @@ public class RunOnDemandInstancesLiveTest extends CreatePoolLiveTest<RunOnDemand
         // TODO: maybe we should also test for spot instances
         BlockDevice blockDevice = mock(BlockDevice.class);
         when(blockDevice.getSize()).thenReturn(8); // TODO: understand why it doesn't work for smaller volumes
-        when(hardware.getBlockDevices()).thenReturn(Lists.newArrayList(blockDevice, blockDevice));
+        when(blockDevice.getName()).thenReturn("/dev/sda1");
+        BlockDevice blockDevice2 = mock(BlockDevice.class);
+        when(blockDevice2.getSize()).thenReturn(16);
+        when(blockDevice2.getName()).thenReturn("/dev/sda4");
+        when(hardware.getBlockDevices()).thenReturn(Lists.newArrayList(blockDevice, blockDevice2));
 
         activity.execute(execution);
 
@@ -97,7 +101,7 @@ public class RunOnDemandInstancesLiveTest extends CreatePoolLiveTest<RunOnDemand
         assertThat(bdm).hasSize(2);
         List<String> volumeIds = Lists.newArrayList();
         for (int i = 0; i < bdm.size(); i++) {
-            assertThat(bdm.get(i).getDeviceName()).isEqualTo("/dev/sda" + (i+1));
+            assertThat(bdm.get(i).getDeviceName()).isEqualTo("/dev/sda" + ((i+1) * (i+1)));
             assertThat(bdm.get(i).getEbs().getDeleteOnTermination()).isTrue();
             volumeIds.add(bdm.get(i).getEbs().getVolumeId());
         }
@@ -105,9 +109,9 @@ public class RunOnDemandInstancesLiveTest extends CreatePoolLiveTest<RunOnDemand
         DescribeVolumesResult volumesResult = client.describeVolumes(
                 new DescribeVolumesRequest().withVolumeIds(volumeIds));
         for (Volume volume : volumesResult.getVolumes()) {
-            assertThat(volume.getSize()).isEqualTo(8);
             assertThat(volume.getState()).isIn(Lists.newArrayList("creating", "available", "in-use"));
         }
+        assertThat(volumesResult.getVolumes().get(0).getSize()).isNotEqualTo(volumesResult.getVolumes().get(1).getSize());
     }
 
     @Override

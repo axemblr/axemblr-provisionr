@@ -26,24 +26,30 @@ import java.util.Map;
 public class BlockDevice extends WithOptions {
 
     private int size;
+    private String name;
 
     public static BlockDeviceBuilder builder() {
         return new BlockDeviceBuilder();
     }
 
-    BlockDevice(int size, Map<String, String> options) {
+    BlockDevice(int size, String name, Map<String, String> options) {
         super(options);
         checkArgument(size > 0, "the block device size should be a positive integer");
         this.size = size;
+        this.name = name;
     }
 
     public int getSize() {
         return size;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(size, getOptions());
+        return Objects.hashCode(size, name, getOptions());
     }
 
     @Override
@@ -56,6 +62,7 @@ public class BlockDevice extends WithOptions {
         }
         final BlockDevice other = (BlockDevice) obj;
         return Objects.equal(this.size, other.size)
+            && Objects.equal(this.name, this.name)
             && Objects.equal(this.getOptions(), other.getOptions());
     }
 
@@ -63,6 +70,7 @@ public class BlockDevice extends WithOptions {
     public String toString() {
         return "BlockDevice {" +
             "size=" + size +
+            "name=" + name +
             ", options=" + getOptions() + "}";
     }
 

@@ -146,13 +146,15 @@ public class CreatePoolCommandTest {
         Pool pool = command.createPoolFromArgumentsAndServiceDefaults(service);
         assertThat(pool.getHardware().getBlockDevices()).isEmpty();
 
-        command.setBlockDeviceOptions(Lists.newArrayList("size=8", "count=2"));
+        command.setBlockDeviceOptions(Lists.newArrayList("/dev/sda2:8", "/dev/sda9:2"));
         pool = command.createPoolFromArgumentsAndServiceDefaults(service);
         assertThat(pool.getHardware().getBlockDevices()).hasSize(2);
         assertThat(pool.getHardware().getBlockDevices().get(0).getSize()).isEqualTo(8);
-        assertThat(pool.getHardware().getBlockDevices().get(1).getSize()).isEqualTo(8);
+        assertThat(pool.getHardware().getBlockDevices().get(0).getName()).isEqualTo("/dev/sda2");
+        assertThat(pool.getHardware().getBlockDevices().get(1).getSize()).isEqualTo(2);
+        assertThat(pool.getHardware().getBlockDevices().get(1).getName()).isEqualTo("/dev/sda9");
 
-        command.setBlockDeviceOptions(Lists.newArrayList("size=7"));
+        command.setBlockDeviceOptions(Lists.newArrayList("/dev/sda1:7"));
         pool = command.createPoolFromArgumentsAndServiceDefaults(service);
         assertThat(pool.getHardware().getBlockDevices()).hasSize(1);
         assertThat(pool.getHardware().getBlockDevices().get(0).getSize()).isEqualTo(7);
@@ -161,7 +163,7 @@ public class CreatePoolCommandTest {
         exception.expect(IllegalArgumentException.class);
         pool = command.createPoolFromArgumentsAndServiceDefaults(service);
 
-        command.setBlockDeviceOptions(Lists.newArrayList("count=1"));
+        command.setBlockDeviceOptions(Lists.newArrayList("/dev/sda1"));
         exception.expect(IllegalArgumentException.class);
         pool = command.createPoolFromArgumentsAndServiceDefaults(service);
 

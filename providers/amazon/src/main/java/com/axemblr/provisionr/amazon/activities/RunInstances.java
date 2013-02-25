@@ -71,9 +71,9 @@ public abstract class RunInstances extends AmazonActivity {
         List<BlockDevice> blockDevices = pool.getHardware().getBlockDevices();
         List<BlockDeviceMapping> blockDeviceMappings = Lists.newArrayList();
         if (blockDevices != null && blockDevices.size() > 0) {
-            int count = 1;
             for (BlockDevice device : blockDevices) {
-                blockDeviceMappings.add(new BlockDeviceMapping().withDeviceName("/dev/sda" + count++)
+                blockDeviceMappings.add(new BlockDeviceMapping()
+                        .withDeviceName(device.getName())
                         .withEbs(new EbsBlockDevice()
                             .withVolumeSize(device.getSize())
                             .withDeleteOnTermination(true)
