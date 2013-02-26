@@ -32,54 +32,16 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TerminateInstancesLiveTest extends AmazonActivityLiveTest<TerminateInstances> {
+public class TerminateInstancesLiveTest extends CreatePoolLiveTest<TerminateInstances> {
 
-    private DelegateExecution execution;
-    private Pool pool;
     private ProcessVariablesCollector collector;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
 
-        execution = mock(DelegateExecution.class);
-        pool = mock(Pool.class);
-
-        final AdminAccess adminAccess = AdminAccess.builder()
-            .username("admin")
-            .publicKey(getResourceAsString("keys/test.pub"))
-            .privateKey(getResourceAsString("keys/test"))
-            .createAdminAccess();
-
-        final Network network = Network.builder().addRules(
-            Rule.builder().anySource().tcp().port(22).createRule()).createNetwork();
-
-        final Hardware hardware = Hardware.builder().type("t1.micro").createHardware();
-
-        when(pool.getProvider()).thenReturn(provider);
-        when(pool.getAdminAccess()).thenReturn(adminAccess);
-        when(pool.getNetwork()).thenReturn(network);
-
-        when(pool.getMinSize()).thenReturn(1);
-        when(pool.getExpectedSize()).thenReturn(1);
-
-        when(pool.getHardware()).thenReturn(hardware);
-
-        when(execution.getProcessBusinessKey()).thenReturn(BUSINESS_KEY);
-        when(execution.getVariable(CoreProcessVariables.POOL)).thenReturn(pool);
-
         collector = new ProcessVariablesCollector();
         collector.install(execution);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void tearDown() throws Exception {
-        executeActivitiesInSequence(execution,
-            DeleteKeyPair.class,
-            DeleteSecurityGroup.class
-        );
-        super.tearDown();
     }
 
     @Test

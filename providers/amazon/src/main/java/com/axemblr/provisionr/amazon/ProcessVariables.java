@@ -84,6 +84,13 @@ public class ProcessVariables {
     public static final String INSTANCE_IDS = "instanceIds";
 
     /**
+     * List of requested EBS volume IDs
+     * 
+     * @see com.axemblr.provisionr.amazon.activities.CreateEBSVolumes
+     */
+    public static final String VOLUME_IDS = "volumeIds"; 
+
+    /**
      * Are all started instances running?
      *
      * @see com.axemblr.provisionr.amazon.activities.CheckAllInstancesAreRunning

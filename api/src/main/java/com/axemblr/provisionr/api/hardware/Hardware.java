@@ -16,11 +16,14 @@
 
 package com.axemblr.provisionr.api.hardware;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.axemblr.provisionr.api.util.WithOptions;
 import com.google.common.base.Objects;
-import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.collect.ImmutableMap;
-import java.io.Serializable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 import java.util.Map;
 
 public class Hardware extends WithOptions {
@@ -30,23 +33,29 @@ public class Hardware extends WithOptions {
     }
 
     private final String type;
+    private List<BlockDevice> blockDevices;
 
-    Hardware(String type, Map<String, String> options) {
+    Hardware(String type, List<BlockDevice> blockDevices, Map<String, String> options) {
         super(options);
         this.type = checkNotNull(type, "type is null");
+        this.blockDevices = ImmutableList.copyOf(blockDevices);
     }
 
     public String getType() {
         return type;
     }
 
+    public List<BlockDevice> getBlockDevices() {
+        return blockDevices;
+    }
+
     public HardwareBuilder toBuilder() {
-        return builder().type(type).options(getOptions());
+        return builder().type(type).blockDevices(blockDevices).options(getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type, getOptions());
+        return Objects.hashCode(type, getOptions(), getBlockDevices());
     }
 
     @Override
@@ -59,13 +68,15 @@ public class Hardware extends WithOptions {
         }
         final Hardware other = (Hardware) obj;
         return Objects.equal(this.type, other.type)
-            && Objects.equal(this.getOptions(), other.getOptions());
+            && Objects.equal(this.getOptions(), other.getOptions())
+            && Objects.equal(this.getBlockDevices(), other.getBlockDevices());
     }
 
     @Override
     public String toString() {
         return "Hardware{" +
             "type='" + type + '\'' +
+            ", blockDevices=" + getBlockDevices() + 
             ", options=" + getOptions() +
             '}';
     }
