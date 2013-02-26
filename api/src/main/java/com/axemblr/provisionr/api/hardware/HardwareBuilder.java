@@ -16,12 +16,17 @@
 
 package com.axemblr.provisionr.api.hardware;
 
-import com.axemblr.provisionr.api.util.BuilderWithOptions;
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.axemblr.provisionr.api.util.BuilderWithOptions;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 public class HardwareBuilder extends BuilderWithOptions<HardwareBuilder> {
 
     private String type = "default";
+    private List<BlockDevice> blockDevices = Lists.newArrayList();
 
     @Override
     protected HardwareBuilder getThis() {
@@ -40,7 +45,12 @@ public class HardwareBuilder extends BuilderWithOptions<HardwareBuilder> {
         return this;
     }
 
+    public HardwareBuilder blockDevices(List<BlockDevice> blockDevices) {
+        this.blockDevices = checkNotNull(blockDevices, "the list of block devices is null");
+        return this;
+    }
+
     public Hardware createHardware() {
-        return new Hardware(type, buildOptions());
+        return new Hardware(type, blockDevices, buildOptions());
     }
 }
