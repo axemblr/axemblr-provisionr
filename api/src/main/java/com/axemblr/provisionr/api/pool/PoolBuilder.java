@@ -37,7 +37,6 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
     private int minSize = -1;
     private int expectedSize = -1;
 
-    private boolean cacheBaseImage = false;
     private int bootstrapTimeInSeconds = 15 * 60;
 
     @Override
@@ -82,11 +81,6 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
         return this;
     }
 
-    public PoolBuilder cacheBaseImage(boolean cacheBaseImage) {
-        this.cacheBaseImage = cacheBaseImage;
-        return this;
-    }
-
     public PoolBuilder bootstrapTimeInSeconds(int bootstrapTimeInSeconds) {
         checkArgument(bootstrapTimeInSeconds > 0, "bootstrapTimeInSeconds should be positive");
         this.bootstrapTimeInSeconds = bootstrapTimeInSeconds;
@@ -95,6 +89,6 @@ public class PoolBuilder extends BuilderWithOptions<PoolBuilder> {
 
     public Pool createPool() {
         return new Pool(provider, network, adminAccess, software, hardware, minSize,
-            expectedSize, cacheBaseImage, bootstrapTimeInSeconds, buildOptions());
+            expectedSize, bootstrapTimeInSeconds, buildOptions());
     }
 }

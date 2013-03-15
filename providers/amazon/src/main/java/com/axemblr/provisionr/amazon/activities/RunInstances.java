@@ -9,7 +9,6 @@ import com.amazonaws.services.ec2.model.LaunchSpecification;
 import com.amazonaws.services.ec2.model.RequestSpotInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.SpotInstanceType;
-import com.axemblr.provisionr.amazon.ProcessVariables;
 import com.axemblr.provisionr.amazon.core.ImageTable;
 import com.axemblr.provisionr.amazon.core.ImageTableQuery;
 import com.axemblr.provisionr.amazon.core.KeyPairs;
@@ -21,6 +20,7 @@ import com.axemblr.provisionr.api.hardware.BlockDevice;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
@@ -32,13 +32,12 @@ import java.util.List;
 import net.schmizz.sshj.common.Base64;
 
 import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.delegate.VariableScope;
 
 public abstract class RunInstances extends AmazonActivity {
 
     public static final String DEFAULT_ARCH = "amd64";
     public static final String DEFAULT_TYPE = "instance-store";
-
+    public static final String DEFAULT_AMI_ID = "ami-0cdf4965"; // Ubuntu 12.10 x64
 
     protected RunInstances(ProviderClientCache providerClientCache) {
         super(providerClientCache);
@@ -62,8 +61,8 @@ public abstract class RunInstances extends AmazonActivity {
         final String keyPairName = KeyPairs.formatNameFromBusinessKey(businessKey);
 
         final String instanceType = pool.getHardware().getType();
-        final String imageId = getImageIdFromProcessVariablesOrQueryImageTable(
-            execution, pool.getProvider(), instanceType);
+        final String imageId = getImageIdFromPoolConfigurationOrQueryImageTable(
+            pool, pool.getProvider(), instanceType);
 
         final String userData = Resources.toString(Resources.getResource(RunInstances.class,
             "/com/axemblr/provisionr/amazon/userdata.sh"), Charsets.UTF_8);
@@ -114,12 +113,12 @@ public abstract class RunInstances extends AmazonActivity {
         }
     }
 
-    private String getImageIdFromProcessVariablesOrQueryImageTable(
-            VariableScope execution, Provider provider, String instanceType
+    private String getImageIdFromPoolConfigurationOrQueryImageTable(
+            Pool pool, Provider provider, String instanceType
         ) {
-            final String imageId = (String) execution.getVariable(ProcessVariables.CACHED_IMAGE_ID);
-            if (imageId != null) {
-                return imageId;
+            final String imageId = pool.getSoftware().getImageId();
+            if (!Strings.isNullOrEmpty(imageId)) {
+                return "default".equals(imageId) ? DEFAULT_AMI_ID : imageId;
             }
 
             ImageTable imageTable;

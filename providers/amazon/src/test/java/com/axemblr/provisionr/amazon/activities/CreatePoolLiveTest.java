@@ -9,6 +9,7 @@ import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public abstract class CreatePoolLiveTest<T extends AmazonActivity> extends Amazo
     protected DelegateExecution execution;
     protected Pool pool;
     protected Hardware hardware;
+    protected Software software;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -40,6 +42,8 @@ public abstract class CreatePoolLiveTest<T extends AmazonActivity> extends Amazo
         hardware = mock(Hardware.class);
         when(hardware.getType()).thenReturn("t1.micro");
         when(hardware.getBlockDevices()).thenReturn(new ArrayList<BlockDevice>());
+
+        software = mock(Software.class);
 
         when(pool.getProvider()).thenReturn(provider);
         when(pool.getAdminAccess()).thenReturn(adminAccess);

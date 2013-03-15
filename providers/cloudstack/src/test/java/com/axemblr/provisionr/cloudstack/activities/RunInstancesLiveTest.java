@@ -65,7 +65,7 @@ public class RunInstancesLiveTest extends CloudStackActivityLiveTest<RunInstance
 
         final Hardware hardware = Hardware.builder().type(getProviderProperty("serviceOffering")).createHardware();
         final Software software = Software.builder()
-            .baseOperatingSystem(getProviderProperty("templateId"))
+            .imageId(getProviderProperty("templateId"))
             .createSoftware();
 
         Map<String, String> options = ImmutableMap.of(ProviderOptions.ZONE_ID,

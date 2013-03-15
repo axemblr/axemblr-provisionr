@@ -118,7 +118,7 @@ public class AmazonProvisionrLiveTest extends ProvisionrLiveTestSupport {
 
         final String destinationPath = "/home/" + adminAccess.getUsername() + "/axemblr.html";
         final Software software = Software.builder()
-            .baseOperatingSystem("ubuntu-12.04")
+            .imageId("default")
             .file("http://axemblr.com", destinationPath)
             .createSoftware();
 

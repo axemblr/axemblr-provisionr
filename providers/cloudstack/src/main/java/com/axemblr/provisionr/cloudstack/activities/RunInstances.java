@@ -39,7 +39,7 @@ public class RunInstances extends CloudStackActivity {
         final String keyPairName = KeyPairs.formatNameFromBusinessKey(businessKey);
 
         final String zoneId = pool.getOptions().get(ProviderOptions.ZONE_ID);
-        final String templateId = pool.getSoftware().getBaseOperatingSystem();
+        final String templateId = pool.getSoftware().getImageId();
         final String serviceOffering = pool.getHardware().getType();
 
         LOG.info("Starting instances!");

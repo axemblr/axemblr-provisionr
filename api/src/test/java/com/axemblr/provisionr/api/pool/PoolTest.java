@@ -17,13 +17,15 @@
 package com.axemblr.provisionr.api.pool;
 
 import static com.axemblr.provisionr.api.AssertSerializable.assertSerializable;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 import com.axemblr.provisionr.api.access.AdminAccess;
 import com.axemblr.provisionr.api.hardware.Hardware;
 import com.axemblr.provisionr.api.network.Network;
 import com.axemblr.provisionr.api.network.Rule;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.software.Software;
-import static org.fest.assertions.api.Assertions.assertThat;
+
 import org.junit.Test;
 
 public class PoolTest {
@@ -54,7 +56,6 @@ public class PoolTest {
             .minSize(20)
             .expectedSize(25)
             .bootstrapTimeInSeconds(60 * 15)
-            .cacheBaseImage(true)
             .createPool();
 
 
