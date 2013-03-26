@@ -43,11 +43,10 @@ public class Pool extends WithOptions {
     private final int minSize;
     private final int expectedSize;
 
-    private final boolean cacheBaseImage;
     private final int bootstrapTimeInSeconds;
 
     Pool(Provider provider, Network network, AdminAccess adminAccess, Software software, Hardware hardware,
-         int minSize, int expectedSize, boolean cacheBaseImage, int bootstrapTimeInSeconds,
+         int minSize, int expectedSize, int bootstrapTimeInSeconds,
          Map<String, String> options
     ) {
         super(options);
@@ -63,7 +62,6 @@ public class Pool extends WithOptions {
         this.hardware = checkNotNull(hardware, "hardware is null");
         this.minSize = minSize;
         this.expectedSize = expectedSize;
-        this.cacheBaseImage = cacheBaseImage;
         this.bootstrapTimeInSeconds = bootstrapTimeInSeconds;
     }
 
@@ -95,10 +93,6 @@ public class Pool extends WithOptions {
         return expectedSize;
     }
 
-    public boolean isCacheBaseImage() {
-        return cacheBaseImage;
-    }
-
     /**
      * The maximum amount of time to go from 0 to minSize
      */
@@ -108,14 +102,14 @@ public class Pool extends WithOptions {
 
     public PoolBuilder toBuilder() {
         return builder().provider(provider).network(network).adminAccess(adminAccess).software(software)
-            .hardware(hardware).minSize(minSize).cacheBaseImage(cacheBaseImage).expectedSize(expectedSize)
+            .hardware(hardware).minSize(minSize).expectedSize(expectedSize)
             .bootstrapTimeInSeconds(bootstrapTimeInSeconds).options(getOptions());
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(provider, network, adminAccess, software, hardware,
-            minSize, expectedSize, cacheBaseImage, bootstrapTimeInSeconds, getOptions());
+            minSize, expectedSize, bootstrapTimeInSeconds, getOptions());
     }
 
     @Override
@@ -131,7 +125,6 @@ public class Pool extends WithOptions {
             && Objects.equal(this.adminAccess, other.adminAccess) && Objects.equal(this.software, other.software)
             && Objects.equal(this.hardware, other.hardware) && Objects.equal(this.minSize, other.minSize)
             && Objects.equal(this.expectedSize, other.expectedSize)
-            && this.cacheBaseImage == other.cacheBaseImage
             && Objects.equal(this.bootstrapTimeInSeconds, other.bootstrapTimeInSeconds)
             && Objects.equal(this.getOptions(), other.getOptions());
     }
@@ -145,7 +138,6 @@ public class Pool extends WithOptions {
             ", software=" + software +
             ", hardware=" + hardware +
             ", minSize=" + minSize +
-            ", cacheBaseImage=" + cacheBaseImage +
             ", expectedSize=" + expectedSize +
             ", bootstrapTimeInSeconds=" + bootstrapTimeInSeconds +
             ", options=" + getOptions() +

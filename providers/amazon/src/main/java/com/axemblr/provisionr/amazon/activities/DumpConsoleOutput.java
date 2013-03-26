@@ -45,8 +45,11 @@ public class DumpConsoleOutput extends AmazonActivity {
         LOG.info(">> Requesting console output for instance {}", machine.getExternalId());
         GetConsoleOutputResult result = client.getConsoleOutput(
             new GetConsoleOutputRequest().withInstanceId(machine.getExternalId()));
-        String content = new String(Base64.decode(result.getOutput()), Charsets.UTF_8);
-
-        LOG.info("<< Console output for instance {}: {}", machine.getExternalId(), content);
+        if (result.getOutput() != null) {
+            String content = new String(Base64.decode(result.getOutput()), Charsets.UTF_8);
+            LOG.info("<< Console output for instance {}: {}", machine.getExternalId(), content);
+        } else {
+            LOG.warn("<< Console output was null for instance {}", machine.getExternalId());
+        }
     }
 }

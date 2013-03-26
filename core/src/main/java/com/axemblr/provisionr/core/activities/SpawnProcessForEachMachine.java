@@ -82,6 +82,7 @@ public class SpawnProcessForEachMachine implements JavaDelegate {
                 processKey, perMachineProcessBusinessKey,
                 ImmutableMap.<String, Object>of(CoreProcessVariables.POOL, pool,
                     CoreProcessVariables.POOL_BUSINESS_KEY, poolBusinessKey,
+                    CoreProcessVariables.IS_CACHED_IMAGE, pool.getSoftware().isCachedImage(),
                     MACHINE, machine));
 
             LOG.info("Started background '" + type + "' process {} ({}) for machine {}",

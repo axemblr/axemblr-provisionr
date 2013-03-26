@@ -59,10 +59,7 @@ import org.apache.karaf.shell.console.OsgiCommandSupport;
  * --port 80 --port 443 --package nginx --package gunicorn --package python-pip
  */
 @Command(scope = "provisionr", name = "create", description = "Create pool of virtual machines")
-public class CreatePoolCommand extends OsgiCommandSupport {
-
-    @Option(name = "--id", description = "Service ID (use provisionr:services)", required = true)
-    private String id;
+public class CreatePoolCommand extends CreateCommand {
 
     @Option(name = "-k", aliases = "--key", description = "Unique business identifier for this pool", required = true)
     private String key;
@@ -70,65 +67,45 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     @Option(name = "-s", aliases = "--size", description = "Expected pool size")
     private int size = 1;
 
-    @Option(name = "-t", aliases = "--template", description = "Pool pre-configured template")
-    private String template;
-
     @Option(name = "-h", aliases = "--hardware-type", description = "Virtual machine hardware type")
     private String hardwareType = "t1.micro";
 
-    @Option(name = "--timeout", description = "Timeout in seconds for the pool's initialization steps. " +
-        "If not specified, defaults to 600 seconds.")
-    private int bootstrapTimeout = 600;
+    @Option(name = "--port", description = "Firewall ports that need to be open for any TCP traffic " +
+            "(multi-valued). SSH (22) is always open by default.", multiValued = true)
+    private List<Integer> ports = Lists.newArrayList();
 
     @Option(name = "--volume", description = "Block devices that will be attached to each instance. " +
         "(multi-valued) Expects the following format: [mapping]:[size in GB]. ", multiValued = true)
     private List<String> blockDeviceOptions = Lists.newArrayList();
 
-    @Option(name = "-o", aliases = "--provider-options", description = "Provider-specific options (multi-valued)." +
-        "Expects either the key=value format or just plain key. If value is not specified, defaults to 'true'." +
+    @Option(name = "-o", aliases = "--provider-options", description = "Provider-specific options (multi-valued). " +
+        "Expects either the key=value format or just plain key. If value is not specified, defaults to 'true'. " +
         "Supported values: spotBid=x.xxx (Amazon).", multiValued = true)
     private List<String> providerOptions = Lists.newArrayList();
 
-    @Option(name = "--port", description = "Firewall port that need to be open for any TCP traffic " +
-        "(multi-valued). SSH (22) is always open by default.", multiValued = true)
-    private List<Integer> ports = Lists.newArrayList();
+    @Option(name = "--image-id", description = "The id of the OS image with which the machines will be created.")
+    private String imageId = "";
 
-    @Option(name = "--package", description = "Package to install by default (multi-valued)",
-        multiValued = true)
-    private List<String> packages = Lists.newArrayList();
-
-    @Option(name = "--cache", description = "Cache base operating system image (including files & packages)")
-    private boolean cacheBaseImage = false;
-
-    private final List<Provisionr> services;
-
-    private final List<PoolTemplate> templates;
+    @Option(name = "--cached-image", description = "If the machines will have their packages and files downloaded " +
+        "or not. If creating the machines from an existent image, software might already be installed.")
+    private boolean cachedImage = false;
 
     public CreatePoolCommand(List<Provisionr> services, List<PoolTemplate> templates) {
-        this.services = checkNotNull(services, "services is null");
-        this.templates = checkNotNull(templates, "templates is null");
+        super(services, templates);
     }
 
     @Override
     protected Object doExecute() throws Exception {
         checkArgument(size > 0, "size should be a positive integer");
 
-        Optional<Provisionr> service = Iterables.tryFind(services, ProvisionrPredicates.withId(id));
-        if (service.isPresent()) {
-            final Pool pool = createPoolFromArgumentsAndServiceDefaults(service.get());
-
-            final String processInstanceId = service.get().startPoolManagementProcess(key, pool);
-            return String.format("Pool management process started (id: %s)", processInstanceId);
-        } else {
-            throw new NoSuchElementException("No provisioning service found with id: " + id);
-        }
+        Provisionr service = getService();
+        final Pool pool = createPoolFromArgumentsAndServiceDefaults(service);
+        final String processInstanceId = service.startPoolManagementProcess(key, pool);
+        return String.format("Pool management process started (id: %s)", processInstanceId);
     }
 
-    @VisibleForTesting
     Pool createPoolFromArgumentsAndServiceDefaults(Provisionr service) {
-        final Optional<Provider> defaultProvider = service.getDefaultProvider();
-        checkArgument(defaultProvider.isPresent(), String.format("please configure a default provider " +
-            "by editing etc/com.axemblr.provisionr.%s.cfg", id));
+        final Optional<Provider> defaultProvider = getDefaultProvider(service);
 
         /* append the provider options that were passed in and rebuild the default provider */
         // TODO: this currently does not support overriding default options, it will throw an exception
@@ -138,43 +115,28 @@ public class CreatePoolCommand extends OsgiCommandSupport {
                 .build();
         Provider provider = defaultProvider.get().toBuilder().options(options).createProvider();
 
-        /* Always allow ICMP and ssh traffic by default */
-        final Network network = Network.builder().addRules(
-            Rule.builder().anySource().icmp().createRule(),
-            Rule.builder().anySource().tcp().port(22).createRule()
-        ).addRules(
-            formatPortsAsIngressRules()
-        ).createNetwork();
-
+        final Software software = Software.builder()
+                .packages(packages)
+                .imageId(imageId)
+                .cachedImage(cachedImage)
+                .createSoftware();
         final Hardware hardware = Hardware.builder()
                 .type(hardwareType)
                 .blockDevices(parseBlockDeviceOptions(blockDeviceOptions))
                 .createHardware();
 
-        final Software software = Software.builder().packages(packages).createSoftware();
-
         final Pool pool = Pool.builder()
-            .provider(provider)
-            .hardware(hardware)
-            .software(software)
-            .network(network)
-            .adminAccess(collectCurrentUserCredentialsForAdminAccess())
-            .minSize(size)
-            .expectedSize(size)
-            .cacheBaseImage(cacheBaseImage)
-            .bootstrapTimeInSeconds(bootstrapTimeout)
-            .createPool();
+                .provider(provider)
+                .hardware(hardware)
+                .software(software)
+                .network(buildNetwork(ports))
+                .adminAccess(collectCurrentUserCredentialsForAdminAccess())
+                .minSize(size)
+                .expectedSize(size)
+                .bootstrapTimeInSeconds(bootstrapTimeout)
+                .createPool();
 
-        if (template != null) {
-            for (PoolTemplate candidate : templates) {
-                if (candidate.getId().equalsIgnoreCase(template)) {
-                    return candidate.apply(pool);
-                }
-            }
-            throw new NoSuchElementException("No pool template found with name: " + template);
-        }
-
-        return pool;
+        return template != null ? applyTemplate(pool) : pool;
     }
 
     private List<BlockDevice> parseBlockDeviceOptions(List<String> options) {
@@ -197,33 +159,6 @@ public class CreatePoolCommand extends OsgiCommandSupport {
         return result;
     }
 
-    private Set<Rule> formatPortsAsIngressRules() {
-        ImmutableSet.Builder<Rule> rules = ImmutableSet.builder();
-        for (int port : ports) {
-            rules.add(Rule.builder().anySource().tcp().port(port).createRule());
-        }
-        return rules.build();
-    }
-
-    protected AdminAccess collectCurrentUserCredentialsForAdminAccess() {
-        String userHome = System.getProperty("user.home");
-
-        try {
-            String publicKey = Files.toString(new File(userHome, ".ssh/id_rsa.pub"), Charsets.UTF_8);
-            String privateKey = Files.toString(new File(userHome, ".ssh/id_rsa"), Charsets.UTF_8);
-
-            return AdminAccess.builder().username(System.getProperty("user.name"))
-                .publicKey(publicKey).privateKey(privateKey).createAdminAccess();
-        } catch (Exception e) {
-            throw Throwables.propagate(e);
-        }
-    }
-
-    @VisibleForTesting
-    void setId(String id) {
-        this.id = checkNotNull(id, "id is null");
-    }
-
     @VisibleForTesting
     void setKey(String key) {
         this.key = checkNotNull(key, "key is null");
@@ -233,11 +168,6 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     void setSize(int size) {
         checkArgument(size > 0, "size should be a positive number");
         this.size = size;
-    }
-
-    @VisibleForTesting
-    void setTemplate(String template) {
-        this.template = checkNotNull(template, "template is null");
     }
 
     @VisibleForTesting
@@ -251,11 +181,6 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     }
 
     @VisibleForTesting
-    void setPackages(List<String> packages) {
-        this.packages = ImmutableList.copyOf(packages);
-    }
-
-    @VisibleForTesting
     void setProviderOptions(List<String> providerOptions) {
         this.providerOptions = ImmutableList.copyOf(providerOptions);
     }
@@ -266,7 +191,7 @@ public class CreatePoolCommand extends OsgiCommandSupport {
     }
 
     @VisibleForTesting
-    void setCacheBaseImage(boolean cacheBaseImage) {
-        this.cacheBaseImage = cacheBaseImage;
+    void setCachedImage(boolean cachedImage) {
+        this.cachedImage = cachedImage;
     }
 }

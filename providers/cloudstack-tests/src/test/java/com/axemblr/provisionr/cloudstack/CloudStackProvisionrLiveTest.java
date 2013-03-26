@@ -76,7 +76,7 @@ public class CloudStackProvisionrLiveTest extends ProvisionrLiveTestSupport {
             .addRules(Rule.builder().anySource().tcp().port(22).createRule())
             .createNetwork();
 
-        final Software software = Software.builder().baseOperatingSystem("ubuntu-10.04")
+        final Software software = Software.builder().imageId("ubuntu-10.04")
             .packages("nginx").createSoftware();
 
         final AdminAccess adminAccess = AdminAccess.builder().asCurrentUser().createAdminAccess();

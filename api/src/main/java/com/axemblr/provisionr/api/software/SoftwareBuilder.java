@@ -25,7 +25,8 @@ import java.util.Map;
 
 public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
 
-    private String baseOperatingSystem = "default";
+    private String imageId = "default";
+    private boolean cachedImage = false;
 
     private ImmutableMap.Builder<String, String> files = ImmutableMap.builder();
     private ImmutableList.Builder<String> packages = ImmutableList.builder();
@@ -36,8 +37,13 @@ public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
         return this;
     }
 
-    public SoftwareBuilder baseOperatingSystem(String baseOperatingSystem) {
-        this.baseOperatingSystem = checkNotNull(baseOperatingSystem, "baseOperatingSystem");
+    public SoftwareBuilder imageId(String imageId) {
+        this.imageId = checkNotNull(imageId, "The imageId was null");
+        return this;
+    }
+
+    public SoftwareBuilder cachedImage(boolean cachedImage) {
+        this.cachedImage = cachedImage;
         return this;
     }
 
@@ -77,7 +83,7 @@ public class SoftwareBuilder extends BuilderWithOptions<SoftwareBuilder> {
     }
 
     public Software createSoftware() {
-        return new Software(baseOperatingSystem, files.build(), packages.build(),
+        return new Software(imageId, cachedImage, files.build(), packages.build(),
             repositories.build(), buildOptions());
     }
 }

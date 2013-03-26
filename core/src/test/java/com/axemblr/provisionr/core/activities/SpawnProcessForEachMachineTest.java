@@ -16,22 +16,27 @@
 
 package com.axemblr.provisionr.core.activities;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
+
 import com.axemblr.provisionr.api.pool.Machine;
 import com.axemblr.provisionr.api.pool.Pool;
+import com.axemblr.provisionr.api.software.Software;
 import com.axemblr.provisionr.core.CoreProcessVariables;
 import com.axemblr.provisionr.test.ProcessVariablesCollector;
 import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.UUID;
+
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration;
-import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class SpawnProcessForEachMachineTest {
 
@@ -43,8 +48,11 @@ public class SpawnProcessForEachMachineTest {
     @Test
     public void testSpawnSampleProcessForLocalhost() throws Exception {
         DelegateExecution execution = mock(DelegateExecution.class);
-
-        when(execution.getVariable(eq(CoreProcessVariables.POOL))).thenReturn(mock(Pool.class));
+        Pool pool = mock(Pool.class, withSettings().serializable());
+        Software software = mock(Software.class, withSettings().serializable());
+        when(software.isCachedImage()).thenReturn(false);
+        when(pool.getSoftware()).thenReturn(software);
+        when(execution.getVariable(eq(CoreProcessVariables.POOL))).thenReturn(pool);
         when(execution.getVariable(eq(CoreProcessVariables.POOL_BUSINESS_KEY))).thenReturn(BUSINESS_KEY);
 
         List<Machine> machines = Lists.newArrayList(

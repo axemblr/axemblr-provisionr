@@ -45,6 +45,7 @@ import org.junit.Test;
 
 public class RunOnDemandInstancesLiveTest extends CreatePoolLiveTest<RunOnDemandInstances> {
 
+    private static final String UBUNTU_AMI_ID = "ami-1e831d77"; // Ubuntu 13.04 amd64
     private ProcessVariablesCollector collector;
 
     @Override
@@ -112,6 +113,21 @@ public class RunOnDemandInstancesLiveTest extends CreatePoolLiveTest<RunOnDemand
             assertThat(volume.getState()).isIn(Lists.newArrayList("creating", "available", "in-use"));
         }
         assertThat(volumesResult.getVolumes().get(0).getSize()).isNotEqualTo(volumesResult.getVolumes().get(1).getSize());
+    }
+
+    @Test
+    public void testRunInstancesWithABaseImageId() throws Exception {
+        when(software.getImageId()).thenReturn(UBUNTU_AMI_ID);
+        when(pool.getSoftware()).thenReturn(software);
+        activity.execute(execution);
+
+        @SuppressWarnings("unchecked")
+        List<String> instanceIds = (List<String>) collector.getVariable(ProcessVariables.INSTANCE_IDS);
+        DescribeInstancesResult result = client.describeInstances(new DescribeInstancesRequest()
+            .withInstanceIds(instanceIds));
+
+        Instance instance = result.getReservations().get(0).getInstances().get(0);
+        assertThat(instance.getImageId()).isEqualTo(UBUNTU_AMI_ID);
     }
 
     @Override

@@ -33,23 +33,29 @@ public class Software extends WithOptions {
         return new SoftwareBuilder();
     }
 
-    private final String baseOperatingSystem;
+    private final String imageId;
+    private final boolean cachedImage;
 
     private final Map<String, String> files;
     private final List<String> packages;
     private final List<Repository> repositories;
 
-    Software(String baseOperatingSystem, Map<String, String> files, List<String> packages,
+    Software(String imageId, boolean cachedImage, Map<String, String> files, List<String> packages,
              List<Repository> repositories, Map<String, String> options) {
         super(options);
-        this.baseOperatingSystem = checkNotNull(baseOperatingSystem, "baseOperatingSystem is null");
+        this.imageId = checkNotNull(imageId, "The supplied imageId was null");
+        this.cachedImage = cachedImage;
         this.files = ImmutableMap.copyOf(files);
         this.packages = ImmutableList.copyOf(packages);
         this.repositories = ImmutableList.copyOf(repositories);
     }
 
-    public String getBaseOperatingSystem() {
-        return baseOperatingSystem;
+    public String getImageId() {
+        return imageId;
+    }
+
+    public boolean isCachedImage() {
+        return cachedImage;
     }
 
     /**
@@ -77,13 +83,13 @@ public class Software extends WithOptions {
     }
 
     public SoftwareBuilder toBuilder() {
-        return builder().baseOperatingSystem(baseOperatingSystem).files(files)
+        return builder().imageId(imageId).files(files)
             .packages(packages).repositories(repositories).options(getOptions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(baseOperatingSystem, files, packages, repositories, getOptions());
+        return Objects.hashCode(imageId, cachedImage, files, packages, repositories, getOptions());
     }
 
     @Override
@@ -96,7 +102,8 @@ public class Software extends WithOptions {
         }
 
         final Software other = (Software) obj;
-        return Objects.equal(this.baseOperatingSystem, other.baseOperatingSystem)
+        return Objects.equal(this.imageId, other.imageId)
+            && Objects.equal(this.cachedImage, other.cachedImage)
             && Objects.equal(this.files, other.files)
             && Objects.equal(this.packages, other.packages)
             && Objects.equal(this.repositories, other.repositories)
@@ -106,7 +113,8 @@ public class Software extends WithOptions {
     @Override
     public String toString() {
         return "Software{" +
-            "baseOperatingSystem='" + baseOperatingSystem + '\'' +
+            "imageId='" + imageId + '\'' +
+            ", cachedImage=" + cachedImage +
             ", files=" + files +
             ", packages=" + packages +
             ", repositories=" + repositories +

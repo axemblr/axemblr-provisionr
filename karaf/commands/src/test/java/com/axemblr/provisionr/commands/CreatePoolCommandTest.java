@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 
 import com.axemblr.provisionr.api.Provisionr;
 import com.axemblr.provisionr.api.access.AdminAccess;
-import com.axemblr.provisionr.api.hardware.BlockDevice;
 import com.axemblr.provisionr.api.pool.Pool;
 import com.axemblr.provisionr.api.provider.Provider;
 import com.axemblr.provisionr.api.provider.ProviderBuilder;
@@ -38,7 +37,6 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

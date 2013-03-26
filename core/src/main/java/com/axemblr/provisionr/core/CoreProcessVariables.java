@@ -61,4 +61,10 @@ public class CoreProcessVariables {
      * to become available.
      */
     public static final String BOOTSTRAP_TIMEOUT = "bootstrapTimeout";
+
+    /**
+     * Flag that indicates if the image the machines are being built from already has all its software
+     * installed and there's no need to download and install the packages and files.
+     */
+    public static final String IS_CACHED_IMAGE = "isCachedImage";
 }

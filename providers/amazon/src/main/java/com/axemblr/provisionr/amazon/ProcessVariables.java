@@ -23,9 +23,9 @@ public class ProcessVariables {
     }
 
     /**
-     * ID of the cached base image
+     * ID of a base image from which to create the others in the pool
      */
-    public static final String CACHED_IMAGE_ID = "cachedImageId";
+    public static final String IMAGE_ID = "imageId";
 
     /**
      * The reservation ID for a pool as String
